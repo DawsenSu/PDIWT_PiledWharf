@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<KeyinTree xmlns="http://www.bentley.com/schemas/1.0/MicroStation/AddIn/KeyinTree.xsd">
+
+  <RootKeyinTable ID="root">
+    <Keyword SubtableRef="PDIWT_PiledWharf" CommandClass="MacroCommand" CommandWord="PDIWT_PiledWharf">
+      <Options Required="true" />
+    </Keyword>
+  </RootKeyinTable>
+
+  <SubKeyinTables>
+    <KeyinTable ID="PDIWT_PiledWharf">
+      <Keyword CommandWord="Settings"></Keyword>
+      <Keyword CommandWord="Input" SubtableRef="PDIWT_PiledWharf_Input"></Keyword>
+      <Keyword CommandWord="Process" SubtableRef="PDIWT_PiledWharf_Process"></Keyword>
+      <Keyword CommandWord="Output" SubtableRef="PDIWT_PiledWharf_Output"></Keyword>
+    </KeyinTable>
+  </SubKeyinTables>
+  
+  <SubKeyinTables>
+    <KeyinTable ID="PDIWT_PiledWharf_Input">
+      <Keyword CommandWord="Dynamic"></Keyword>
+      <Keyword CommandWord="ExcelFile"></Keyword>
+    </KeyinTable>
+  </SubKeyinTables>
+  <SubKeyinTables>
+    <KeyinTable ID="PDIWT_PiledWharf_Process">
+      <Keyword CommandWord="Settings"></Keyword>
+    </KeyinTable>
+  </SubKeyinTables>
+  <SubKeyinTables>
+    <KeyinTable ID="PDIWT_PiledWharf_Output">
+      <Keyword CommandWord="Settings"></Keyword>
+    </KeyinTable>
+  </SubKeyinTables>
+
+  <KeyinHandlers>
+    <KeyinHandler Keyin="PDIWT_PiledWharf Settings" Function="PDIWT_PiledWharf_Main.KeyinCommands.Settings"/>
+  </KeyinHandlers>
+</KeyinTree>
