@@ -7,12 +7,12 @@
         mc:Ignorable="d ignore"
         Height="300"
         Width="300"
-        Title="MVVM Light Application">
+        Title="Settings">
     
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Skins/MainSkin.xaml" />
+                <ResourceDictionary Source="Skins/MainSkin.xaml" />             
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>

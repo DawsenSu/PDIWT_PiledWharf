@@ -9,7 +9,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
     /// See http://www.mvvmlight.net
     /// </para>
     /// </summary>
-    public class MainViewModel : ViewModelBase
+    public class SettingsViewModel : ViewModelBase
     {
         private readonly IDataService _dataService;
 
@@ -39,7 +39,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
-        public MainViewModel(IDataService dataService)
+        public SettingsViewModel(IDataService dataService)
         {
             _dataService = dataService;
             _dataService.GetData(

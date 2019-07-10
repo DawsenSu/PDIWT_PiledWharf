@@ -8,7 +8,7 @@ namespace PDIWT_PiledWharf_Core.Model
         {
             // Use this to connect to the actual data service
 
-            var item = new DataItem("Welcome to MVVM Light");
+            var item = new DataItem("Welcome to MVVM Light[Run]");
             callback(item, null);
         }
     }

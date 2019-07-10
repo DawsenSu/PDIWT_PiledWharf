@@ -20,9 +20,8 @@ namespace PDIWT_PiledWharf_Core
         {
             InitializeComponent();
             Closing += (s, e) => ViewModelLocator.Cleanup();
-   
-            var locator = new ViewModel.ViewModelLocator();
-            this.DataContext = locator.Main;
+            ViewModelLocator locator = new ViewModelLocator();
+            DataContext = locator.Settings;
 
             m_wpfhelper = new BMWPF.WPFInteropHelper(this);
             m_wpfhelper.Attach(addIn, true, "MainWindow");
