@@ -68,5 +68,9 @@ namespace PDIWT_PiledWharf_Core
             m_mainwindowhost = null;
         }
 
+        private void Button_Click_CancelWindow(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

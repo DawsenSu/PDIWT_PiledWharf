@@ -7,8 +7,8 @@
     <ProjectGuid>{9E11F8B4-3AF7-4DE2-B869-7E50F84376F7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PDIWT_PileWharf_Main</RootNamespace>
-    <AssemblyName>PDIWT_PileWharf_Main</AssemblyName>
+    <RootNamespace>PDIWT_PiledWharf_Main</RootNamespace>
+    <AssemblyName>PDIWT_PiledWharf_Main</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

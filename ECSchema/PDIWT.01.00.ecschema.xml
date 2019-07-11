@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ECSchema schemaName="PDIWT" nameSpacePrefix="MS" version="1.0" description="Water Transportation Desing Insitutation LTD.Co." xmlns="http://www.bentley.com/schemas/Bentley.ECXML.2.0">
+    <ECSchemaReference name="Bentley_Standard_CustomAttributes" version="01.00" prefix="bsca" />
+    <ECCustomAttributes>
+        <SchemaChangeTrackingState xmlns="Bentley_Standard_CustomAttributes.01.00">
+            <FinalizationHistory />
+            <TrackingEnabled>True</TrackingEnabled>
+            <SchemaFullNameAtEditingStart>PDIWT.01.00</SchemaFullNameAtEditingStart>
+        </SchemaChangeTrackingState>
+    </ECCustomAttributes>
+    <ECClass typeName="PiledWharfSetting" description="Used by Piled Wharf Setting Command" isDomainClass="True">
+        <ECProperty propertyName="ConcreteModulus" typeName="double" />
+        <ECProperty propertyName="ConcretePoisson" typeName="double" />
+        <ECProperty propertyName="ConcreteDensity" typeName="double" />
+        <ECProperty propertyName="SteelModulus" typeName="double" />
+        <ECProperty propertyName="SteelPoisson" typeName="double" />
+        <ECProperty propertyName="SteelDensity" typeName="double" />
+    </ECClass>
+</ECSchema>

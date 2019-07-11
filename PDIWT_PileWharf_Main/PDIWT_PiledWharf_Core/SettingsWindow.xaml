@@ -1,31 +1,188 @@
-﻿<Window x:Class="PDIWT_PiledWharf_Core.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:ignore="http://www.galasoft.ch/ignore"
-        mc:Ignorable="d ignore"
-        Height="300"
-        Width="300"
-        Title="Settings">
-    
+﻿<Window
+    x:Class="PDIWT_PiledWharf_Core.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ignore="http://www.galasoft.ch/ignore"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Settings"
+    Width="300"
+    Height="300"
+    mc:Ignorable="d ignore">
+
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Skins/MainSkin.xaml" />             
+                <ResourceDictionary Source="Skins/MainSkin.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
 
-    <Grid x:Name="LayoutRoot">
-
-        <TextBlock FontSize="36"
-                   FontWeight="Bold"
-                   Foreground="Purple"
-                   Text="{Binding WelcomeTitle}"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   TextWrapping="Wrap" />
-
+    <Grid x:Name="LayoutRoot" Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <TabControl Grid.Row="0">
+            <TabItem Header="Material">
+                <StackPanel>
+                    <GroupBox Header="Concrete">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Content="Modulus(E):" />
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Text="{Binding ConcreteModulus}" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Content="N/m2" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Content="Poisson(v):" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Text="{Binding ConcretePoisson}" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Content="Concrete Density:" />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Text="{Binding ConcreteDensity}" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="2"
+                                Content="kN/m3" />
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Header="Steel">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Content="Modulus(E):" />
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Text="{Binding SteelModulus}" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Content="N/m2" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Content="Poisson(v):" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Text="{Binding SteelPoisson}" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Content="Steel Density:" />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Text="{Binding SteelDensity}" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="2"
+                                Content="kN/m3" />
+                        </Grid>
+                    </GroupBox>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="WaterLevel">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Content="HAT(m):" />
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Text="{Binding HAT}" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Content="MHW(m):" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Text="{Binding MHW}" />
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Content="MSL(m):" />
+                    <TextBox
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Text="{Binding MSL}" />
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Content="MLW(m):" />
+                    <TextBox
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Text="{Binding MLW}" />
+                    <Label
+                        Grid.Row="4"
+                        Grid.Column="0"
+                        Content="LAT(m):" />
+                    <TextBox
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        Text="{Binding LAT}" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="Wave" />
+        </TabControl>
+        <StackPanel
+            Grid.Row="1"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button Command="{Binding WriteEnvParameters}">OK</Button>
+            <Button Click="Button_Click_CancelWindow">Cancel</Button>
+        </StackPanel>
     </Grid>
 </Window>
