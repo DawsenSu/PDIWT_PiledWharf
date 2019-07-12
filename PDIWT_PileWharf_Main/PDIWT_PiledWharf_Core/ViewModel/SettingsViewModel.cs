@@ -3,6 +3,7 @@ using System.Collections;
 using System.Windows;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
@@ -11,9 +12,12 @@ using PDIWT_PiledWharf_Core.Model;
 using BM = Bentley.MstnPlatformNET;
 using BD = Bentley.DgnPlatformNET;
 using BDEC = Bentley.DgnPlatformNET.DgnEC;
-using BDECS = Bentley.ECObjects.Schema;
-using System.Linq;
-using Bentley.ECN;
+using BES = Bentley.ECObjects.Schema;
+using BEX = Bentley.ECObjects.XML;
+using BECN = Bentley.ECN;
+using BE = Bentley.ECObjects;
+using BEPQ = Bentley.EC.Persistence.Query;
+using BCI = Bentley.ECObjects.Instance;
 
 namespace PDIWT_PiledWharf_Core.ViewModel
 {
@@ -24,17 +28,43 @@ namespace PDIWT_PiledWharf_Core.ViewModel
     /// </para>
     /// </summary>
     public class SettingsViewModel : ViewModelBase
-    { 
+    {
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
         public SettingsViewModel()
         {
+            _concreteModulus = 3.2e7;
+            _concretePoisson = 0.2;
+            _concreteDensity = 25;
+            _concreteUnderWaterDensity = 15;
+            _steelModulus = 2e8;
+            _steelPoisson = 0.2;
+            _steelDensity = 78.5;
+            _hat = 2;
+            _mhw = 1;
+            _msl = 0;
+            _mlw = -1;
+            _lat = -2;
+            _propValueDictionary.Add("ConcretModulus", _concreteModulus);
+            _propValueDictionary.Add("ConcretePoisson", _concretePoisson);
+            _propValueDictionary.Add("ConcreteDensity", _concreteDensity);
+            _propValueDictionary.Add("ConcreteUnderWaterDensity", _concreteUnderWaterDensity);
+            _propValueDictionary.Add("SteelModulus", _steelModulus);
+            _propValueDictionary.Add("SteelPoisson", _steelPoisson);
+            _propValueDictionary.Add("SteelDensity", _steelDensity);
+            //_propValueDictionary.Add("HAT", _hat);
+            //_propValueDictionary.Add("MHW", _mhw);
+            //_propValueDictionary.Add("MSL", _msl);
+            //_propValueDictionary.Add("MLW", _mlw);
+            //_propValueDictionary.Add("LAT", _lat);
 
         }
 
+        private Dictionary<string, double> _propValueDictionary = new Dictionary<string, double>();
 
-        private double _concreteModulus = 3.2e7;
+
+        private double _concreteModulus;
         /// <summary>
         /// Concrete's Modulus
         /// </summary>
@@ -44,7 +74,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             set { Set(ref _concreteModulus, value); }
         }
 
-        private double _concretePoisson = 0.2;
+        private double _concretePoisson;
         /// <summary>
         /// Concrete's Poisson Ration
         /// </summary>
@@ -55,7 +85,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
 
-        private double _concreteDensity = 25;
+        private double _concreteDensity;
         /// <summary>
         /// Concrete's Density
         /// </summary>
@@ -66,7 +96,17 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
 
-        private double _steelModulus = 2e8;
+        private double _concreteUnderWaterDensity;
+        /// <summary>
+        /// Concrete's underwater density
+        /// </summary>
+        public double ConcreteUnderWaterDensity
+        {
+            get { return _concreteUnderWaterDensity; }
+            set { Set(ref _concreteUnderWaterDensity, value); }
+        }
+
+        private double _steelModulus;
         /// <summary>
         /// Steel's Modulus
         /// </summary>
@@ -77,7 +117,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
 
-        private double _steelPoisson = 0.3;
+        private double _steelPoisson;
         /// <summary>
         /// Steel's Poisson
         /// </summary>
@@ -88,7 +128,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
 
-        private double _steelDensity = 78.5;
+        private double _steelDensity;
         /// <summary>
         /// steel's density
         /// </summary>
@@ -99,7 +139,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
 
-        private double _hat = 2;
+        private double _hat;
         /// <summary>
         /// Highest Astronomical Tide
         /// </summary>
@@ -110,7 +150,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
 
-        private double _mhw = 1;
+        private double _mhw;
         /// <summary>
         /// Mean High Water
         /// </summary>
@@ -121,7 +161,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
 
-        private double _msl = 0;
+        private double _msl;
         /// <summary>
         ///  Mean Sea Level
         /// </summary>
@@ -132,7 +172,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
 
-        private double _mlw = -1;
+        private double _mlw;
         /// <summary>
         /// Mean Low Water
         /// </summary>
@@ -143,7 +183,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
 
-        private double _lat = -2;
+        private double _lat;
         /// <summary>
         /// Lowest Astronomical Tide
         /// </summary>
@@ -169,58 +209,102 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
         private void WriteEnvParametersExcuteMethod()
         {
-            BM.MessageCenter messageCenter = BM.MessageCenter.Instance;
-            BDEC.DgnECManager dgnECManager = BDEC.DgnECManager.Manager;
+            BM.MessageCenter _messageCenter = BM.MessageCenter.Instance;
+            BDEC.DgnECManager _dgnECManager = BDEC.DgnECManager.Manager;
 
-            string ecschemaName = "PDIWT.01.00.ecschema";
+            string ecschemaName = "PDIWT.01.00.ecschema.xml";
 
-            if(!IsECSchemaInActiveModel(ecschemaName))
+            try
             {
+                //parse the full schema Name
+                if (!BE.ECObjects.ParseFullSchemaName(out string pdiwtSchemaName, out int versionMajor, out int versionMinor, ecschemaName))
+                    _messageCenter.ShowErrorMessage($"Can't Parse {ecschemaName}", $"Can't Parse {ecschemaName}, Setting Parameters failed.", BM.MessageAlert.Balloon);
+                // Obtain the FileInfo of ECSchema
                 if (GetOrganizationECSchemaFile(out FileInfo pdiwtECSchemaFileInfo, ecschemaName) == BD.StatusInt.Error)
+                    _messageCenter.ShowErrorMessage($"Can't find {ecschemaName}", $"Can't find {ecschemaName}, Setting Parameters failed.", BM.MessageAlert.Balloon);
+                // If dgnfile doesn't contain the designated schema, Import it.
+                if (!_dgnECManager.DiscoverSchemas(BM.Session.Instance.GetActiveDgnFile(), BDEC.ReferencedModelScopeOption.All, false).Contains(BE.ECObjects.FormatFullSchemaName(pdiwtSchemaName, versionMajor, versionMinor)))
                 {
-                    messageCenter.ShowErrorMessage($"Can't find {ecschemaName}", $"Can't find {ecschemaName}, Setting Parameters failed.", BM.MessageAlert.Balloon);
-                    return;
+                    BD.StatusInt _readSchemaStatus = PDIWT_PiledWharf_Core_Cpp.ECFrameWorkWraper.ImportSChemaXMLFileOnActiveModel(pdiwtECSchemaFileInfo.FullName);
+                    if (_readSchemaStatus == BD.StatusInt.Success)
+                        _messageCenter.StatusMessage = string.Format($"Import {ecschemaName}");
+                    else
+                        _messageCenter.StatusMessage = string.Format($"Can't Import {ecschemaName}");
                 }
 
+                // Locate designated schema and write instatnce on it.
+                // If the active dgn file contain the instance of this schema, update it.
+                // If not, write the instance on it.
+                BDEC.FindInstancesScope scope = BDEC.FindInstancesScope.CreateScope(BM.Session.Instance.GetActiveDgnModel(), new BDEC.FindInstancesScopeOption());
+                BES.IECSchema _ipdiwtschema = _dgnECManager.LocateSchemaInScope(scope, pdiwtSchemaName, versionMajor, versionMinor, BES.SchemaMatchType.Exact);
+                if (null == _ipdiwtschema)
+                    _messageCenter.ShowErrorMessage($"Can't locate {ecschemaName} In Dgnfile", $"Can't locate {ecschemaName} Dgnfile, Setting Parameters failed.", BM.MessageAlert.Balloon);
+
+                string _piledwharfClassName = "PiledWharfSetting";
+                BDEC.FindInstancesScope _findPDIWTInstanceScope = BDEC.FindInstancesScope.CreateScope(BM.Session.Instance.GetActiveDgnFile(), new BDEC.FindInstancesScopeOption(BDEC.DgnECHostType.Model));
+                BEPQ.ECQuery _pdiwtQuery = new BEPQ.ECQuery(_ipdiwtschema.GetClass(_piledwharfClassName));
+                _pdiwtQuery.SelectClause.SelectAllProperties = true;
+                BDEC.DgnECInstanceCollection _allPDIWTECInstances = _dgnECManager.FindInstances(_findPDIWTInstanceScope, _pdiwtQuery);
+                if (_allPDIWTECInstances.Count() == 0)
+                {
+                    _messageCenter.ShowInfoMessage($"{ecschemaName} Exist in Model", $"{ecschemaName} Exist in Model", BM.MessageAlert.None);
+
+                    BDEC.IDgnECInstance _ecInstance = _allPDIWTECInstances.First();
+                    foreach (var _itemProp in _ecInstance)
+                    {
+                        _itemProp.DoubleValue = _propValueDictionary[_itemProp.Property.Name];
+                    }
+                    _ecInstance.WriteChanges();
+                    _messageCenter.StatusMessage = string.Format($"Write Instance Successfully.");
+                }
+                else
+                {
+                    BES.IECClass _piledwharfECClass = _ipdiwtschema.GetClass(_piledwharfClassName);
+                    if (null == _piledwharfECClass)
+                        _messageCenter.StatusMessage = string.Format($"Can't Find ECClass {_piledwharfClassName}");
+                    BDEC.DgnECInstanceEnabler _piledwharfEnabler = _dgnECManager.ObtainInstanceEnabler(BM.Session.Instance.GetActiveDgnFile(), _piledwharfECClass);
+                    BE.Instance.ECDInstance _piledwharfWipInstance = _piledwharfEnabler.SharedWipInstance;
+                    foreach (var item in _propValueDictionary)
+                    {
+                        _piledwharfWipInstance.SetAsString(item.Key, item.Value.ToString());
+                    }
+                    BDEC.IDgnECInstance _persistentPiledWharfInstance = _piledwharfEnabler.CreateInstanceOnModel(BM.Session.Instance.GetActiveDgnModel(), _piledwharfWipInstance);
+                    _persistentPiledWharfInstance.WriteChanges();
+                    _messageCenter.StatusMessage = string.Format($"Write Instance Successfully.");
+                }
+
+                //}
             }
-            //messageCenter.ShowInfoMessage($"Find {pdiwtECSchemaFileInfo.FullName}", $"Find {ecschemaName}", BM.MessageAlert.Dialog);
+            catch (Exception ex)
+            {
+                _messageCenter.StatusMessage = ex.Message;
+                _messageCenter.StatusWarning = ex.Message;
+            }
         }
 
         /// <summary>
         /// Get the ECSchema file based on Schema Name  
         /// </summary>
         /// <param name="ecSchemaFile">[out]The ECSchema's FileInfo</param>
-        /// <param name="ecSchemaName"></param>
+        /// <param name="ecFullSchemaName"></param>
         /// <param name="schemaExtension">Default ".xml"</param>
         /// <returns>Success/Error</returns>
-        private BD.StatusInt GetOrganizationECSchemaFile(out FileInfo ecSchemaFile, string ecSchemaName,string schemaExtension = ".xml")
+        private BD.StatusInt GetOrganizationECSchemaFile(out FileInfo ecSchemaFile, string ecFullSchemaName)
         {
-            if(!BD.ConfigurationManager.IsVariableDefined("PDIWT_ORGANIZATION_ECSCHEMAPATH"))
-            {
-                BD.ConfigurationManager.DefineVariable("PDIWT_ORGANIZATION_ECSCHEMAPATH", "$(_USTN_ORGANIZATION)ECSchemas/", BD.ConfigurationVariableLevel.Organization);
-            }
+            ecSchemaFile = null;
+            if (!BD.ConfigurationManager.IsVariableDefined("PDIWT_ORGANIZATION_ECSCHEMAPATH"))
+                return BD.StatusInt.Error;
+
             string[] folderpaths = BD.ConfigurationManager.GetVariable("PDIWT_ORGANIZATION_ECSCHEMAPATH").Split(';');
             foreach (var path in folderpaths)
             {
-                if (File.Exists(path + ecSchemaName + schemaExtension))
+                if (File.Exists(path + ecFullSchemaName))
                 {
-                    ecSchemaFile = new FileInfo(path + ecSchemaName + schemaExtension);
+                    ecSchemaFile = new FileInfo(path + ecFullSchemaName);
                     return BD.StatusInt.Success;
-                }               
+                }
             }
-            ecSchemaFile = null;
             return BD.StatusInt.Error;
-        }
-
-        /// <summary>
-        /// Verify the Active DgnModel Contains certain ecschema
-        /// </summary>
-        /// <param name="ecschemaName">The ecschema Name to be verified.</param>
-        /// <returns>returns true if it contains</returns>
-        bool IsECSchemaInActiveModel(string wholeecschemaName)
-        {
-            string[] schemaParts = wholeecschemaName.Split('.');
-            return BDEC.DgnECManager.IsSchemaContainedWithinFile(BM.Session.Instance.GetActiveDgnFile(), schemaParts[0], Convert.ToInt32(schemaParts[1]),Convert.ToInt32( schemaParts[2]), BDECS.SchemaMatchType.Exact);
         }
 
         ////public override void Cleanup()

@@ -5,7 +5,6 @@
 #include <cmath>
 
 
-
 using namespace System;
 
 namespace PDIWT_PiledWharf_Core_Cpp {
@@ -15,5 +14,11 @@ namespace PDIWT_PiledWharf_Core_Cpp {
 	public:
 		TestClass();
 		void OutputMessage(String^);
+	};
+
+	public ref class ECFrameWorkWraper
+	{
+	public:
+		static Bentley::DgnPlatformNET::StatusInt ImportSChemaXMLFileOnActiveModel(String^ xmlFilePath);
 	};
 }
