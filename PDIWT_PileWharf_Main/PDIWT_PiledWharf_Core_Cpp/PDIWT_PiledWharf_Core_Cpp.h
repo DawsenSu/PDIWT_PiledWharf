@@ -6,19 +6,22 @@
 
 
 using namespace System;
+using namespace System::Collections::Generic;
 
 namespace PDIWT_PiledWharf_Core_Cpp {
-	public ref class TestClass
+	public class PDIWTECFramework
 	{
 		// TODO: Add your methods for this class here.
 	public:
-		TestClass();
-		void OutputMessage(String^);
+		static StatusInt WriteSettingsOnActiveModel(bmap<WString, double> propList);
+	private:
+		static StatusInt ImportSChemaXMLFileOnActiveModel(WString xmlFilePath);
+		static StatusInt GetOrganizationECSchemaFile(BeFileNameR ecSchemaFile, WString ecSchemaFullName);
 	};
 
 	public ref class ECFrameWorkWraper
 	{
 	public:
-		static Bentley::DgnPlatformNET::StatusInt ImportSChemaXMLFileOnActiveModel(String^ xmlFilePath);
+		static Bentley::DgnPlatformNET::StatusInt WriteSettingsOnActiveModel(Dictionary<String^, double>^ propList);
 	};
 }

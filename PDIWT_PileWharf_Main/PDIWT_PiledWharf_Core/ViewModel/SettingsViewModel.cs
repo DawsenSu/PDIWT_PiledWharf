@@ -209,77 +209,78 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
         private void WriteEnvParametersExcuteMethod()
         {
-            BM.MessageCenter _messageCenter = BM.MessageCenter.Instance;
-            BDEC.DgnECManager _dgnECManager = BDEC.DgnECManager.Manager;
+            PDIWT_PiledWharf_Core_Cpp.ECFrameWorkWraper.WriteSettingsOnActiveModel(_propValueDictionary);
+            //BM.MessageCenter _messageCenter = BM.MessageCenter.Instance;
+            //BDEC.DgnECManager _dgnECManager = BDEC.DgnECManager.Manager;
 
-            string ecschemaName = "PDIWT.01.00.ecschema.xml";
+            //string ecschemaName = "PDIWT.01.00.ecschema.xml";
 
-            try
-            {
-                //parse the full schema Name
-                if (!BE.ECObjects.ParseFullSchemaName(out string pdiwtSchemaName, out int versionMajor, out int versionMinor, ecschemaName))
-                    _messageCenter.ShowErrorMessage($"Can't Parse {ecschemaName}", $"Can't Parse {ecschemaName}, Setting Parameters failed.", BM.MessageAlert.Balloon);
-                // Obtain the FileInfo of ECSchema
-                if (GetOrganizationECSchemaFile(out FileInfo pdiwtECSchemaFileInfo, ecschemaName) == BD.StatusInt.Error)
-                    _messageCenter.ShowErrorMessage($"Can't find {ecschemaName}", $"Can't find {ecschemaName}, Setting Parameters failed.", BM.MessageAlert.Balloon);
-                // If dgnfile doesn't contain the designated schema, Import it.
-                if (!_dgnECManager.DiscoverSchemas(BM.Session.Instance.GetActiveDgnFile(), BDEC.ReferencedModelScopeOption.All, false).Contains(BE.ECObjects.FormatFullSchemaName(pdiwtSchemaName, versionMajor, versionMinor)))
-                {
-                    BD.StatusInt _readSchemaStatus = PDIWT_PiledWharf_Core_Cpp.ECFrameWorkWraper.ImportSChemaXMLFileOnActiveModel(pdiwtECSchemaFileInfo.FullName);
-                    if (_readSchemaStatus == BD.StatusInt.Success)
-                        _messageCenter.StatusMessage = string.Format($"Import {ecschemaName}");
-                    else
-                        _messageCenter.StatusMessage = string.Format($"Can't Import {ecschemaName}");
-                }
+            //try
+            //{
+            //    //parse the full schema Name
+            //    if (!BE.ECObjects.ParseFullSchemaName(out string pdiwtSchemaName, out int versionMajor, out int versionMinor, ecschemaName))
+            //        _messageCenter.ShowErrorMessage($"Can't Parse {ecschemaName}", $"Can't Parse {ecschemaName}, Setting Parameters failed.", BM.MessageAlert.Balloon);
+            //    // Obtain the FileInfo of ECSchema
+            //    if (GetOrganizationECSchemaFile(out FileInfo pdiwtECSchemaFileInfo, ecschemaName) == BD.StatusInt.Error)
+            //        _messageCenter.ShowErrorMessage($"Can't find {ecschemaName}", $"Can't find {ecschemaName}, Setting Parameters failed.", BM.MessageAlert.Balloon);
+            //    // If dgnfile doesn't contain the designated schema, Import it.
+            //    if (!_dgnECManager.DiscoverSchemas(BM.Session.Instance.GetActiveDgnFile(), BDEC.ReferencedModelScopeOption.All, false).Contains(BE.ECObjects.FormatFullSchemaName(pdiwtSchemaName, versionMajor, versionMinor)))
+            //    {
+            //        BD.StatusInt _readSchemaStatus = PDIWT_PiledWharf_Core_Cpp.ECFrameWorkWraper.ImportSChemaXMLFileOnActiveModel(pdiwtECSchemaFileInfo.FullName);
+            //        if (_readSchemaStatus == BD.StatusInt.Success)
+            //            _messageCenter.StatusMessage = string.Format($"Import {ecschemaName}");
+            //        else
+            //            _messageCenter.StatusMessage = string.Format($"Can't Import {ecschemaName}");
+            //    }
 
-                // Locate designated schema and write instatnce on it.
-                // If the active dgn file contain the instance of this schema, update it.
-                // If not, write the instance on it.
-                BDEC.FindInstancesScope scope = BDEC.FindInstancesScope.CreateScope(BM.Session.Instance.GetActiveDgnModel(), new BDEC.FindInstancesScopeOption());
-                BES.IECSchema _ipdiwtschema = _dgnECManager.LocateSchemaInScope(scope, pdiwtSchemaName, versionMajor, versionMinor, BES.SchemaMatchType.Exact);
-                if (null == _ipdiwtschema)
-                    _messageCenter.ShowErrorMessage($"Can't locate {ecschemaName} In Dgnfile", $"Can't locate {ecschemaName} Dgnfile, Setting Parameters failed.", BM.MessageAlert.Balloon);
+            //    // Locate designated schema and write instatnce on it.
+            //    // If the active dgn file contain the instance of this schema, update it.
+            //    // If not, write the instance on it.
+            //    BDEC.FindInstancesScope scope = BDEC.FindInstancesScope.CreateScope(BM.Session.Instance.GetActiveDgnModel(), new BDEC.FindInstancesScopeOption());
+            //    BES.IECSchema _ipdiwtschema = _dgnECManager.LocateSchemaInScope(scope, pdiwtSchemaName, versionMajor, versionMinor, BES.SchemaMatchType.Exact);
+            //    if (null == _ipdiwtschema)
+            //        _messageCenter.ShowErrorMessage($"Can't locate {ecschemaName} In Dgnfile", $"Can't locate {ecschemaName} Dgnfile, Setting Parameters failed.", BM.MessageAlert.Balloon);
 
-                string _piledwharfClassName = "PiledWharfSetting";
-                BDEC.FindInstancesScope _findPDIWTInstanceScope = BDEC.FindInstancesScope.CreateScope(BM.Session.Instance.GetActiveDgnFile(), new BDEC.FindInstancesScopeOption(BDEC.DgnECHostType.Model));
-                BEPQ.ECQuery _pdiwtQuery = new BEPQ.ECQuery(_ipdiwtschema.GetClass(_piledwharfClassName));
-                _pdiwtQuery.SelectClause.SelectAllProperties = true;
-                BDEC.DgnECInstanceCollection _allPDIWTECInstances = _dgnECManager.FindInstances(_findPDIWTInstanceScope, _pdiwtQuery);
-                if (_allPDIWTECInstances.Count() == 0)
-                {
-                    _messageCenter.ShowInfoMessage($"{ecschemaName} Exist in Model", $"{ecschemaName} Exist in Model", BM.MessageAlert.None);
+            //    string _piledwharfClassName = "PiledWharfSetting";
+            //    BDEC.FindInstancesScope _findPDIWTInstanceScope = BDEC.FindInstancesScope.CreateScope(BM.Session.Instance.GetActiveDgnFile(), new BDEC.FindInstancesScopeOption(BDEC.DgnECHostType.Model));
+            //    BEPQ.ECQuery _pdiwtQuery = new BEPQ.ECQuery(_ipdiwtschema.GetClass(_piledwharfClassName));
+            //    _pdiwtQuery.SelectClause.SelectAllProperties = true;
+            //    BDEC.DgnECInstanceCollection _allPDIWTECInstances = _dgnECManager.FindInstances(_findPDIWTInstanceScope, _pdiwtQuery);
+            //    if (_allPDIWTECInstances.Count() == 0)
+            //    {
+            //        _messageCenter.ShowInfoMessage($"{ecschemaName} Exist in Model", $"{ecschemaName} Exist in Model", BM.MessageAlert.None);
 
-                    BDEC.IDgnECInstance _ecInstance = _allPDIWTECInstances.First();
-                    foreach (var _itemProp in _ecInstance)
-                    {
-                        _itemProp.DoubleValue = _propValueDictionary[_itemProp.Property.Name];
-                    }
-                    _ecInstance.WriteChanges();
-                    _messageCenter.StatusMessage = string.Format($"Write Instance Successfully.");
-                }
-                else
-                {
-                    BES.IECClass _piledwharfECClass = _ipdiwtschema.GetClass(_piledwharfClassName);
-                    if (null == _piledwharfECClass)
-                        _messageCenter.StatusMessage = string.Format($"Can't Find ECClass {_piledwharfClassName}");
-                    BDEC.DgnECInstanceEnabler _piledwharfEnabler = _dgnECManager.ObtainInstanceEnabler(BM.Session.Instance.GetActiveDgnFile(), _piledwharfECClass);
-                    BE.Instance.ECDInstance _piledwharfWipInstance = _piledwharfEnabler.SharedWipInstance;
-                    foreach (var item in _propValueDictionary)
-                    {
-                        _piledwharfWipInstance.SetAsString(item.Key, item.Value.ToString());
-                    }
-                    BDEC.IDgnECInstance _persistentPiledWharfInstance = _piledwharfEnabler.CreateInstanceOnModel(BM.Session.Instance.GetActiveDgnModel(), _piledwharfWipInstance);
-                    _persistentPiledWharfInstance.WriteChanges();
-                    _messageCenter.StatusMessage = string.Format($"Write Instance Successfully.");
-                }
+            //        BDEC.IDgnECInstance _ecInstance = _allPDIWTECInstances.First();
+            //        foreach (var _itemProp in _ecInstance)
+            //        {
+            //            _itemProp.DoubleValue = _propValueDictionary[_itemProp.Property.Name];
+            //        }
+            //        _ecInstance.WriteChanges();
+            //        _messageCenter.StatusMessage = string.Format($"Write Instance Successfully.");
+            //    }
+            //    else
+            //    {
+            //        BES.IECClass _piledwharfECClass = _ipdiwtschema.GetClass(_piledwharfClassName);
+            //        if (null == _piledwharfECClass)
+            //            _messageCenter.StatusMessage = string.Format($"Can't Find ECClass {_piledwharfClassName}");
+            //        BDEC.DgnECInstanceEnabler _piledwharfEnabler = _dgnECManager.ObtainInstanceEnabler(BM.Session.Instance.GetActiveDgnFile(), _piledwharfECClass);
+            //        BE.Instance.ECDInstance _piledwharfWipInstance = _piledwharfEnabler.SharedWipInstance;
+            //        foreach (var item in _propValueDictionary)
+            //        {
+            //            _piledwharfWipInstance.SetAsString(item.Key, item.Value.ToString());
+            //        }
+            //        BDEC.IDgnECInstance _persistentPiledWharfInstance = _piledwharfEnabler.CreateInstanceOnModel(BM.Session.Instance.GetActiveDgnModel(), _piledwharfWipInstance);
+            //        _persistentPiledWharfInstance.WriteChanges();
+            //        _messageCenter.StatusMessage = string.Format($"Write Instance Successfully.");
+            //    }
 
-                //}
-            }
-            catch (Exception ex)
-            {
-                _messageCenter.StatusMessage = ex.Message;
-                _messageCenter.StatusWarning = ex.Message;
-            }
+            //    //}
+            //}
+            //catch (Exception ex)
+            //{
+            //    _messageCenter.StatusMessage = ex.Message;
+            //    _messageCenter.StatusWarning = ex.Message;
+            //}
         }
 
         /// <summary>
