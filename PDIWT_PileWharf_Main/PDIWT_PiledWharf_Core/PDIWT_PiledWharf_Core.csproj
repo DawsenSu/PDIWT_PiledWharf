@@ -173,7 +173,9 @@
     <Compile Include="Design\DesignDataService.cs" />
     <Compile Include="Model\DataItem.cs" />
     <Compile Include="Model\DataService.cs" />
+    <Compile Include="Model\HasErrorHelper.cs" />
     <Compile Include="Model\IDataService.cs" />
+    <Compile Include="Model\PileType.cs" />
     <Compile Include="Model\PileWharfStaadGenerator.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
@@ -194,20 +196,11 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -219,6 +212,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PDIWT.Resources\PDIWT.Resources.csproj">
+      <Project>{1055ee07-f11a-49db-ad46-06e49948bda2}</Project>
+      <Name>PDIWT.Resources</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PDIWT_PiledWharf_Core_Cpp\PDIWT_PiledWharf_Core_Cpp.vcxproj">
       <Project>{be1b266d-b8b6-45a3-9593-9b9291ef06a9}</Project>
       <Name>PDIWT_PiledWharf_Core_Cpp</Name>

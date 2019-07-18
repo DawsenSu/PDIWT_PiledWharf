@@ -65,20 +65,18 @@ StatusInt PDIWT_PiledWharf_Core_Cpp::PDIWTECFramework::WriteSettingsOnActiveMode
 		FindInstancesScopePtr _pFindInstancesScope = FindInstancesScope::CreateScope(*ACTIVEMODEL, FindInstancesScopeOption(DgnECHostType::Model));
 		ECQueryPtr _pECQuery = ECQuery::CreateQuery(_pdiwtSchemaName.GetWCharCP(), ecClassName.GetWCharCP());
 		DgnECInstanceIterable _ecInterable = _dgnECManager.FindInstances(*_pFindInstancesScope, *_pECQuery);
-		if (_ecInterable.empty())
+
+		if (!_ecInterable.empty())
 		{
-			DgnECInstancePtr _pdiwtInstance = nullptr;
-			DgnECInstanceEnablerP _pdiwtInstanceEnabler = _dgnECManager.ObtainInstanceEnabler(*_pdwitECClassP, *ISessionMgr::GetActiveDgnFile());
-			StandaloneECInstanceR _pdiwtWIPInstance = _pdiwtInstanceEnabler->GetSharedWipInstance();
-			SetPropValueList(_pdiwtWIPInstance, propList);
-			_pdiwtInstanceEnabler->CreateInstanceOnModel(&_pdiwtInstance, _pdiwtWIPInstance, *ISessionMgr::GetActiveDgnModelP());
+			for (auto _ecInstance : _ecInterable)
+				_ecInstance->Delete();
 		}
-		else
-		{
-			DgnECInstancePtr _pdiwtInstance = *_ecInterable.begin();
-			SetPropValueList(*_pdiwtInstance, propList);
-			_pdiwtInstance->WriteChanges();
-		}
+
+		DgnECInstancePtr _pdiwtInstance = nullptr;
+		DgnECInstanceEnablerP _pdiwtInstanceEnabler = _dgnECManager.ObtainInstanceEnabler(*_pdwitECClassP, *ISessionMgr::GetActiveDgnFile());
+		StandaloneECInstanceR _pdiwtWIPInstance = _pdiwtInstanceEnabler->GetSharedWipInstance();
+		SetPropValueList(_pdiwtWIPInstance, propList);
+		_pdiwtInstanceEnabler->CreateInstanceOnModel(&_pdiwtInstance, _pdiwtWIPInstance, *ISessionMgr::GetActiveDgnModelP());
 
 	}
 	catch (const std::exception& ex)

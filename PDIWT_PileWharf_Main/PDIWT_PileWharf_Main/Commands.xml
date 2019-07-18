@@ -18,22 +18,35 @@
   
   <SubKeyinTables>
     <KeyinTable ID="PDIWT_PiledWharf_Input">
-      <Keyword CommandWord="Dynamic"></Keyword>
-      <Keyword CommandWord="ExcelFile"></Keyword>
+      <Keyword CommandWord="ImportFromFile"></Keyword>
+      <Keyword CommandWord="PilePlacement"></Keyword>
     </KeyinTable>
   </SubKeyinTables>
   <SubKeyinTables>
     <KeyinTable ID="PDIWT_PiledWharf_Process">
-      <Keyword CommandWord="Settings"></Keyword>
+      <Keyword CommandWord="CalculateWaveAndCurrentForce"></Keyword>
+      <Keyword CommandWord="CalculateBearingCapacity"></Keyword>
+      <Keyword CommandWord="DetectCollision"></Keyword>
     </KeyinTable>
   </SubKeyinTables>
   <SubKeyinTables>
     <KeyinTable ID="PDIWT_PiledWharf_Output">
-      <Keyword CommandWord="Settings"></Keyword>
+      <Keyword CommandWord="CalculationNote"></Keyword>
+      <Keyword CommandWord="PilePositionDrawing"></Keyword>
     </KeyinTable>
   </SubKeyinTables>
 
   <KeyinHandlers>
     <KeyinHandler Keyin="PDIWT_PiledWharf Settings" Function="PDIWT_PiledWharf_Main.KeyinCommands.Settings"/>
+    <!--Input part-->
+    <KeyinHandler Keyin="PDIWT_PiledWharf Input ImportFromFile" Function="PDIWT_PiledWharf_Main.KeyinCommands.Input_ImportFromFile"/>
+    <KeyinHandler Keyin="PDIWT_PiledWharf Input PilePlacement" Function="PDIWT_PiledWharf_Main.KeyinCommands.Input_PilePlacement"/>
+    <!--Process part-->
+    <KeyinHandler Keyin="PDIWT_PiledWharf Process CalculateWaveAndCurrentForce" Function="PDIWT_PiledWharf_Main.KeyinCommands.Process_CalculateWaveAndCurrentForce"/>
+    <KeyinHandler Keyin="PDIWT_PiledWharf Process CalculateBearingCapacity" Function="PDIWT_PiledWharf_Main.KeyinCommands.Process_CalculateBearingCapacity"/>
+    <KeyinHandler Keyin="PDIWT_PiledWharf Process DetectCollision" Function="PDIWT_PiledWharf_Main.KeyinCommands.Process_DetectCollision"/>
+    <!--Output part-->
+    <KeyinHandler Keyin="PDIWT_PiledWharf Output CalculationNote" Function="PDIWT_PiledWharf_Main.KeyinCommands.Output_CalculationNote"/>
+    <KeyinHandler Keyin="PDIWT_PiledWharf Output PilePositionDrawing" Function="PDIWT_PiledWharf_Main.KeyinCommands.Output_PilePositionDrawing"/>
   </KeyinHandlers>
 </KeyinTree>

@@ -4,10 +4,15 @@ using System.Windows;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Messaging;
+
 using PDIWT_PiledWharf_Core.Model;
+using PDIWT.Resources.Localization.MainModule;
+
 
 using BM = Bentley.MstnPlatformNET;
 using BD = Bentley.DgnPlatformNET;
@@ -34,8 +39,13 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         /// </summary>
         public SettingsViewModel()
         {
-            _pileType = new List<string>() { "Round", "Square" };
-            _selectedPileType = _pileType[0];
+            _pileTypes = new List<PileType>()
+            {
+                new PileType { NamePath = Resources.Round, Value = "Round" },
+                new PileType { NamePath = Resources.Square, Value = "Square" }
+            };
+
+            _selectedPileType = _pileTypes[0].Value;
             _pileSideLengthDiameter = 1000;
             _concreteModulus = 3.2e7;
             _concretePoisson = 0.2;
@@ -53,6 +63,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             _waveHeight = 1.0;
             _waveLength = 10;
             _wavePeriod = 20;
+            _hasInputError = false;
         }
 
         private Dictionary<string, string> _geometryPropValueDictionary = new Dictionary<string, string>();
@@ -92,14 +103,14 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             _wavePropValueDictionary.Add("WavePeriod", _wavePeriod.ToString());
         }
 
-        private List<string> _pileType;
+        private List<PileType> _pileTypes;
         /// <summary>
         /// PileType List
         /// </summary>
-        public List<string> PileType
+        public List<PileType> PileTypes
         {
-            get { return _pileType; }
-            set { Set(ref _pileType, value); }
+            get { return _pileTypes; }
+            set { Set(ref _pileTypes, value); }
         }
 
 
@@ -295,6 +306,17 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             set { Set(ref _wavePeriod, value); }
         }
 
+
+
+        private bool _hasInputError;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public bool HasInputError
+        {
+            get { return _hasInputError; }
+            set { Set(ref _hasInputError, value); }
+        }
         private RelayCommand _writeEnvParameters;
 
         /// <summary>
@@ -305,7 +327,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             get
             {
                 return _writeEnvParameters
-                    ?? (_writeEnvParameters = new RelayCommand(WriteEnvParametersExcuteMethod));
+                    ?? (_writeEnvParameters = new RelayCommand(WriteEnvParametersExcuteMethod, () => !_hasInputError));
             }
         }
 
@@ -323,10 +345,35 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                 BM.MessageCenter.Instance.ShowErrorMessage("Can't Write SettingsOnAtiveModel", "Can't Write SettingsOnAtiveModel", BM.MessageAlert.Balloon);
             BM.MessageCenter.Instance.ShowInfoMessage("Success", "Write Settings Onto AtiveModel", BM.MessageAlert.None);
 
+            MessengerInstance.Send(new NotificationMessage("CloseWindow"));
         }
 
+        private RelayCommand<ValidationErrorEventArgs> _inputHasError;
 
-
+        /// <summary>
+        /// Gets the InputHasError.
+        /// </summary>
+        public RelayCommand<ValidationErrorEventArgs> InputHasError
+        {
+            get
+            {
+                return _inputHasError
+                    ?? (_inputHasError = new RelayCommand<ValidationErrorEventArgs>(
+                    e =>
+                    {
+                        if (e.Action == ValidationErrorEventAction.Added)
+                        {
+                            MessageBox.Show($"{e.Error.ToString()} error occurs on {e.OriginalSource}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            e.Handled = true;
+                            _hasInputError = true;
+                        }
+                        else
+                        {
+                            _hasInputError = false;
+                        }
+                    }));
+            }
+        }
         ////public override void Cleanup()
         ////{
         ////    // Clean up if needed

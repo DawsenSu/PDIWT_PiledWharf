@@ -160,17 +160,6 @@
     <Compile Include="KeyinCommands.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Commands.xml">
@@ -179,6 +168,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PDIWT.Resources\PDIWT.Resources.csproj">
+      <Project>{1055ee07-f11a-49db-ad46-06e49948bda2}</Project>
+      <Name>PDIWT.Resources</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PDIWT_PiledWharf_Core\PDIWT_PiledWharf_Core.csproj">
       <Project>{7cc54bcc-187b-4424-8d66-c664cd7e6e5c}</Project>
       <Name>PDIWT_PiledWharf_Core</Name>

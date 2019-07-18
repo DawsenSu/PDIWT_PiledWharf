@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Windows;
+using System.Threading;
 using System.Windows.Controls;
 using PDIWT_PiledWharf_Core.ViewModel;
 
+using GalaSoft.MvvmLight.Messaging;
+
 using BM = Bentley.MstnPlatformNET;
 using BMWPF = Bentley.MstnPlatformNET.WPF;
+using System.Windows.Media.Imaging;
 
 namespace PDIWT_PiledWharf_Core
 {
@@ -25,6 +29,9 @@ namespace PDIWT_PiledWharf_Core
 
             m_wpfhelper = new BMWPF.WPFInteropHelper(this);
             m_wpfhelper.Attach(addIn, true, "MainWindow");
+            Icon = new BitmapImage(new Uri("pack://application:,,,/PDIWT.Resources;component/Images/Icons/Settings.ico", UriKind.RelativeOrAbsolute));
+
+            Messenger.Default.Register<NotificationMessage>(this,(e)=> { if (e.Notification == "CloseWindow" )this.Close(); });
         }
 
         ~MainWindow()

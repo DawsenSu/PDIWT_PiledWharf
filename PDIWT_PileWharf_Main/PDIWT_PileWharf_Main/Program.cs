@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Resources;
 
@@ -20,6 +21,7 @@ namespace PDIWT_PiledWharf_Main
         private Program(IntPtr mdlDesc) : base(mdlDesc)
         {
             Addin = this;
+            Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-US");
         }
 
         protected override int Run(string[] commandLine)
