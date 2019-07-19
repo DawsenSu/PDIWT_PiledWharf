@@ -26,7 +26,7 @@ namespace PDIWT_PiledWharf_Core.Model
         private static void HasErrorChanged(object sender, RoutedEventArgs e)
         {
             DependencyObject d = e.OriginalSource as DependencyObject;
-            HasErrorHelper.SetHasError(d, Validation.GetHasError(d));
+            HasErrorHelper.SetHasError(d, Validation.GetHasError(d));            
         }
     }
 

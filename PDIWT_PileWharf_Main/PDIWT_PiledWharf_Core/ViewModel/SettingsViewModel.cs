@@ -23,6 +23,7 @@ using BECN = Bentley.ECN;
 using BE = Bentley.ECObjects;
 using BEPQ = Bentley.EC.Persistence.Query;
 using BCI = Bentley.ECObjects.Instance;
+using System.Windows.Media;
 
 namespace PDIWT_PiledWharf_Core.ViewModel
 {
@@ -317,21 +318,23 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             get { return _hasInputError; }
             set { Set(ref _hasInputError, value); }
         }
-        private RelayCommand _writeEnvParameters;
 
+
+
+        private RelayCommand<Grid> _writeEnvParameters;
         /// <summary>
         /// Write the Environment related parameter to dgn model through EC
         /// </summary>
-        public RelayCommand WriteEnvParameters
+        public RelayCommand<Grid> WriteEnvParameters
         {
             get
             {
                 return _writeEnvParameters
-                    ?? (_writeEnvParameters = new RelayCommand(WriteEnvParametersExcuteMethod, () => !_hasInputError));
+                    ?? (_writeEnvParameters = new RelayCommand<Grid>(WriteEnvParametersExcuteMethod, grid => !EnumTextBoxHasError(grid)));
             }
         }
 
-        private void WriteEnvParametersExcuteMethod()
+        private void WriteEnvParametersExcuteMethod(Grid grid)
         {
             BuildPropValueDictionary();
             if (PDIWT_PiledWharf_Core_Cpp.ECFrameWorkWraper.WriteSettingsOnActiveModel("PDIWT.01.00.ecschema.xml", "PileGeometrySettings", _geometryPropValueDictionary)
@@ -348,32 +351,18 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             MessengerInstance.Send(new NotificationMessage("CloseWindow"));
         }
 
-        private RelayCommand<ValidationErrorEventArgs> _inputHasError;
-
-        /// <summary>
-        /// Gets the InputHasError.
-        /// </summary>
-        public RelayCommand<ValidationErrorEventArgs> InputHasError
+        private bool EnumTextBoxHasError(DependencyObject framework)
         {
-            get
+            foreach (var _item in LogicalTreeHelper.GetChildren(framework))
             {
-                return _inputHasError
-                    ?? (_inputHasError = new RelayCommand<ValidationErrorEventArgs>(
-                    e =>
-                    {
-                        if (e.Action == ValidationErrorEventAction.Added)
-                        {
-                            MessageBox.Show($"{e.Error.ToString()} error occurs on {e.OriginalSource}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                            e.Handled = true;
-                            _hasInputError = true;
-                        }
-                        else
-                        {
-                            _hasInputError = false;
-                        }
-                    }));
+                if (_item is DependencyObject)
+                    if (((_item is TextBox) && Validation.GetHasError((TextBox)_item)) || EnumTextBoxHasError((DependencyObject)_item))
+                        return true;
+
             }
+            return false;
         }
+
         ////public override void Cleanup()
         ////{
         ////    // Clean up if needed

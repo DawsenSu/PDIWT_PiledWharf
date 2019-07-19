@@ -14,9 +14,6 @@
     Width="300"
     Height="370"
     mc:Ignorable="d ignore">
-    <i:Interaction.Behaviors>
-        <model:NotifyErrorBehavior />
-    </i:Interaction.Behaviors>
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -32,16 +29,12 @@
     </Window.Resources>
 
     <Grid x:Name="MainLayoutRoot" Margin="4">
-        <!--<i:Interaction.Triggers>
-            <i:EventTrigger EventName="Validation.Error">
-                <mvvmLightCommand:EventToCommand Command="{Binding InputHasError}" PassEventArgsToCommand="True" />
-            </i:EventTrigger>
-        </i:Interaction.Triggers>-->
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <TabControl Grid.Row="0">
+
             <TabItem Header="{x:Static loc:Resources.Geometry}" TabIndex="0">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -72,15 +65,12 @@
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
-                        model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
                         TabIndex="2">
-                        <TextBox.Text>
-                            <Binding NotifyOnValidationError="True" Path="PileSideLengthDiameter">
-                                <Binding.ValidationRules>
-                                    <StaticResource ResourceKey="RangeValidationRule" />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
+                        <Binding NotifyOnValidationError="True" Path="PileSideLengthDiameter">
+                            <Binding.ValidationRules>
+                                <StaticResource ResourceKey="RangeValidationRule" />
+                            </Binding.ValidationRules>
+                        </Binding>
                     </TextBox>
                     <Label
                         Grid.Row="1"
@@ -110,15 +100,12 @@
                             <TextBox
                                 Grid.Row="0"
                                 Grid.Column="1"
-                                model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
                                 TabIndex="4">
-                                <TextBox.Text>
-                                    <Binding NotifyOnValidationError="True" Path="ConcreteModulus">
-                                        <Binding.ValidationRules>
-                                            <StaticResource ResourceKey="RangeValidationRule" />
-                                        </Binding.ValidationRules>
-                                    </Binding>
-                                </TextBox.Text>
+                                <Binding NotifyOnValidationError="True" Path="ConcreteModulus">
+                                    <Binding.ValidationRules>
+                                        <StaticResource ResourceKey="RangeValidationRule" />
+                                    </Binding.ValidationRules>
+                                </Binding>
                             </TextBox>
                             <Label
                                 Grid.Row="0"
@@ -131,15 +118,12 @@
                             <TextBox
                                 Grid.Row="1"
                                 Grid.Column="1"
-                                model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
                                 TabIndex="5">
-                                <TextBox.Text>
-                                    <Binding NotifyOnValidationError="True" Path="ConcretePoisson">
-                                        <Binding.ValidationRules>
-                                            <StaticResource ResourceKey="RangeValidationRule" />
-                                        </Binding.ValidationRules>
-                                    </Binding>
-                                </TextBox.Text>
+                                <Binding NotifyOnValidationError="True" Path="ConcretePoisson">
+                                    <Binding.ValidationRules>
+                                        <StaticResource ResourceKey="RangeValidationRule" />
+                                    </Binding.ValidationRules>
+                                </Binding>
                             </TextBox>
                             <Label
                                 Grid.Row="2"
@@ -148,15 +132,12 @@
                             <TextBox
                                 Grid.Row="2"
                                 Grid.Column="1"
-                                model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
                                 TabIndex="6">
-                                <TextBox.Text>
-                                    <Binding NotifyOnValidationError="True" Path="ConcreteDensity">
-                                        <Binding.ValidationRules>
-                                            <StaticResource ResourceKey="RangeValidationRule" />
-                                        </Binding.ValidationRules>
-                                    </Binding>
-                                </TextBox.Text>
+                                <Binding NotifyOnValidationError="True" Path="ConcreteDensity">
+                                    <Binding.ValidationRules>
+                                        <StaticResource ResourceKey="RangeValidationRule" />
+                                    </Binding.ValidationRules>
+                                </Binding>
                             </TextBox>
                             <Label
                                 Grid.Row="2"
@@ -169,15 +150,12 @@
                             <TextBox
                                 Grid.Row="3"
                                 Grid.Column="1"
-                                model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
                                 TabIndex="7">
-                                <TextBox.Text>
-                                    <Binding NotifyOnValidationError="True" Path="ConcreteUnderWaterDensity">
-                                        <Binding.ValidationRules>
-                                            <StaticResource ResourceKey="RangeValidationRule" />
-                                        </Binding.ValidationRules>
-                                    </Binding>
-                                </TextBox.Text>
+                                <Binding NotifyOnValidationError="True" Path="ConcreteUnderWaterDensity">
+                                    <Binding.ValidationRules>
+                                        <StaticResource ResourceKey="RangeValidationRule" />
+                                    </Binding.ValidationRules>
+                                </Binding>
                             </TextBox>
                             <Label
                                 Grid.Row="3"
@@ -204,15 +182,12 @@
                             <TextBox
                                 Grid.Row="0"
                                 Grid.Column="1"
-                                model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
                                 TabIndex="8">
-                                <TextBox.Text>
-                                    <Binding NotifyOnValidationError="True" Path="SteelModulus">
-                                        <Binding.ValidationRules>
-                                            <StaticResource ResourceKey="RangeValidationRule" />
-                                        </Binding.ValidationRules>
-                                    </Binding>
-                                </TextBox.Text>
+                                <Binding NotifyOnValidationError="True" Path="SteelModulus">
+                                    <Binding.ValidationRules>
+                                        <StaticResource ResourceKey="RangeValidationRule" />
+                                    </Binding.ValidationRules>
+                                </Binding>
                             </TextBox>
                             <Label
                                 Grid.Row="0"
@@ -225,15 +200,12 @@
                             <TextBox
                                 Grid.Row="1"
                                 Grid.Column="1"
-                                model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
                                 TabIndex="9">
-                                <TextBox.Text>
-                                    <Binding NotifyOnValidationError="True" Path="SteelPoisson">
-                                        <Binding.ValidationRules>
-                                            <StaticResource ResourceKey="RangeValidationRule" />
-                                        </Binding.ValidationRules>
-                                    </Binding>
-                                </TextBox.Text>
+                                <Binding NotifyOnValidationError="True" Path="SteelPoisson">
+                                    <Binding.ValidationRules>
+                                        <StaticResource ResourceKey="RangeValidationRule" />
+                                    </Binding.ValidationRules>
+                                </Binding>
                             </TextBox>
                             <Label
                                 Grid.Row="2"
@@ -242,15 +214,12 @@
                             <TextBox
                                 Grid.Row="2"
                                 Grid.Column="1"
-                                model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
                                 TabIndex="10">
-                                <TextBox.Text>
-                                    <Binding NotifyOnValidationError="True" Path="SteelDensity">
-                                        <Binding.ValidationRules>
-                                            <StaticResource ResourceKey="RangeValidationRule" />
-                                        </Binding.ValidationRules>
-                                    </Binding>
-                                </TextBox.Text>
+                                <Binding NotifyOnValidationError="True" Path="SteelDensity">
+                                    <Binding.ValidationRules>
+                                        <StaticResource ResourceKey="RangeValidationRule" />
+                                    </Binding.ValidationRules>
+                                </Binding>
                             </TextBox>
                             <Label
                                 Grid.Row="2"
@@ -266,21 +235,14 @@
                                 <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Content="{x:Static loc:Resources.Density}" />
-                            <TextBox
-                                Grid.Column="1"
-                                model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
-                                TabIndex="11">
-                                <TextBox.Text>
-                                    <Binding NotifyOnValidationError="True" Path="WaterDensity">
-                                        <Binding.ValidationRules>
-                                            <StaticResource ResourceKey="RangeValidationRule" />
-                                        </Binding.ValidationRules>
-                                    </Binding>
-                                </TextBox.Text>
+                            <TextBox Grid.Column="1" TabIndex="11">
+                                <Binding NotifyOnValidationError="True" Path="WaterDensity">
+                                    <Binding.ValidationRules>
+                                        <StaticResource ResourceKey="RangeValidationRule" />
+                                    </Binding.ValidationRules>
+                                </Binding>
                             </TextBox>
-
                             <Label Grid.Column="2" Content="kN/m3" />
-
                         </Grid>
                     </GroupBox>
                 </StackPanel>
@@ -306,15 +268,12 @@
                     <TextBox
                         Grid.Row="0"
                         Grid.Column="1"
-                        model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
                         TabIndex="13">
-                        <TextBox.Text>
-                            <Binding NotifyOnValidationError="True" Path="HAT">
-                                <Binding.ValidationRules>
-                                    <StaticResource ResourceKey="RangeValidationRule" />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
+                        <Binding NotifyOnValidationError="True" Path="HAT">
+                            <Binding.ValidationRules>
+                                <StaticResource ResourceKey="RangeValidationRule" />
+                            </Binding.ValidationRules>
+                        </Binding>
                     </TextBox>
                     <Label
                         Grid.Row="0"
@@ -327,15 +286,12 @@
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
-                        model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
                         TabIndex="14">
-                        <TextBox.Text>
-                            <Binding NotifyOnValidationError="True" Path="MHW">
-                                <Binding.ValidationRules>
-                                    <StaticResource ResourceKey="RangeValidationRule" />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
+                        <Binding NotifyOnValidationError="True" Path="MHW">
+                            <Binding.ValidationRules>
+                                <StaticResource ResourceKey="RangeValidationRule" />
+                            </Binding.ValidationRules>
+                        </Binding>
                     </TextBox>
                     <Label
                         Grid.Row="1"
@@ -348,15 +304,12 @@
                     <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
-                        model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
                         TabIndex="15">
-                        <TextBox.Text>
-                            <Binding NotifyOnValidationError="True" Path="MSL">
-                                <Binding.ValidationRules>
-                                    <StaticResource ResourceKey="RangeValidationRule" />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
+                        <Binding NotifyOnValidationError="True" Path="MSL">
+                            <Binding.ValidationRules>
+                                <StaticResource ResourceKey="RangeValidationRule" />
+                            </Binding.ValidationRules>
+                        </Binding>
                     </TextBox>
                     <Label
                         Grid.Row="2"
@@ -369,15 +322,12 @@
                     <TextBox
                         Grid.Row="3"
                         Grid.Column="1"
-                        model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
                         TabIndex="16">
-                        <TextBox.Text>
-                            <Binding NotifyOnValidationError="True" Path="MLW">
-                                <Binding.ValidationRules>
-                                    <StaticResource ResourceKey="RangeValidationRule" />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
+                        <Binding NotifyOnValidationError="True" Path="MLW">
+                            <Binding.ValidationRules>
+                                <StaticResource ResourceKey="RangeValidationRule" />
+                            </Binding.ValidationRules>
+                        </Binding>
                     </TextBox>
                     <Label
                         Grid.Row="3"
@@ -390,15 +340,12 @@
                     <TextBox
                         Grid.Row="4"
                         Grid.Column="1"
-                        model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
                         TabIndex="17">
-                        <TextBox.Text>
-                            <Binding NotifyOnValidationError="True" Path="LAT">
-                                <Binding.ValidationRules>
-                                    <StaticResource ResourceKey="RangeValidationRule" />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
+                        <Binding NotifyOnValidationError="True" Path="LAT">
+                            <Binding.ValidationRules>
+                                <StaticResource ResourceKey="RangeValidationRule" />
+                            </Binding.ValidationRules>
+                        </Binding>
                     </TextBox>
                     <Label
                         Grid.Row="4"
@@ -425,15 +372,12 @@
                     <TextBox
                         Grid.Row="0"
                         Grid.Column="1"
-                        model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
                         TabIndex="19">
-                        <TextBox.Text>
-                            <Binding NotifyOnValidationError="True" Path="WaveHeight">
-                                <Binding.ValidationRules>
-                                    <StaticResource ResourceKey="RangeValidationRule" />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
+                        <Binding NotifyOnValidationError="True" Path="WaveHeight">
+                            <Binding.ValidationRules>
+                                <StaticResource ResourceKey="RangeValidationRule" />
+                            </Binding.ValidationRules>
+                        </Binding>
                     </TextBox>
                     <Label
                         Grid.Row="0"
@@ -446,15 +390,12 @@
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
-                        model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
                         TabIndex="20">
-                        <TextBox.Text>
-                            <Binding NotifyOnValidationError="True" Path="WaveLength">
-                                <Binding.ValidationRules>
-                                    <StaticResource ResourceKey="RangeValidationRule" />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
+                        <Binding NotifyOnValidationError="True" Path="WaveLength">
+                            <Binding.ValidationRules>
+                                <StaticResource ResourceKey="RangeValidationRule" />
+                            </Binding.ValidationRules>
+                        </Binding>
                     </TextBox>
                     <Label
                         Grid.Row="1"
@@ -467,15 +408,12 @@
                     <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
-                        model:HasErrorHelper.HasError="{Binding HasInputError, Mode=OneWayToSource}"
                         TabIndex="21">
-                        <TextBox.Text>
-                            <Binding NotifyOnValidationError="True" Path="WavePeriod">
-                                <Binding.ValidationRules>
-                                    <StaticResource ResourceKey="RangeValidationRule" />
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </TextBox.Text>
+                        <Binding NotifyOnValidationError="True" Path="WavePeriod">
+                            <Binding.ValidationRules>
+                                <StaticResource ResourceKey="RangeValidationRule" />
+                            </Binding.ValidationRules>
+                        </Binding>
                     </TextBox>
                     <Label
                         Grid.Row="2"
@@ -490,6 +428,7 @@
             Orientation="Horizontal">
             <Button
                 Command="{Binding WriteEnvParameters}"
+                CommandParameter="{Binding ElementName=MainLayoutRoot}"
                 Content="{x:Static loc:Resources.OK}"
                 IsDefault="True"
                 Style="{StaticResource BasicButton}"
