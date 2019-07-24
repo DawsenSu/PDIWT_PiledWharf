@@ -28,17 +28,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         static ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
-
-            if (ViewModelBase.IsInDesignModeStatic)
-            {
-                SimpleIoc.Default.Register<IDataService, Design.DesignDataService>();
-            }
-            else
-            {
-                SimpleIoc.Default.Register<IDataService, DataService>();
-            }
-
             SimpleIoc.Default.Register<SettingsViewModel>();
+            SimpleIoc.Default.Register<Input_ImportFromFileViewModel>();
         }
 
         /// <summary>
@@ -52,6 +43,17 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<SettingsViewModel>();
+            }
+        }
+
+        /// <summary>
+        /// Gets the view's ViewModel.
+        /// </summary>
+        public Input_ImportFromFileViewModel Input_ImportFromFile
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<Input_ImportFromFileViewModel>();
             }
         }
 

@@ -189,4 +189,109 @@
   <data name="Error" xml:space="preserve">
     <value>错误</value>
   </data>
+  <data name="ImportFromFile" xml:space="preserve">
+    <value>从文件中导入</value>
+  </data>
+  <data name="Choice" xml:space="preserve">
+    <value>选项</value>
+  </data>
+  <data name="StaadFile" xml:space="preserve">
+    <value>Staad文件</value>
+  </data>
+  <data name="ExcelFile" xml:space="preserve">
+    <value>Excel文件</value>
+  </data>
+  <data name="Path" xml:space="preserve">
+    <value>路径</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>浏览</value>
+  </data>
+  <data name="StaadFileFilter" xml:space="preserve">
+    <value>Staad 文件(*.std)|*.std</value>
+  </data>
+  <data name="ExcelFileFilter" xml:space="preserve">
+    <value>Excel 文件(*.xlsx)|*.xlsx</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>导入</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>基本</value>
+  </data>
+  <data name="StructureImportanceFactor" xml:space="preserve">
+    <value>结构重要性系数</value>
+  </data>
+  <data name="AntiEarthquakeIntensity" xml:space="preserve">
+    <value>抗震设防烈度</value>
+  </data>
+  <data name="PileWeightPartialFactor" xml:space="preserve">
+    <value>桩自重分项系数</value>
+  </data>
+  <data name="FixedDepthFactor" xml:space="preserve">
+    <value>嵌固深度系数η</value>
+  </data>
+  <data name="AntiEarthquakeAdjustmentFactor" xml:space="preserve">
+    <value>抗震调整系数</value>
+  </data>
+  <data name="PileBasicInformation" xml:space="preserve">
+    <value>桩基基本信息</value>
+  </data>
+  <data name="PileSpatialInformation" xml:space="preserve">
+    <value>桩基空间信息</value>
+  </data>
+  <data name="SquarePile" xml:space="preserve">
+    <value>方桩</value>
+  </data>
+  <data name="TubePile" xml:space="preserve">
+    <value>管桩</value>
+  </data>
+  <data name="PHCTubePile" xml:space="preserve">
+    <value>PHC管桩</value>
+  </data>
+  <data name="SteelTubePile" xml:space="preserve">
+    <value>Steel Tube Pile</value>
+  </data>
+  <data name="PileWidth" xml:space="preserve">
+    <value>桩宽(桩径)</value>
+  </data>
+  <data name="PileInsideDiameter" xml:space="preserve">
+    <value>桩内径</value>
+  </data>
+  <data name="IsFilledWithConcrete" xml:space="preserve">
+    <value>是否灌芯</value>
+  </data>
+  <data name="ConcreteCoreLength" xml:space="preserve">
+    <value>灌芯长度</value>
+  </data>
+  <data name="PileTipSealType" xml:space="preserve">
+    <value>桩尖封口类型</value>
+  </data>
+  <data name="PileTip_TotalSeal" xml:space="preserve">
+    <value>全封口</value>
+  </data>
+  <data name="PileTip_HalfSeal" xml:space="preserve">
+    <value>半封口</value>
+  </data>
+  <data name="PileTip_SingleBorad" xml:space="preserve">
+    <value>单隔板</value>
+  </data>
+  <data name="PileTip_DoubleBoard" xml:space="preserve">
+    <value>双隔板</value>
+  </data>
+  <data name="PileTip_QuadBoard" xml:space="preserve">
+    <value>四隔板</value>
+  </data>
+  <data name="PileNumber" xml:space="preserve">
+    <value>桩号</value>
+  </data>
+  <data name="PileTopPoint" xml:space="preserve">
+    <value>桩顶坐标</value>
+  </data>
+  <data name="PileBottomPoint" xml:space="preserve">
+    <value>桩底坐标</value>
+  </data>
+  <data name="PileTypeIllustration" xml:space="preserve">
+    <value>桩型示意图</value>
+  </data>
 </root>

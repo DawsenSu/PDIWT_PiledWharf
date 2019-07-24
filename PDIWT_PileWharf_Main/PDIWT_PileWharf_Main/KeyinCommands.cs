@@ -12,13 +12,14 @@ namespace PDIWT_PiledWharf_Main
         #region Settings Key-ins
         public static void Settings(String unparsed)
         {
-            PDIWT_PiledWharf_Core.MainWindow.ShowWindow(Program.Addin);
+            PDIWT_PiledWharf_Core.SettingsWindow.ShowWindow(Program.Addin);
         }
         #endregion
 
         public static void Input_ImportFromFile(string unparsed)
         {
-            Bentley.MstnPlatformNET.MessageCenter.Instance.StatusMessage = "Input Import FromFile";
+            PDIWT_PiledWharf_Core.Input_ImportFromFileWindow.ShowWindow(Program.Addin);
+            //Bentley.MstnPlatformNET.MessageCenter.Instance.StatusMessage = "Input Import FromFile";
         }
         public static void Input_PilePlacement(string unparsed)
         {

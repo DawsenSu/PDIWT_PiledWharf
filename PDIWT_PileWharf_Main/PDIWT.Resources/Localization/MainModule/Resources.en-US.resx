@@ -189,4 +189,109 @@
   <data name="Error" xml:space="preserve">
     <value>Error</value>
   </data>
+  <data name="ImportFromFile" xml:space="preserve">
+    <value>Import From File</value>
+  </data>
+  <data name="Choice" xml:space="preserve">
+    <value>Choice</value>
+  </data>
+  <data name="StaadFile" xml:space="preserve">
+    <value>Staad File</value>
+  </data>
+  <data name="ExcelFile" xml:space="preserve">
+    <value>Excel File</value>
+  </data>
+  <data name="Path" xml:space="preserve">
+    <value>Path</value>
+  </data>
+  <data name="Browse" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="StaadFileFilter" xml:space="preserve">
+    <value>Staad File(*.std)|*.std</value>
+  </data>
+  <data name="ExcelFileFilter" xml:space="preserve">
+    <value>Excel File(*.xlsx)|*.xlsx</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="StructureImportanceFactor" xml:space="preserve">
+    <value>Structure Importance Factoer</value>
+  </data>
+  <data name="AntiEarthquakeIntensity" xml:space="preserve">
+    <value>Anti-Earthquake Intensity</value>
+  </data>
+  <data name="PileWeightPartialFactor" xml:space="preserve">
+    <value>Pile Weight Partial Factor</value>
+  </data>
+  <data name="FixedDepthFactor" xml:space="preserve">
+    <value>Fixed Depth Factorη</value>
+  </data>
+  <data name="AntiEarthquakeAdjustmentFactor" xml:space="preserve">
+    <value>Anti-Earthquake Adjustment Factor</value>
+  </data>
+  <data name="PileBasicInformation" xml:space="preserve">
+    <value>Pile Basic Information</value>
+  </data>
+  <data name="PileSpatialInformation" xml:space="preserve">
+    <value>Pile Spatial Inforamtion</value>
+  </data>
+  <data name="SquarePile" xml:space="preserve">
+    <value>Square Pile</value>
+  </data>
+  <data name="TubePile" xml:space="preserve">
+    <value>Tube Pile</value>
+  </data>
+  <data name="PHCTubePile" xml:space="preserve">
+    <value>PHC Tube Pile</value>
+  </data>
+  <data name="SteelTubePile" xml:space="preserve">
+    <value>Steel Tube Pile</value>
+  </data>
+  <data name="PileWidth" xml:space="preserve">
+    <value>Pile Width(Pile Outside Diameter)</value>
+  </data>
+  <data name="PileInsideDiameter" xml:space="preserve">
+    <value>Pile Inside Diameter</value>
+  </data>
+  <data name="IsFilledWithConcrete" xml:space="preserve">
+    <value>Is Filled With Concrete</value>
+  </data>
+  <data name="ConcreteCoreLength" xml:space="preserve">
+    <value>Concrete Core Length</value>
+  </data>
+  <data name="PileTipSealType" xml:space="preserve">
+    <value>Pile Tip Seal Type</value>
+  </data>
+  <data name="PileTip_TotalSeal" xml:space="preserve">
+    <value>Total Seal</value>
+  </data>
+  <data name="PileTip_HalfSeal" xml:space="preserve">
+    <value>Half Seal</value>
+  </data>
+  <data name="PileTip_SingleBorad" xml:space="preserve">
+    <value>Single Board</value>
+  </data>
+  <data name="PileTip_DoubleBoard" xml:space="preserve">
+    <value>Double Board</value>
+  </data>
+  <data name="PileTip_QuadBoard" xml:space="preserve">
+    <value>Quadruple Board</value>
+  </data>
+  <data name="PileNumber" xml:space="preserve">
+    <value>Pile Number</value>
+  </data>
+  <data name="PileTopPoint" xml:space="preserve">
+    <value>Top Point</value>
+  </data>
+  <data name="PileBottomPoint" xml:space="preserve">
+    <value>Bottom Point</value>
+  </data>
+  <data name="PileTypeIllustration" xml:space="preserve">
+    <value>Pile Type Illustration</value>
+  </data>
 </root>

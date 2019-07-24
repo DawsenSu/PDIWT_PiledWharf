@@ -1,5 +1,5 @@
 ﻿<Window
-    x:Class="PDIWT_PiledWharf_Core.MainWindow"
+    x:Class="PDIWT_PiledWharf_Core.SettingsWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -18,12 +18,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Skins/MainSkin.xaml" />
-                <ResourceDictionary>
-                    <valid:RangeValidationRule
-                        x:Key="RangeValidationRule"
-                        Max="1e20"
-                        Min="-1e20" />
-                </ResourceDictionary>
+                <ResourceDictionary />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -35,7 +30,7 @@
         </Grid.RowDefinitions>
         <TabControl Grid.Row="0">
 
-            <TabItem Header="{x:Static loc:Resources.Geometry}" TabIndex="0">
+            <!--<TabItem Header="{x:Static loc:Resources.Geometry}" TabIndex="0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
@@ -68,7 +63,7 @@
                         TabIndex="2">
                         <Binding NotifyOnValidationError="True" Path="PileSideLengthDiameter">
                             <Binding.ValidationRules>
-                                <StaticResource ResourceKey="RangeValidationRule" />
+                                <StaticResource ResourceKey="RealRangeValidationRule" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox>
@@ -77,10 +72,69 @@
                         Grid.Column="2"
                         Content="mm" />
                 </Grid>
+            </TabItem>-->
+
+            <TabItem Header="{x:Static loc:Resources.General}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Content="{x:Static loc:Resources.StructureImportanceFactor}" />
+                    <TextBox Grid.Row="0" Grid.Column="1">
+                        <Binding NotifyOnValidationError="True" Path="StructureImportanceFactor">
+                            <Binding.ValidationRules>
+                                <StaticResource ResourceKey="RealRangeValidationRule" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox>
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Content="{x:Static loc:Resources.AntiEarthquakeIntensity}" />
+                    <TextBox Grid.Row="1" Grid.Column="1">
+                        <Binding NotifyOnValidationError="True" Path="AntiEarthquakeIntensity">
+                            <Binding.ValidationRules>
+                                <StaticResource ResourceKey="RealRangeValidationRule" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox>
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Content="{x:Static loc:Resources.FixedDepthFactor}" />
+                    <TextBox Grid.Row="2" Grid.Column="1">
+                        <Binding NotifyOnValidationError="True" Path="FixedDepthFactor">
+                            <Binding.ValidationRules>
+                                <StaticResource ResourceKey="RealRangeValidationRule" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox>
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Content="{x:Static loc:Resources.AntiEarthquakeAdjustmentFactor}" />
+                    <TextBox Grid.Row="3" Grid.Column="1">
+                        <Binding NotifyOnValidationError="True" Path="AntiEarthquakeAdjustmentFactor">
+                            <Binding.ValidationRules>
+                                <StaticResource ResourceKey="RealRangeValidationRule" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox>
+                </Grid>
             </TabItem>
             <TabItem Header="{x:Static loc:Resources.Material}" TabIndex="3">
                 <StackPanel>
-                    <GroupBox Header="{x:Static loc:Resources.Concrete}">
+                    <GroupBox Foreground="{StaticResource GroupBoxCaptionColor}" Header="{x:Static loc:Resources.Concrete}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -103,7 +157,7 @@
                                 TabIndex="4">
                                 <Binding NotifyOnValidationError="True" Path="ConcreteModulus">
                                     <Binding.ValidationRules>
-                                        <StaticResource ResourceKey="RangeValidationRule" />
+                                        <StaticResource ResourceKey="RealRangeValidationRule" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox>
@@ -121,7 +175,7 @@
                                 TabIndex="5">
                                 <Binding NotifyOnValidationError="True" Path="ConcretePoisson">
                                     <Binding.ValidationRules>
-                                        <StaticResource ResourceKey="RangeValidationRule" />
+                                        <StaticResource ResourceKey="RealRangeValidationRule" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox>
@@ -135,7 +189,7 @@
                                 TabIndex="6">
                                 <Binding NotifyOnValidationError="True" Path="ConcreteDensity">
                                     <Binding.ValidationRules>
-                                        <StaticResource ResourceKey="RangeValidationRule" />
+                                        <StaticResource ResourceKey="RealRangeValidationRule" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox>
@@ -153,7 +207,7 @@
                                 TabIndex="7">
                                 <Binding NotifyOnValidationError="True" Path="ConcreteUnderWaterDensity">
                                     <Binding.ValidationRules>
-                                        <StaticResource ResourceKey="RangeValidationRule" />
+                                        <StaticResource ResourceKey="RealRangeValidationRule" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox>
@@ -163,7 +217,7 @@
                                 Content="kN/m3" />
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="{x:Static loc:Resources.Steel}">
+                    <GroupBox Foreground="{StaticResource GroupBoxCaptionColor}" Header="{x:Static loc:Resources.Steel}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -185,7 +239,7 @@
                                 TabIndex="8">
                                 <Binding NotifyOnValidationError="True" Path="SteelModulus">
                                     <Binding.ValidationRules>
-                                        <StaticResource ResourceKey="RangeValidationRule" />
+                                        <StaticResource ResourceKey="RealRangeValidationRule" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox>
@@ -203,7 +257,7 @@
                                 TabIndex="9">
                                 <Binding NotifyOnValidationError="True" Path="SteelPoisson">
                                     <Binding.ValidationRules>
-                                        <StaticResource ResourceKey="RangeValidationRule" />
+                                        <StaticResource ResourceKey="RealRangeValidationRule" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox>
@@ -217,7 +271,7 @@
                                 TabIndex="10">
                                 <Binding NotifyOnValidationError="True" Path="SteelDensity">
                                     <Binding.ValidationRules>
-                                        <StaticResource ResourceKey="RangeValidationRule" />
+                                        <StaticResource ResourceKey="RealRangeValidationRule" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox>
@@ -227,7 +281,7 @@
                                 Content="kN/m3" />
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="{x:Static loc:Resources.Water}">
+                    <GroupBox Foreground="{StaticResource GroupBoxCaptionColor}" Header="{x:Static loc:Resources.Water}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="120" />
@@ -238,7 +292,7 @@
                             <TextBox Grid.Column="1" TabIndex="11">
                                 <Binding NotifyOnValidationError="True" Path="WaterDensity">
                                     <Binding.ValidationRules>
-                                        <StaticResource ResourceKey="RangeValidationRule" />
+                                        <StaticResource ResourceKey="RealRangeValidationRule" />
                                     </Binding.ValidationRules>
                                 </Binding>
                             </TextBox>
@@ -271,7 +325,7 @@
                         TabIndex="13">
                         <Binding NotifyOnValidationError="True" Path="HAT">
                             <Binding.ValidationRules>
-                                <StaticResource ResourceKey="RangeValidationRule" />
+                                <StaticResource ResourceKey="RealRangeValidationRule" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox>
@@ -289,7 +343,7 @@
                         TabIndex="14">
                         <Binding NotifyOnValidationError="True" Path="MHW">
                             <Binding.ValidationRules>
-                                <StaticResource ResourceKey="RangeValidationRule" />
+                                <StaticResource ResourceKey="RealRangeValidationRule" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox>
@@ -307,7 +361,7 @@
                         TabIndex="15">
                         <Binding NotifyOnValidationError="True" Path="MSL">
                             <Binding.ValidationRules>
-                                <StaticResource ResourceKey="RangeValidationRule" />
+                                <StaticResource ResourceKey="RealRangeValidationRule" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox>
@@ -325,7 +379,7 @@
                         TabIndex="16">
                         <Binding NotifyOnValidationError="True" Path="MLW">
                             <Binding.ValidationRules>
-                                <StaticResource ResourceKey="RangeValidationRule" />
+                                <StaticResource ResourceKey="RealRangeValidationRule" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox>
@@ -343,7 +397,7 @@
                         TabIndex="17">
                         <Binding NotifyOnValidationError="True" Path="LAT">
                             <Binding.ValidationRules>
-                                <StaticResource ResourceKey="RangeValidationRule" />
+                                <StaticResource ResourceKey="RealRangeValidationRule" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox>
@@ -375,7 +429,7 @@
                         TabIndex="19">
                         <Binding NotifyOnValidationError="True" Path="WaveHeight">
                             <Binding.ValidationRules>
-                                <StaticResource ResourceKey="RangeValidationRule" />
+                                <StaticResource ResourceKey="RealRangeValidationRule" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox>
@@ -393,7 +447,7 @@
                         TabIndex="20">
                         <Binding NotifyOnValidationError="True" Path="WaveLength">
                             <Binding.ValidationRules>
-                                <StaticResource ResourceKey="RangeValidationRule" />
+                                <StaticResource ResourceKey="RealRangeValidationRule" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox>
@@ -411,7 +465,7 @@
                         TabIndex="21">
                         <Binding NotifyOnValidationError="True" Path="WavePeriod">
                             <Binding.ValidationRules>
-                                <StaticResource ResourceKey="RangeValidationRule" />
+                                <StaticResource ResourceKey="RealRangeValidationRule" />
                             </Binding.ValidationRules>
                         </Binding>
                     </TextBox>

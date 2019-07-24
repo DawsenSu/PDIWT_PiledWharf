@@ -46,8 +46,14 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                 new PileType { NamePath = Resources.Square, Value = "Square" }
             };
 
+            _structureImportanceFactor = 1.1;
+            _antiearthquakeIntensity = 1.0;
+            _fixedDepthFactor = 1.0;
+            _antiEarthquakeAdjustmentFactor = 1.0;
+
             _selectedPileType = _pileTypes[0].Value;
             _pileSideLengthDiameter = 1000;
+
             _concreteModulus = 3.2e7;
             _concretePoisson = 0.2;
             _concreteDensity = 25;
@@ -56,17 +62,19 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             _steelPoisson = 0.2;
             _steelDensity = 78.5;
             _waterDensity = 10;
+
             _hat = 2;
             _mhw = 1;
             _msl = 0;
             _mlw = -1;
             _lat = -2;
+
             _waveHeight = 1.0;
             _waveLength = 10;
             _wavePeriod = 20;
-            _hasInputError = false;
         }
 
+        private Dictionary<string, string> _generalPropValueDicitionary = new Dictionary<string, string>();
         private Dictionary<string, string> _geometryPropValueDictionary = new Dictionary<string, string>();
         private Dictionary<string, string> _materialPropValueDictionary = new Dictionary<string, string>();
         private Dictionary<string, string> _waterLevelPropValueDictionary = new Dictionary<string, string>();
@@ -77,6 +85,12 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         /// </summary>
         private void BuildPropValueDictionary()
         {
+            _generalPropValueDicitionary.Clear();
+            _generalPropValueDicitionary.Add("StructureImportanceFactor", _structureImportanceFactor.ToString());
+            _generalPropValueDicitionary.Add("AntiEarthquakeIntensity", _antiearthquakeIntensity.ToString());
+            _generalPropValueDicitionary.Add("FixedDepthFactor", _fixedDepthFactor.ToString());
+            _generalPropValueDicitionary.Add("AntiEarthquakeAdjustmentFactor", _antiEarthquakeAdjustmentFactor.ToString());
+
             _geometryPropValueDictionary.Clear();
             _geometryPropValueDictionary.Add("PileType", _selectedPileType);
             _geometryPropValueDictionary.Add("PileSideLengthDiameter", _pileSideLengthDiameter.ToString());
@@ -123,6 +137,50 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         {
             get { return _selectedPileType; }
             set { Set(ref _selectedPileType, value); }
+        }
+
+
+        private double _structureImportanceFactor;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public double StructureImportanceFactor
+        {
+            get { return _structureImportanceFactor; }
+            set { Set(ref _structureImportanceFactor, value); }
+        }
+
+
+        private double _antiearthquakeIntensity;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public double AntiEarthquakeIntensity
+        {
+            get { return _antiearthquakeIntensity; }
+            set { Set(ref _antiearthquakeIntensity, value); }
+        }
+
+
+        private double _fixedDepthFactor;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public double FixedDepthFactor
+        {
+            get { return _fixedDepthFactor; }
+            set { Set(ref _fixedDepthFactor, value); }
+        }
+
+
+        private double _antiEarthquakeAdjustmentFactor;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public double AntiEarthquakeAdjustmentFactor
+        {
+            get { return _antiEarthquakeAdjustmentFactor; }
+            set { Set(ref _antiEarthquakeAdjustmentFactor, value); }
         }
 
         private double _pileSideLengthDiameter;
@@ -308,19 +366,6 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
 
-
-        private bool _hasInputError;
-        /// <summary>
-        /// Property Description
-        /// </summary>
-        public bool HasInputError
-        {
-            get { return _hasInputError; }
-            set { Set(ref _hasInputError, value); }
-        }
-
-
-
         private RelayCommand<Grid> _writeEnvParameters;
         /// <summary>
         /// Write the Environment related parameter to dgn model through EC
@@ -330,14 +375,14 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             get
             {
                 return _writeEnvParameters
-                    ?? (_writeEnvParameters = new RelayCommand<Grid>(WriteEnvParametersExcuteMethod, grid => !EnumTextBoxHasError(grid)));
+                    ?? (_writeEnvParameters = new RelayCommand<Grid>(WriteEnvParametersExcuteMethod, grid => !PDIWT_Helper.EnumTextBoxHasError(grid)));
             }
         }
 
         private void WriteEnvParametersExcuteMethod(Grid grid)
         {
             BuildPropValueDictionary();
-            if (PDIWT_PiledWharf_Core_Cpp.ECFrameWorkWraper.WriteSettingsOnActiveModel("PDIWT.01.00.ecschema.xml", "PileGeometrySettings", _geometryPropValueDictionary)
+            if (PDIWT_PiledWharf_Core_Cpp.ECFrameWorkWraper.WriteSettingsOnActiveModel("PDIWT.01.00.ecschema.xml", "GeneralSettings", _generalPropValueDicitionary)
                 == PDIWT_PiledWharf_Core_Cpp.SettingsWriteStatus.ERROR
                 || PDIWT_PiledWharf_Core_Cpp.ECFrameWorkWraper.WriteSettingsOnActiveModel("PDIWT.01.00.ecschema.xml", "PileMaterialSettings", _materialPropValueDictionary)
                 == PDIWT_PiledWharf_Core_Cpp.SettingsWriteStatus.ERROR
@@ -350,19 +395,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
             MessengerInstance.Send(new NotificationMessage("CloseWindow"));
         }
-
-        private bool EnumTextBoxHasError(DependencyObject framework)
-        {
-            foreach (var _item in LogicalTreeHelper.GetChildren(framework))
-            {
-                if (_item is DependencyObject)
-                    if (((_item is TextBox) && Validation.GetHasError((TextBox)_item)) || EnumTextBoxHasError((DependencyObject)_item))
-                        return true;
-
-            }
-            return false;
-        }
-
+        
         ////public override void Cleanup()
         ////{
         ////    // Clean up if needed

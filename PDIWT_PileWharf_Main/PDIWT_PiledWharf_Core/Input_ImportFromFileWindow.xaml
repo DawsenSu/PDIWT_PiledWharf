@@ -1,0 +1,270 @@
+﻿<Window
+    x:Class="PDIWT_PiledWharf_Core.Input_ImportFromFileWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:input="clr-namespace:System.Windows.Input;assembly=System"
+    xmlns:loc="clr-namespace:PDIWT.Resources.Localization.MainModule;assembly=PDIWT.Resources"
+    xmlns:local="clr-namespace:PDIWT_PiledWharf_Core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    Title="{x:Static loc:Resources.Import}"
+    Width="400"
+    Height="500"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Skins/MainSkin.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid x:Name="MainGridLayout">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <GroupBox Foreground="{StaticResource GroupBoxCaptionColor}" Header="{x:Static loc:Resources.PileBasicInformation}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.RowSpan="2" Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Content="{x:Static loc:Resources.PileType}" />
+                    <ComboBox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        ItemsSource="{Binding PileTypes, Mode=OneTime}"
+                        SelectedItem="{Binding SelectedPileType}" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Content="{x:Static loc:Resources.PileWidth}" />
+                    <TextBox Grid.Row="1" Grid.Column="1">
+                        <Binding NotifyOnValidationError="True" Path="PileWidth">
+                            <Binding.ValidationRules>
+                                <StaticResource ResourceKey="RealRangeValidationRule" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox>
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Content="{x:Static loc:Resources.PileInsideDiameter}" />
+                    <TextBox
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        IsEnabled="{Binding SelectedPileType, Converter={StaticResource RoundPileStringOfListToBooleanConverter}, Mode=OneWay}">
+                        <Binding NotifyOnValidationError="True" Path="PileInsideDiameter">
+                            <Binding.ValidationRules>
+                                <StaticResource ResourceKey="RealRangeValidationRule" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox>
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Content="{x:Static loc:Resources.ConcreteCoreLength}" />
+                    <TextBox
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        IsEnabled="{Binding SelectedPileType, Converter={StaticResource SteelPileStringOfListToBooleanConverter}, Mode=OneWay}">
+                        <Binding NotifyOnValidationError="True" Path="ConcreteCoreLength">
+                            <Binding.ValidationRules>
+                                <StaticResource ResourceKey="RealRangeValidationRule" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox>
+                    <Label
+                        Grid.Row="4"
+                        Grid.Column="0"
+                        Content="{x:Static loc:Resources.PileTipSealType}" />
+                    <ComboBox
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        IsEnabled="{Binding SelectedPileType, Converter={StaticResource SteelPileStringOfListToBooleanConverter}, Mode=OneWay}"
+                        ItemsSource="{Binding PileTipSealTypes, Mode=OneTime}"
+                        SelectedItem="{Binding SelectedPileTipType}" />
+                </Grid>
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Content="{x:Static loc:Resources.PileTypeIllustration}" />
+                <Canvas
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Width="100"
+                    Height="100"
+                    Margin="1">
+                    <TextBlock
+                        Canvas.Left="0"
+                        Canvas.Top="-3"
+                        FontSize="10"
+                        Text="{Binding SelectedPileType}" />
+                    <Rectangle
+                        Canvas.Left="10"
+                        Canvas.Top="10"
+                        Width="80"
+                        Height="80"
+                        Fill="#FFAAAAB0"
+                        Opacity="80"
+                        Stroke="Black"
+                        StrokeThickness="2"
+                        Visibility="{Binding SelectedPileType, Converter={StaticResource SquarePileStringOfListToVisibilityConverter}, Mode=OneWay}" />
+                    <Ellipse
+                        Canvas.Left="10"
+                        Canvas.Top="10"
+                        Width="80"
+                        Height="80"
+                        Fill="#FFAAAAB0"
+                        Stroke="Black"
+                        StrokeThickness="2"
+                        Visibility="Hidden" />
+                    <Path
+                        Canvas.Left="10"
+                        Canvas.Top="10"
+                        Width="80"
+                        Height="80"
+                        Fill="#FFAAAAB0"
+                        Stroke="Black"
+                        Visibility="{Binding SelectedPileType, Converter={StaticResource RoundPileStringOfListToVisibilityConverter}, Mode=OneWay}">
+                        <Path.Data>
+                            <CombinedGeometry GeometryCombineMode="Exclude">
+                                <CombinedGeometry.Geometry1>
+                                    <EllipseGeometry
+                                        Center="40,40"
+                                        RadiusX="40"
+                                        RadiusY="40" />
+                                </CombinedGeometry.Geometry1>
+                                <CombinedGeometry.Geometry2>
+                                    <EllipseGeometry
+                                        Center="40,40"
+                                        RadiusX="30"
+                                        RadiusY="30" />
+                                </CombinedGeometry.Geometry2>
+                            </CombinedGeometry>
+                        </Path.Data>
+                    </Path>
+                </Canvas>
+            </Grid>
+        </GroupBox>
+        <GroupBox
+            Grid.Row="1"
+            Foreground="{StaticResource GroupBoxCaptionColor}"
+            Header="{x:Static loc:Resources.PileSpatialInformation}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Header="{x:Static loc:Resources.Choice}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <RadioButton
+                                Grid.Row="0"
+                                Content="{x:Static loc:Resources.StaadFile}"
+                                GroupName="ImportFileType"
+                                IsChecked="{Binding IsStaadFileChecked}" />
+                            <RadioButton
+                                Grid.Row="1"
+                                Content="{x:Static loc:Resources.ExcelFile}"
+                                GroupName="ImportFileType"
+                                IsChecked="{Binding IsExcelFileChecked}" />
+                        </Grid>
+                    </GroupBox>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Content="{x:Static loc:Resources.Path}" />
+                        <TextBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Text="{Binding FilePath}" />
+                        <StackPanel
+                            Grid.Row="1"
+                            Grid.ColumnSpan="2"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                            <Button
+                                Command="{Binding BrowseFile}"
+                                Content="{x:Static loc:Resources.Browse}"
+                                Style="{StaticResource BasicButton}" />
+                            <Button
+                                Command="{Binding ImportFromFile}"
+                                Content="{x:Static loc:Resources.Import}"
+                                Style="{StaticResource BasicButton}" />
+
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+                <DataGrid
+                    x:Name="PileDataGrid"
+                    Grid.Row="1"
+                    AutoGenerateColumns="False"
+                    CanUserReorderColumns="False"
+                    ColumnWidth="*"
+                    ItemsSource="{Binding PileSpatialInformation}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Numbering}" Header="{x:Static loc:Resources.PileNumber}" />
+                        <DataGridTextColumn Binding="{Binding TopJoint}" Header="{x:Static loc:Resources.PileTopPoint}" />
+                        <DataGridTextColumn Binding="{Binding BottomJoint}" Header="{x:Static loc:Resources.PileBottomPoint}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </GroupBox>
+        <StackPanel
+            Grid.Row="2"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+                Command="{Binding CreatePiles}"
+                CommandParameter="{Binding ElementName=MainGridLayout}"
+                Content="{x:Static loc:Resources.OK}"
+                Style="{StaticResource BasicButton}" />
+            <Button
+                Click="Button_Click"
+                Content="{x:Static loc:Resources.Cancel}"
+                Style="{StaticResource BasicButton}" />
+        </StackPanel>
+    </Grid>
+
+</Window>

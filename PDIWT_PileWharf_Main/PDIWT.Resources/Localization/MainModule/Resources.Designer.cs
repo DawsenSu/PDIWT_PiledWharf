@@ -61,11 +61,47 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anti-Earthquake Adjustment Factor.
+        /// </summary>
+        public static string AntiEarthquakeAdjustmentFactor {
+            get {
+                return ResourceManager.GetString("AntiEarthquakeAdjustmentFactor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anti-Earthquake Intensity.
+        /// </summary>
+        public static string AntiEarthquakeIntensity {
+            get {
+                return ResourceManager.GetString("AntiEarthquakeIntensity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browse.
+        /// </summary>
+        public static string Browse {
+            get {
+                return ResourceManager.GetString("Browse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choice.
+        /// </summary>
+        public static string Choice {
+            get {
+                return ResourceManager.GetString("Choice", resourceCulture);
             }
         }
         
@@ -88,6 +124,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Concrete Core Length.
+        /// </summary>
+        public static string ConcreteCoreLength {
+            get {
+                return ResourceManager.GetString("ConcreteCoreLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Density.
         /// </summary>
         public static string Density {
@@ -106,11 +151,74 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Excel File.
+        /// </summary>
+        public static string ExcelFile {
+            get {
+                return ResourceManager.GetString("ExcelFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Excel File(*.xlsx)|*.xlsx.
+        /// </summary>
+        public static string ExcelFileFilter {
+            get {
+                return ResourceManager.GetString("ExcelFileFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fixed Depth Factorη.
+        /// </summary>
+        public static string FixedDepthFactor {
+            get {
+                return ResourceManager.GetString("FixedDepthFactor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General.
+        /// </summary>
+        public static string General {
+            get {
+                return ResourceManager.GetString("General", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Geometry.
         /// </summary>
         public static string Geometry {
             get {
                 return ResourceManager.GetString("Geometry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import.
+        /// </summary>
+        public static string Import {
+            get {
+                return ResourceManager.GetString("Import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import From File.
+        /// </summary>
+        public static string ImportFromFile {
+            get {
+                return ResourceManager.GetString("ImportFromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Is Filled With Concrete.
+        /// </summary>
+        public static string IsFilledWithConcrete {
+            get {
+                return ResourceManager.GetString("IsFilledWithConcrete", resourceCulture);
             }
         }
         
@@ -142,11 +250,164 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Path.
+        /// </summary>
+        public static string Path {
+            get {
+                return ResourceManager.GetString("Path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PHC Tube Pile.
+        /// </summary>
+        public static string PHCTubePile {
+            get {
+                return ResourceManager.GetString("PHCTubePile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pile Basic Inforamtion.
+        /// </summary>
+        public static string PileBasicInformation {
+            get {
+                return ResourceManager.GetString("PileBasicInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bottom Point.
+        /// </summary>
+        public static string PileBottomPoint {
+            get {
+                return ResourceManager.GetString("PileBottomPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pile Inside Diameter.
+        /// </summary>
+        public static string PileInsideDiameter {
+            get {
+                return ResourceManager.GetString("PileInsideDiameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pile Number.
+        /// </summary>
+        public static string PileNumber {
+            get {
+                return ResourceManager.GetString("PileNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pile Spatial Inforamtion.
+        /// </summary>
+        public static string PileSpatialInformation {
+            get {
+                return ResourceManager.GetString("PileSpatialInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Double Board.
+        /// </summary>
+        public static string PileTip_DoubleBoard {
+            get {
+                return ResourceManager.GetString("PileTip_DoubleBoard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Half Seal.
+        /// </summary>
+        public static string PileTip_HalfSeal {
+            get {
+                return ResourceManager.GetString("PileTip_HalfSeal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quadruple Board.
+        /// </summary>
+        public static string PileTip_QuadBoard {
+            get {
+                return ResourceManager.GetString("PileTip_QuadBoard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Single Board.
+        /// </summary>
+        public static string PileTip_SingleBorad {
+            get {
+                return ResourceManager.GetString("PileTip_SingleBorad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Seal.
+        /// </summary>
+        public static string PileTip_TotalSeal {
+            get {
+                return ResourceManager.GetString("PileTip_TotalSeal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pile Tip Seal Type.
+        /// </summary>
+        public static string PileTipSealType {
+            get {
+                return ResourceManager.GetString("PileTipSealType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top Point.
+        /// </summary>
+        public static string PileTopPoint {
+            get {
+                return ResourceManager.GetString("PileTopPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pile Type.
         /// </summary>
         public static string PileType {
             get {
                 return ResourceManager.GetString("PileType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pile Type Illustration.
+        /// </summary>
+        public static string PileTypeIllustration {
+            get {
+                return ResourceManager.GetString("PileTypeIllustration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pile Weight Partial Factor.
+        /// </summary>
+        public static string PileWeightPartialFactor {
+            get {
+                return ResourceManager.GetString("PileWeightPartialFactor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pile Width(Pile Outside Diameter).
+        /// </summary>
+        public static string PileWidth {
+            get {
+                return ResourceManager.GetString("PileWidth", resourceCulture);
             }
         }
         
@@ -196,6 +457,33 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Square Pile.
+        /// </summary>
+        public static string SquarePile {
+            get {
+                return ResourceManager.GetString("SquarePile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Staad File.
+        /// </summary>
+        public static string StaadFile {
+            get {
+                return ResourceManager.GetString("StaadFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Staad File(*.std)|*.std.
+        /// </summary>
+        public static string StaadFileFilter {
+            get {
+                return ResourceManager.GetString("StaadFileFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Steel.
         /// </summary>
         public static string Steel {
@@ -205,11 +493,38 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Steel Tube Pile.
+        /// </summary>
+        public static string SteelTubePile {
+            get {
+                return ResourceManager.GetString("SteelTubePile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Structure Importance Factoer.
+        /// </summary>
+        public static string StructureImportanceFactor {
+            get {
+                return ResourceManager.GetString("StructureImportanceFactor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Success.
         /// </summary>
         public static string Success {
             get {
                 return ResourceManager.GetString("Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tube Pile.
+        /// </summary>
+        public static string TubePile {
+            get {
+                return ResourceManager.GetString("TubePile", resourceCulture);
             }
         }
         
