@@ -6,9 +6,14 @@
 #include <DgnView\DgnElementSetTool.h>
 
 #include "MDL_TechTestCmd.h"
-#include "MDL_TechTest.h"
+#include "ElementCreator.h"
+#include "ClickSelectTool.h"
+//#include "MDL_TechTest.h"
+
 //#include "..\MixedBridge\MixedBridge4Cpp.h"
 //#include "..\NativeDLL\NativeDllTest.h"
+
+//int TestA(int a, int b);
 
 extern "C" __declspec(dllexport)
 void ShowMsgHelloWorld()
@@ -183,14 +188,30 @@ void createABsplineSurface(WCharCP unparsed)
 	pTool->InstallTool();
 }
 
+void CreateQueryTool(WCharCP unparsed)
+{
+	ClickSelectTool::InstallNewInstance(
+		1, 
+		ElementsQueryOptions::ElementsExampleQuery_Display);
+}
+
+void CreateSphereTool(WCharCP unparsed)
+{
+	double radius = 0.2 * g_1mu;
+	ElementCreator::CreateSphereToolImp(0,0,0, radius);
+}
+
 MdlCommandNumber cmdNums[] =
 {
 	{ (CmdHandler)createALine,		        CMD_HELLOWORLD_CREATE_LINE },
 	{ (CmdHandler)createAComplexShape,	    CMD_HELLOWORLD_CREATE_COMPLEXSHAPE },
 	{ (CmdHandler)createAProjectedSolid,	CMD_HELLOWORLD_CREATE_PROJECTEDSOLID },
 	{ (CmdHandler)createABsplineSurface,    CMD_HELLOWORLD_CREATE_BSPLINESURFACE },
+	{ (CmdHandler)CreateSphereTool,    CMD_HELLOWORLD_CREATE_SPHERESOLID },
+	{ (CmdHandler)CreateQueryTool,    CMD_HELLOWORLD_QUERY },
 	0
 };
+
 
 extern "C" DLLEXPORT void MdlMain(int argc, WCharCP argv[])
 {

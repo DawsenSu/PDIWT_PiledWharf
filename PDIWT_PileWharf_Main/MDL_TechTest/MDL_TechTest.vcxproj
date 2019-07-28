@@ -24,11 +24,19 @@
     <None Include="MDL_TechTest.r" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ClickSelectTool.cpp" />
+    <ClCompile Include="ElementCreator.cpp" />
+    <ClCompile Include="ElementsQueryHelper.cpp" />
     <ClCompile Include="MDL_TechTest.cpp" />
     <ClCompile Include="RayIntersectionTest.cpp" />
+    <ClCompile Include="TechTest.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ClickSelectTool.h" />
+    <ClInclude Include="ElementCreator.h" />
+    <ClInclude Include="ElementsQueryHelper.h" />
     <ClInclude Include="MDL_TechTest.h" />
+    <ClInclude Include="TechTest.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="exampleTool5BentleySdk\ReadMe.txt" />
@@ -85,6 +93,9 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Program Files\Bentley\MicroStationCONNECTSDK\include;</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Program Files\Bentley\MicroStationCONNECTSDK\include;</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

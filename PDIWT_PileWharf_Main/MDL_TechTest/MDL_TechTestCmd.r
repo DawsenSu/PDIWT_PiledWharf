@@ -16,16 +16,18 @@ enum CmdTableIds
 +----------------------------------------------------------------------*/
 CommandTable   CT_MAIN =
 { 
-    { 1,  CT_SUB,	PLACEMENT,	  REQ,		"HELLOWORLD" }, 
+    { 1,  CT_SUB,	PLACEMENT,	  REQ,		"HELLOWORLD" },
 };
 CommandTable	   CT_SUB =
 {
     { 1,  CT_CREATE,    INHERIT,          NONE, 	"CREATE" },
+	{ 2,  CT_NONE,    INHERIT,          NONE, 	"QUERY" },
 };
 CommandTable	   CT_CREATE =
 {
     { 1,  CT_NONE, 	INHERIT, 	  DEF, 	        "Line" },
     { 2,  CT_NONE, 	INHERIT, 	  NONE,        "ComplexShape" },
     { 3,  CT_NONE, 	INHERIT, 	  NONE,        "ProjectedSolid" },
-    { 4,  CT_NONE, 	INHERIT, 	  NONE,        "BsplineSurface",},
+    { 4,  CT_NONE, 	INHERIT, 	  NONE,        "BsplineSurface"},
+	{ 5,  CT_NONE, 	INHERIT, 	  NONE,        "SphereSolid"},
 };

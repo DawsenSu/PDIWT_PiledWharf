@@ -3,4 +3,4 @@
 // Used by Resource.rc
 
 // Next default values for new objects
-//
+

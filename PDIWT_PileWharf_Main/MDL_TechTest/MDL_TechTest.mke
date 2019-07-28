@@ -6,7 +6,12 @@ DEFAULT_TARGET_PROCESSOR_ARCHITECTURE=x64
 
 appName = MDL_TechTest
 
-appObjs = $(o)$(appName)$(oext)
+appObjs = $(o)$(appName)$(oext) \
+			$(o)ElementCreator$(oext) \
+			$(o)TechTest$(oext) \
+			$(o)ElementsQueryHelper$(oext) \
+			$(o)ClickSelectTool$(oext) \
+
 
 appRscs = $(o)$(appName).rsc $(o)$(appName)Cmd.rsc
 
@@ -37,10 +42,11 @@ DLM_NO_MANIFEST   = 1
 DLM_DEST	  = $(mdlapps)
 LINKER_LIBRARIES = $(mdlLibs)bentley.lib \
 	           $(mdlLibs)mdlbltin.lib \
+			   $(mdlLibs)RmgrTools.lib \
         	   $(mdlLibs)BentleyGeom.lib \
                    $(mdlLibs)DgnPlatform.lib \
 				   $(mdlLibs)BentleyAllocator.lib \
-				   $(mdlLibs)DgnView.lib \
+				   $(mdlLibs)DgnView.lib
 				   # $(mdlapps)NativeDLL.lib \
 				   # $(mdlapps)MixedBridge.lib
 
@@ -71,7 +77,15 @@ $(mdlapps)$(appName).ma     : $(appRscs)
 #-----------------------------------------------------------------------------------------
 #	Builds any necessary CODE modules and link them to DLL
 #-----------------------------------------------------------------------------------------
-$(o)$(appName)$(oext)       : $(baseDir)$(appName).cpp
+$(o)$(appName)$(oext)       : $(baseDir)$(appName).cpp		$(baseDir)ClickSelectTool.h		$(baseDir)ElementsQueryHelper.h
+
+$(o)ElementCreator$(oext)	: $(baseDir)ElementCreator.cpp		$(baseDir)ElementCreator.h
+
+$(o)TechTest$(oext)		: $(baseDir)TechTest.cpp		$(baseDir)TechTest.h
+
+$(o)ElementsQueryHelper$(oext)      : $(baseDir)ElementsQueryHelper.cpp		$(baseDir)ElementsQueryHelper.h
+
+$(o)ClickSelectTool$(oext)      : $(baseDir)ClickSelectTool.cpp   $(baseDir)ClickSelectTool.h	$(baseDir)ElementsQueryHelper.h
 
 %include dlmlink.mki
 
