@@ -3,6 +3,10 @@
 #include "PDIWT_PiledWharf_Core_Cpp.h"
 
 #pragma unmanaged
+
+//! ****************************************************
+//!		ECFramework Part 
+//! ****************************************************
 // Write setting into active dgnmodel
 StatusInt PDIWT_PiledWharf_Core_Cpp::PDIWTECFramework::WriteSettingsOnActiveModel(WString ecschemaFullName, WString ecClassName, bmap<WString, WString> propList)
 {
@@ -147,22 +151,359 @@ void PDIWT_PiledWharf_Core_Cpp::PDIWTECFramework::SetPropValueList(IECInstanceR 
 	}
 }
 
-#pragma managed
-
-
-PDIWT_PiledWharf_Core_Cpp::SettingsWriteStatus PDIWT_PiledWharf_Core_Cpp::ECFrameWorkWraper::WriteSettingsOnActiveModel(String^ ecSchemaFullName, String^ ecClassName, Dictionary<String^, String^>^ propList)
+//! ****************************************************
+//!		Pile Creation Part
+//! ****************************************************
+PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::PileEntityCreation()
 {
-	pin_ptr<const WCHAR> _ecSchemaFullName = PtrToStringChars(ecSchemaFullName);
-	pin_ptr<const WCHAR> _ecClassName = PtrToStringChars(ecClassName);
-	bmap<WString, WString> _ecPropValueList;
-	for each (auto _propvalue in propList)
-	{
-		pin_ptr<const WCHAR> _prop = PtrToStringChars(_propvalue.Key);
-		pin_ptr<const WCHAR> _value = PtrToStringChars(_propvalue.Value);
-		_ecPropValueList.Insert(_prop, _value);
-	}
-	if (PDIWTECFramework::WriteSettingsOnActiveModel(WString(_ecSchemaFullName), WString(_ecClassName), _ecPropValueList) == ERROR)
-		SettingsWriteStatus::ERROR;
-	return SettingsWriteStatus::SUCCESS;
+	_pileType = PileType::SqaurePile;
+	_pileWidth = 0;
+	_pileInsideDiameter = 0;
+	_pileConcreteCoreLength = 0;
+	_topPoint = DPoint3d::FromZero();
+	_bottomPoint = DPoint3d::FromZero();
+	InitSQLiteDb();
 }
+
+PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::~PileEntityCreation()
+{
+	sqlite3_close_v2(_db);
+}
+
+void PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::CreatPile()
+{
+	ISolidKernelEntityPtr _solid;
+	switch (_pileType)
+	{
+	case PileType::SqaurePile:
+		if (SUCCESS != CreateSquarePile(_solid))
+			mdlOutput_error(L"Fail to Create Pile!");
+		break;
+	case PileType::TubePile:
+		if (SUCCESS != CreateTubePile(_solid))
+			mdlOutput_error(L"Fail to Create Pile!");
+		break;
+	case PileType::PHCTubePile:
+		if (SUCCESS != CreatePHCTubePile(_solid))
+			mdlOutput_error(L"Fail to Create Pile!");
+		break;
+	case PileType::SteelTubePile:
+		if (SUCCESS != CreateSteelTubePile(_solid))
+			mdlOutput_error(L"Fail to Create Pile!");
+		break;
+	default:
+		break;
+	}
+	if (_solid != nullptr)
+	{
+		EditElementHandle _eeh;
+		if (SUCCESS != CreateWarperCellElement(_eeh, _solid))
+			mdlOutput_error(L"Fail to Attach IFC Information!");
+
+		if (SUCCESS != _eeh.AddToModel())
+			mdlOutput_error(L"Fail to add to element");
+
+		if(SUCCESS != BuildECInstanceOnElement(_eeh))
+			mdlOutput_error(L"Fail to attach information to element");
+	}
+}
+
+
+
+BentleyStatus PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::CreateSquarePile(ISolidKernelEntityPtr & out)
+{
+	//! There still problem for this
+	DVec3d _vectorX = DVec3d::FromCrossProduct(DVec3d::UnitY(), DVec3d::FromStartEnd(_bottomPoint, _topPoint));
+	DVec3d _vectorY = DVec3d::FromCrossProduct(DVec3d::UnitX(), DVec3d::FromStartEnd(_bottomPoint, _topPoint));
+	double _nouse;
+	if (!_vectorX.TryNormalize(_vectorX, _nouse) || !_vectorY.TryNormalize(_vectorY, _nouse))
+		return ERROR;
+	//mdlOutput_message(WPrintfString(L"(%f, %f, %f) -> [%f], original length: [%f]", _vectorY.x, _vectorY.y, _vectorY.z, _vectorY.Magnitude(), _nouse));
+	DgnBoxDetail _dgnBoxDetail = DgnBoxDetail::InitFromCenters(_bottomPoint, _topPoint, _vectorX, _vectorY, _pileWidth, _pileWidth, _pileWidth, _pileWidth, true);
+	ISolidPrimitivePtr _dgnBox = ISolidPrimitive::CreateDgnBox(_dgnBoxDetail);
+
+	return SolidUtil::Create::BodyFromSolidPrimitive(out, *_dgnBox, *ACTIVEMODEL);
+}
+
+BentleyStatus PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::CreateTubePile(ISolidKernelEntityPtr & out)
+{
+	DgnConeDetail _dgnConeDetail(_bottomPoint, _topPoint, _pileWidth / 2, _pileWidth / 2, true);
+	ISolidPrimitivePtr _dgnCone = ISolidPrimitive::CreateDgnCone(_dgnConeDetail);
+	return SolidUtil::Create::BodyFromSolidPrimitive(out, *_dgnCone, *ACTIVEMODEL);
+}
+
+BentleyStatus PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::CreatePHCTubePile(ISolidKernelEntityPtr & out)
+{
+	DgnConeDetail _dgnConeDetailOuter(_bottomPoint, _topPoint, _pileWidth / 2, _pileWidth / 2, true);
+	ISolidPrimitivePtr _dgnConeOuter = ISolidPrimitive::CreateDgnCone(_dgnConeDetailOuter);
+
+	DgnConeDetail _dgnConeDetailInner(_bottomPoint, _topPoint, _pileInsideDiameter / 2, _pileInsideDiameter / 2, true);
+	ISolidPrimitivePtr _dgnConeInner = ISolidPrimitive::CreateDgnCone(_dgnConeDetailInner);
+	if (_pileInsideDiameter >= _pileWidth)
+	{
+		mdlOutput_error(L"Fail to create inner cone entities! Inner diameter is greater than outer diameter!");
+		return ERROR;
+	}
+	ISolidKernelEntityPtr _dgnConeInnerEntity;
+	if (SolidUtil::Create::BodyFromSolidPrimitive(out, *_dgnConeOuter, *ACTIVEMODEL) != SUCCESS
+		|| SolidUtil::Create::BodyFromSolidPrimitive(_dgnConeInnerEntity, *_dgnConeInner, *ACTIVEMODEL) != SUCCESS)
+		mdlOutput_error(L"Fail to create cone entities!");
+
+	return SolidUtil::Modify::BooleanSubtract(out, &_dgnConeInnerEntity, 1);
+}
+
+BentleyStatus PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::CreateSteelTubePile(ISolidKernelEntityPtr & out)
+{
+	DgnConeDetail _dgnConeDetailOuter(_bottomPoint, _topPoint, _pileWidth / 2, _pileWidth / 2, true);
+	ISolidPrimitivePtr _dgnConeOuter = ISolidPrimitive::CreateDgnCone(_dgnConeDetailOuter);
+
+	DSegment3d _segment = DSegment3d::From(_topPoint, _bottomPoint);
+
+	if (_pileConcreteCoreLength < 0)
+	{
+		mdlOutput_error(L"Pile Concrete Core is less than 0!");
+		return ERROR;
+	}
+	else if (_pileConcreteCoreLength == 0)
+		return CreatePHCTubePile(out);
+	else
+	{
+		if (abs(_segment.Length() - _pileConcreteCoreLength) < 1e-3)
+			return CreateTubePile(out);
+		else
+		{
+			double _length = _segment.Length();
+			double _factor = abs(_segment.Length() - _pileConcreteCoreLength) / _segment.Length();
+			DPoint3d _concreteCoreTopPoint = _segment.FractionToPoint(_factor);
+			DgnConeDetail _dgnConeDetailInner(_concreteCoreTopPoint, _topPoint, _pileInsideDiameter / 2, _pileInsideDiameter / 2, true);
+			ISolidPrimitivePtr _dgnConeInner = ISolidPrimitive::CreateDgnCone(_dgnConeDetailInner);
+
+			ISolidKernelEntityPtr _dgnConeInnerEntity;
+			if (SolidUtil::Create::BodyFromSolidPrimitive(out, *_dgnConeOuter, *ACTIVEMODEL) != SUCCESS
+				|| SolidUtil::Create::BodyFromSolidPrimitive(_dgnConeInnerEntity, *_dgnConeInner, *ACTIVEMODEL) != SUCCESS)
+				mdlOutput_error(L"Fail to create cone entities!");
+
+			return SolidUtil::Modify::BooleanSubtract(out, &_dgnConeInnerEntity, 1);
+		}
+	}
+	
+
+}
+
+BentleyStatus PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::CreateWarperCellElement(EditElementHandleR out, ISolidKernelEntityPtr in)
+{
+	// Create the Cell Element which acts like a warper for whole pile entity.
+	NormalCellHeaderHandler::CreateCellElement(out, L"Pile", _topPoint, RotMatrix::FromIdentity(), true, *ACTIVEMODEL);
+
+	// Convert three dimensional entity to elementhandle
+	EditElementHandle _entityeeh;
+	if (SUCCESS != SolidUtil::Convert::BodyToElement(_entityeeh, *in, nullptr, *ACTIVEMODEL))
+	{
+		mdlOutput_error(L"Fail to convert body to element!");
+		return ERROR;
+	}
+	// Create Line which represents the axis line of pile
+	ICurvePrimitivePtr _linePtr = ICurvePrimitive::CreateLine(DSegment3d::From(_topPoint, _bottomPoint));
+	EditElementHandle _lineeeh;
+	if (SUCCESS != DraftingElementSchema::ToElement(_lineeeh, *_linePtr, nullptr, true, *ACTIVEMODEL))
+	{
+		mdlOutput_error(L"Fail to pile axis element!");
+		return ERROR;
+	}
+	ElementPropertiesSetterPtr _linePropSetter = ElementPropertiesSetter::Create();
+	_linePropSetter->SetElementClass(DgnElementClass::Construction);
+	_linePropSetter->SetTransparency(1.0); //_line is invisible.
+	_linePropSetter->Apply(_lineeeh);
+
+
+	if (NormalCellHeaderHandler::AddChildElement(out, _entityeeh) != SUCCESS
+		|| NormalCellHeaderHandler::AddChildElement(out, _lineeeh) != SUCCESS
+		|| NormalCellHeaderHandler::AddChildComplete(out))
+	{
+		mdlOutput_error(L"Fail to add child element to cell!");
+		return ERROR;
+	}
+	return SUCCESS;
+}
+
+BentleyStatus PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::BuildECInstanceOnElement(EditElementHandleR inout)
+{
+	// Import IfcPort ECSchema into dgnModel and attach the IfcPile onto the entity.
+	WString _ifcPortSchemaFullName(L"IfcPort.01.00.ecschema.xml");
+	bvector<WString> _ifcPortSchemaPath;
+	PDIWTECFramework::GetOrganizationECSchemaFile(_ifcPortSchemaFullName, WString(L"PDIWT_ORGANIZATION_ECSCHEMAPATH"), &_ifcPortSchemaPath);
+
+	DgnECManagerR _dgnECManager = DgnECManager::GetManager();
+
+	//ParseFull Schema Name
+	WString _ifcPortSchemaName;
+	uint32_t _ifcMajorVersion, _ifcMinorVersion;
+	ECSchema::ParseSchemaFullName(_ifcPortSchemaName, _ifcMajorVersion, _ifcMinorVersion, _ifcPortSchemaFullName);
+	SchemaInfo _ifcPortSchemaInfo(SchemaKey(_ifcPortSchemaName.GetWCharCP(), _ifcMajorVersion, _ifcMinorVersion), *ISessionMgr::GetActiveDgnFile());
+
+	ECSchemaPtr _ifcPort;
+	if (!_dgnECManager.IsSchemaContainedWithinFile(_ifcPortSchemaInfo, SCHEMAMATCHTYPE_Identical))
+	{
+		if (SchemaReadStatus::SCHEMA_READ_STATUS_Success != _dgnECManager.ReadSchemaFromXmlFile(_ifcPort, WString(_ifcPortSchemaPath.at(0) + _ifcPortSchemaFullName).GetWCharCP(), ISessionMgr::GetActiveDgnFile()))
+		{
+			mdlOutput_error(L"Can not load ifcPort Schema");
+			return ERROR;
+		}
+		if (SchemaImportStatus::SCHEMAIMPORT_Success != _dgnECManager.ImportSchema(*_ifcPort, *ISessionMgr::GetActiveDgnFile()))
+		{
+			mdlOutput_error(L"Can not import ifcPort Schema");
+			return ERROR;
+		}
+	}
+
+	_ifcPort = _dgnECManager.LocateSchemaInDgnFile(_ifcPortSchemaInfo, SchemaMatchType::SCHEMAMATCHTYPE_Identical);
+
+
+	DgnElementECInstancePtr _ifcPileElementInstancePtr = nullptr;
+	//ECClassP _ifcPileClassP = _ifcPort->GetClassP(L"IfcPile");
+	//DgnECInstanceEnablerP _ifcPileInstanceEnablerP = _dgnECManager.ObtainInstanceEnabler(*_ifcPileClassP, *ISessionMgr::GetActiveDgnFile());
+	DgnECInstanceEnablerP _ifcPileInstanceEnablerP = _dgnECManager.ObtainInstanceEnablerByName(_ifcPortSchemaName.GetWCharCP(), L"IfcPile", *ISessionMgr::GetActiveDgnFile());
+	StandaloneECInstanceR _ifcPileWIPECInstance = _ifcPileInstanceEnablerP->GetSharedWipInstance();
+
+	//Build PropList and Set Values
+	bmap<WString, WString> _proplist;
+	double _uorpermm = ACTIVEMODEL->GetModelInfoCP()->GetUorPerMeter() / 1000;
+
+	_proplist.Insert(L"Length", WPrintfString(L"%f",DSegment3d::From(_bottomPoint, _topPoint).Length()/_uorpermm));
+	if (_pileType == PileType::PHCTubePile || _pileType == PileType::SteelTubePile || _pileType == PileType::TubePile)
+		_proplist.Insert(L"OutSideDiameter", WPrintfString(L"%f", _pileWidth / _uorpermm));
+	if (_pileType == PileType::PHCTubePile || _pileType == PileType::SteelTubePile)
+	{
+		_proplist.Insert(L"WallTickness", WPrintfString(L"%f", (_pileWidth - _pileInsideDiameter) / _uorpermm));
+		_proplist.Insert(L"InnerDiameter", WPrintfString(L"%f", _pileInsideDiameter /_uorpermm));
+	}
+	if (_pileType == PileType::SqaurePile)
+	{
+		_proplist.Insert(L"CrossSectionLength", WPrintfString(L"%f", _pileWidth / _uorpermm));
+		_proplist.Insert(L"CrossSectionWidth", WPrintfString(L"%f", _pileWidth / _uorpermm));
+	}
+	_proplist.Insert(L"TopElevation", WPrintfString(L"%f", _topPoint.z / _uorpermm));
+
+	DVec3d _pileVec3d = DVec3d::FromStartEnd(_topPoint, _bottomPoint);
+	_proplist.Insert(L"Skewness", WPrintfString(L"%f", atan(_pileVec3d.AngleTo(DVec3d::From(0, 0, -1)))));
+	_proplist.Insert(L"PlanRotationAngle", WPrintfString(L"%f¡ã", _pileVec3d.AngleXY()));
+	_proplist.Insert(L"BottomElevation", WPrintfString(L"%f", _bottomPoint.z / _uorpermm));
+
+	double _pileVolume;
+	MSElementDescrP _elementDescr = inout.GetElementDescrCP()->h.firstElem;
+	while (_elementDescr != nullptr)
+	{
+		if (SUCCESS == mdlMeasure_volumeProperties(&_pileVolume, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, _elementDescr, 1e-4))
+		{
+			_proplist.Insert(L"Volume", WPrintfString(L"%f", _pileVolume / pow(_uorpermm,3)));
+			break;
+		}
+		_elementDescr = _elementDescr->h.next;
+	}
+
+
+	_proplist.Insert(L"Code", GetCodeString(L"IfcPile"));
+	WString _pileTypeStr;
+	switch (_pileType)
+	{
+	case PDIWT_PiledWharf_Core_Cpp::SqaurePile:
+		_pileTypeStr = L"Square Pile";
+		break;
+	case PDIWT_PiledWharf_Core_Cpp::TubePile:
+		_pileTypeStr = L"Tube Pile";
+		break;
+	case PDIWT_PiledWharf_Core_Cpp::PHCTubePile:
+		_pileTypeStr = L"PHC Tube Pile";
+		break;
+	case PDIWT_PiledWharf_Core_Cpp::SteelTubePile:
+		_pileTypeStr = L"Steel Tube Pile";
+		break;
+	default:
+		_pileTypeStr = L"Unknown";
+		break;
+	}
+	_proplist.Insert(L"Type", _pileTypeStr);
+
+	PDIWTECFramework::SetPropValueList(_ifcPileWIPECInstance, _proplist);
+	DgnECInstanceStatus _status = _ifcPileInstanceEnablerP->CreateInstanceOnElement(&_ifcPileElementInstancePtr, _ifcPileWIPECInstance, inout);
+	if (DgnECInstanceStatus::DGNECINSTANCESTATUS_Success != _status)
+	{
+		mdlOutput_error(L"Can not Create IfcPile Instance on pile element");
+		return ERROR;
+	}
+
+	return SUCCESS;
+}
+
+
+BentleyStatus PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::InitSQLiteDb()
+{
+	// Fetch data from SQLite database
+	// 1. Get Variable Path
+	WString _sqliteDatabase;
+	if (SUCCESS != ConfigurationManager::GetVariable(_sqliteDatabase, L"PDIWT_ORGANIZATION_DATABASEPATH", ConfigurationVariableLevel::Organization))
+	{
+		mdlOutput_error(L"Can't get environmental predefined variables PDIWT_ORGANIZATION_DATABASEPATH!");
+		return ERROR;
+	}
+	// 2.Connection
+	Utf8String _sqliteFileName(_sqliteDatabase);
+	_sqliteFileName.append("BIMClassificationAndCode.db");
+	int _rc = sqlite3_open_v2(_sqliteFileName.c_str(), &_db,SQLITE_OPEN_READONLY,NULL);
+	if (_rc)
+	{
+		mdlOutput_error(L"Can not open Db");
+		return ERROR;
+	}
+	
+	return SUCCESS;
+}
+
+WString PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::GetCodeString(WString codeName)
+{
+	sqlite3_stmt *_pstmt;
+
+	WString _level3Code, _level2Code, _level1Code, _previousLevelCodeName;
+	//Obtain Level3 Code
+	WPrintfString _sqlstatement(L"SELECT Code, PreviousLevelCodeName FROM IfcPortComponentAndEquipment_Level3 WHERE CodeName = '%s'", codeName);
+	Utf8String _sqlstatementUtf8;
+	//Utf8PrintfString  _sqlstatement("SELECT Code, PreviousLevelCodeName FROM IfcPortComponentAndEquipment_Level3 WHERE CodeName = '%s'", codeName);
+	BeStringUtilities::WCharToUtf8(_sqlstatementUtf8, _sqlstatement);
+	sqlite3_prepare_v2(_db, _sqlstatementUtf8.c_str(), (int)_sqlstatementUtf8.length(), &_pstmt, NULL);	
+	while (sqlite3_step(_pstmt) == SQLITE_ROW)
+	{
+		BeStringUtilities::Utf8ToWChar(_level3Code, (Utf8CP)sqlite3_column_text(_pstmt,0));
+		BeStringUtilities::Utf8ToWChar(_previousLevelCodeName, (Utf8CP)sqlite3_column_text(_pstmt, 1));
+	}
+
+	//Obtain Level2 Code 
+	_sqlstatement = WPrintfString(L"SELECT Code, PreviousLevelCodeName FROM IfcPortComponentAndEquipment_Level2 WHERE CodeName = '%s'", _previousLevelCodeName);
+	BeStringUtilities::WCharToUtf8(_sqlstatementUtf8, _sqlstatement);
+	sqlite3_prepare_v2(_db, _sqlstatementUtf8.c_str(), (int)_sqlstatementUtf8.length(), &_pstmt, NULL);
+	while (sqlite3_step(_pstmt) == SQLITE_ROW)
+	{
+		BeStringUtilities::Utf8ToWChar(_level2Code, (Utf8CP)sqlite3_column_text(_pstmt, 0));
+		BeStringUtilities::Utf8ToWChar(_previousLevelCodeName, (Utf8CP)sqlite3_column_text(_pstmt, 1));
+	}
+
+	//Obtain Level1 Code
+	_sqlstatement = WPrintfString(L"SELECT Code, PreviousLevelCodeName FROM IfcPortComponentAndEquipment_Level1 WHERE CodeName = '%s'", _previousLevelCodeName);
+	BeStringUtilities::WCharToUtf8(_sqlstatementUtf8, _sqlstatement);
+	sqlite3_prepare_v2(_db, _sqlstatementUtf8.c_str(), (int)_sqlstatementUtf8.length(), &_pstmt, NULL);
+	while (sqlite3_step(_pstmt) == SQLITE_ROW)
+	{
+		BeStringUtilities::Utf8ToWChar(_level1Code, (Utf8CP)sqlite3_column_text(_pstmt, 0));
+		BeStringUtilities::Utf8ToWChar(_previousLevelCodeName, (Utf8CP)sqlite3_column_text(_pstmt, 1));
+	}
+
+	sqlite3_finalize(_pstmt);
+
+	WString _delimiter(L"/");
+
+	return _level1Code + _delimiter + _level2Code + _delimiter + _level3Code;
+}
+
+
+
+
 

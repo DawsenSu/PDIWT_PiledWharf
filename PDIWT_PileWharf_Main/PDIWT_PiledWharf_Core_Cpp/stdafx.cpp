@@ -41,3 +41,4 @@
 #pragma comment(lib,"TerrainModelElementHandler.lib")
 #pragma comment(lib,"videolib.lib")
 #pragma comment(lib,"VisEdgesLib.lib")
+#pragma comment(lib,"sqlite3.lib")

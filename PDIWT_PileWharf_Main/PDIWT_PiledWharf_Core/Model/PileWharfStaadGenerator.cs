@@ -371,6 +371,7 @@ namespace PDIWT_PiledWharf_Core.Model
                 return true;
             return false;
         }
+
         public override int GetHashCode()
         {
             int _hashNumbering = Numbering.GetHashCode();
@@ -427,6 +428,12 @@ namespace PDIWT_PiledWharf_Core.Model
             get { return _bottomJoint; }
             set { Set(ref _bottomJoint, value); }
         }
+        
+        public void ScaleInPlace(double factor)
+        {
+            _topJoint.Point.ScaleInPlace(factor);
+            _bottomJoint.Point.ScaleInPlace(factor);
+        }
 
         // pilestring example: 1 1 2
         public static void ParseFromString(string pileString, List<Joint> jointList, out Pile pile)
@@ -442,160 +449,159 @@ namespace PDIWT_PiledWharf_Core.Model
         {
             return string.Format("{0} {1} {2}", _numbering, _topJoint.Numbering, _bottomJoint.Numbering);
         }
+    }
 
-        public class PileFrame : ObservableObject
+    public class PileFrame : ObservableObject
+    {
+        public PileFrame()
         {
-            public PileFrame()
+            Piles = new List<Pile>();
+            FrameNumber = 0;
+        }
+        public PileFrame(List<Pile> piles, int frameNumber)
+        {
+            Piles = piles;
+            FrameNumber = frameNumber;
+        }
+        public List<Pile> Piles { get; }
+
+        public int FrameNumber { get; set; }
+
+        public int NumberOfPilesInFrame => Piles.Count;
+
+        public bool Add(Pile pile)
+        {
+            if (Piles.Contains(pile))
+                return false;
+            else
             {
-                Piles = new List<Pile>();
-                FrameNumber = 0;
+                Piles.Add(pile);
+                return true;
             }
-            public PileFrame(List<Pile> piles, int frameNumber)
-            {
-                Piles = piles;
-                FrameNumber = frameNumber;
-            }
-            public List<Pile> Piles { get; }
-
-            public int FrameNumber { get; set; }
-
-            public int NumberOfPilesInFrame => Piles.Count;
-
-            public bool Add(Pile pile)
-            {
-                if (Piles.Contains(pile))
-                    return false;
-                else
-                {
-                    Piles.Add(pile);
-                    return true;
-                }
-            }
-
-            public void Clear() => Piles.Clear();
-            /// <summary>
-            /// Clone the this PileFrame for next PileFrame with given offset
-            /// </summary>
-            /// <param name="offset">the offset from next pileframe to current one</param>
-            /// <returns>The next pileframe</returns>
-            public PileFrame CloneNextWithOffset(double offset)
-            {
-                int _numberofpiles = NumberOfPilesInFrame;
-                int _biggestJointNumbering = 0;
-                int _biggestPileNumbering = 0;
-                foreach (var _pile in Piles)
-                {
-                    if (_pile.TopJoint.Numbering > _biggestJointNumbering)
-                        _biggestJointNumbering = _pile.TopJoint.Numbering;
-                    if (_pile.BottomJoint.Numbering > _biggestJointNumbering)
-                        _biggestJointNumbering = _pile.BottomJoint.Numbering;
-
-                    if (_pile.Numbering > _biggestPileNumbering)
-                        _biggestPileNumbering = _pile.Numbering;
-                }
-
-                List<Pile> _nextPilesList = new List<Pile>();
-                for (int i = 0; i < _numberofpiles; i++)
-                {
-                    // top joint goes first, then bottom joint
-                    Joint _newTopJoint = new Joint(_biggestJointNumbering + i + 1,
-                                                   Piles[i].TopJoint.Point.X + offset,
-                                                   Piles[i].TopJoint.Point.Y,
-                                                   Piles[i].TopJoint.Point.Z);
-                    Joint _newBottomJoint = new Joint(_biggestJointNumbering + i + 2,
-                                                      Piles[i].BottomJoint.Point.X + offset,
-                                                      Piles[i].BottomJoint.Point.Y,
-                                                      Piles[i].BottomJoint.Point.Z);
-                    Pile _newPile = new Pile(_biggestPileNumbering + i + 1,
-                                             _biggestJointNumbering + i + 1,
-                                             _biggestJointNumbering + i + 2,
-                                             new List<Joint> { _newBottomJoint, _newTopJoint });
-                    _nextPilesList.Add(_newPile);
-                }
-                return new PileFrame(_nextPilesList, FrameNumber + 1);
-            }
-            public double GetOffsetFrom(PileFrame pileFrameFrom)
-            {
-                return pileFrameFrom.Piles.First().TopJoint.Point.Distance(Piles.First().TopJoint.Point);
-            }
-
-            public override string ToString()
-            {
-                StringBuilder _sb = new StringBuilder();
-                _sb.Append(FrameNumber.ToString() + "\n");
-                foreach (var _pile in Piles)
-                {
-                    _sb.Append(_pile + "; ");
-                }
-                return _sb.ToString();
-            }
-
         }
 
-        public class Wharf : ObservableObject
+        public void Clear() => Piles.Clear();
+        /// <summary>
+        /// Clone the this PileFrame for next PileFrame with given offset
+        /// </summary>
+        /// <param name="offset">the offset from next pileframe to current one</param>
+        /// <returns>The next pileframe</returns>
+        public PileFrame CloneNextWithOffset(double offset)
         {
-            public Wharf()
+            int _numberofpiles = NumberOfPilesInFrame;
+            int _biggestJointNumbering = 0;
+            int _biggestPileNumbering = 0;
+            foreach (var _pile in Piles)
             {
-                PileFrameList = new List<PileFrame>();
-                FrameSpans = new List<double>();
-            }
-            public Wharf(List<PileFrame> pileFrames)
-            {
-                PileFrameList = pileFrames;
-                FrameSpans = new List<double>();
-                for (int i = 0; i < pileFrames.Count - 1; i++)
-                {
-                    FrameSpans.Add(pileFrames[i].GetOffsetFrom(pileFrames[i + 1]));
-                }
-            }
+                if (_pile.TopJoint.Numbering > _biggestJointNumbering)
+                    _biggestJointNumbering = _pile.TopJoint.Numbering;
+                if (_pile.BottomJoint.Numbering > _biggestJointNumbering)
+                    _biggestJointNumbering = _pile.BottomJoint.Numbering;
 
-            public Wharf(PileFrame firstPileFrame, List<double> spans)
-            {
-                PileFrameList = new List<PileFrame>() { firstPileFrame };
-                List<double> _distanceFromFirstFrame = new List<double>();
-                for (int i = 0; i < spans.Count; i++)
-                {
-                    if (i == 0)
-                        _distanceFromFirstFrame.Add(spans[i]);
-                    else
-                        _distanceFromFirstFrame.Add(_distanceFromFirstFrame[i - 1] + spans[i]);
-                }
-                foreach (var _distance in _distanceFromFirstFrame)
-                {
-                    PileFrameList.Add(firstPileFrame.CloneNextWithOffset(_distance));
-                }
+                if (_pile.Numbering > _biggestPileNumbering)
+                    _biggestPileNumbering = _pile.Numbering;
             }
 
-            List<PileFrame> PileFrameList { get; }
-            public List<double> FrameSpans { get; }
-
-            public int NumberOfFrames => PileFrameList.Count;
-            public int NumberOfPiles
+            List<Pile> _nextPilesList = new List<Pile>();
+            for (int i = 0; i < _numberofpiles; i++)
             {
-                get
-                {
-                    int _numberOfPiles = 0;
-                    foreach (var _frame in PileFrameList)
-                    {
-                        _numberOfPiles += _frame.NumberOfPilesInFrame;
-                    }
-                    return _numberOfPiles;
-                }
+                // top joint goes first, then bottom joint
+                Joint _newTopJoint = new Joint(_biggestJointNumbering + i + 1,
+                                               Piles[i].TopJoint.Point.X + offset,
+                                               Piles[i].TopJoint.Point.Y,
+                                               Piles[i].TopJoint.Point.Z);
+                Joint _newBottomJoint = new Joint(_biggestJointNumbering + i + 2,
+                                                  Piles[i].BottomJoint.Point.X + offset,
+                                                  Piles[i].BottomJoint.Point.Y,
+                                                  Piles[i].BottomJoint.Point.Z);
+                Pile _newPile = new Pile(_biggestPileNumbering + i + 1,
+                                         _biggestJointNumbering + i + 1,
+                                         _biggestJointNumbering + i + 2,
+                                         new List<Joint> { _newBottomJoint, _newTopJoint });
+                _nextPilesList.Add(_newPile);
             }
+            return new PileFrame(_nextPilesList, FrameNumber + 1);
+        }
+        public double GetOffsetFrom(PileFrame pileFrameFrom)
+        {
+            return pileFrameFrom.Piles.First().TopJoint.Point.Distance(Piles.First().TopJoint.Point);
+        }
 
-            public int NumberOfJoints => 2 * NumberOfPiles;
-
-            public override string ToString()
+        public override string ToString()
+        {
+            StringBuilder _sb = new StringBuilder();
+            _sb.Append(FrameNumber.ToString() + "\n");
+            foreach (var _pile in Piles)
             {
-                StringBuilder _sb = new StringBuilder();
-                _sb.AppendFormat("Wharf Information: Contains {0} Frames, {1} Piles, {2} Joints\n", NumberOfFrames, NumberOfPiles, NumberOfJoints);
+                _sb.Append(_pile + "; ");
+            }
+            return _sb.ToString();
+        }
+
+    }
+
+    public class Wharf : ObservableObject
+    {
+        public Wharf()
+        {
+            PileFrameList = new List<PileFrame>();
+            FrameSpans = new List<double>();
+        }
+        public Wharf(List<PileFrame> pileFrames)
+        {
+            PileFrameList = pileFrames;
+            FrameSpans = new List<double>();
+            for (int i = 0; i < pileFrames.Count - 1; i++)
+            {
+                FrameSpans.Add(pileFrames[i].GetOffsetFrom(pileFrames[i + 1]));
+            }
+        }
+
+        public Wharf(PileFrame firstPileFrame, List<double> spans)
+        {
+            PileFrameList = new List<PileFrame>() { firstPileFrame };
+            List<double> _distanceFromFirstFrame = new List<double>();
+            for (int i = 0; i < spans.Count; i++)
+            {
+                if (i == 0)
+                    _distanceFromFirstFrame.Add(spans[i]);
+                else
+                    _distanceFromFirstFrame.Add(_distanceFromFirstFrame[i - 1] + spans[i]);
+            }
+            foreach (var _distance in _distanceFromFirstFrame)
+            {
+                PileFrameList.Add(firstPileFrame.CloneNextWithOffset(_distance));
+            }
+        }
+
+        List<PileFrame> PileFrameList { get; }
+        public List<double> FrameSpans { get; }
+
+        public int NumberOfFrames => PileFrameList.Count;
+        public int NumberOfPiles
+        {
+            get
+            {
+                int _numberOfPiles = 0;
                 foreach (var _frame in PileFrameList)
                 {
-                    _sb.Append(_frame);
+                    _numberOfPiles += _frame.NumberOfPilesInFrame;
                 }
-                return _sb.ToString();
+                return _numberOfPiles;
             }
         }
 
+        public int NumberOfJoints => 2 * NumberOfPiles;
+
+        public override string ToString()
+        {
+            StringBuilder _sb = new StringBuilder();
+            _sb.AppendFormat("Wharf Information: Contains {0} Frames, {1} Piles, {2} Joints\n", NumberOfFrames, NumberOfPiles, NumberOfJoints);
+            foreach (var _frame in PileFrameList)
+            {
+                _sb.Append(_frame);
+            }
+            return _sb.ToString();
+        }
     }
 }

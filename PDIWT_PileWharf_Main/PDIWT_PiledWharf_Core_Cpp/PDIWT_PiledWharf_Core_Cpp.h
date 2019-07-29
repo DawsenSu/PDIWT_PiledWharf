@@ -4,11 +4,9 @@
 #include <cstdlib>
 #include <cmath>
 
-
-using namespace System;
-using namespace System::Collections::Generic;
-
 namespace PDIWT_PiledWharf_Core_Cpp {
+
+	// @brief ECFramework Helper 
 	public class PDIWTECFramework
 	{
 	public:
@@ -25,18 +23,51 @@ namespace PDIWT_PiledWharf_Core_Cpp {
 		// @param[out]	ecSchemaFilePaths	collections of paths of schema xml file
 		// @Return	true, if gets the file paths
 		static StatusInt GetOrganizationECSchemaFile(WString ecSchemaFullName, WString definedVariable, bvector<WString>* ecSchemaFilePaths);
-	private:
+
 		// Set Property values to given ecInstance
 		// @param[in]	ecInstance	The instance which will hold the given property values
 		// @param[in]	propList	Properties and values list
 		static void SetPropValueList(IECInstanceR ecInstance, bmap<WString, WString> propList);
 	};
 
-	public enum struct SettingsWriteStatus { SUCCESS, ERROR };
-
-	public ref class ECFrameWorkWraper
+	public enum PileType
+	{
+		SqaurePile = 1,
+		TubePile,
+		PHCTubePile,
+		SteelTubePile
+	};
+	// @brief Pile Creation class
+	public class PileEntityCreation
 	{
 	public:
-		static SettingsWriteStatus WriteSettingsOnActiveModel(String^ ecSchemaFullName, String^ ecClassName, Dictionary<String^, String^>^ propList);
+		PileEntityCreation();
+		PileEntityCreation(PileType pileType, double pileWidth, double pileInsideDiameter, double pileConcreteCoreLength, DPoint3d topPoint, DPoint3d bottomPoint)
+			:_pileType(pileType), _pileWidth(pileWidth), _pileInsideDiameter(pileInsideDiameter), _pileConcreteCoreLength(pileConcreteCoreLength), _topPoint(topPoint), _bottomPoint(bottomPoint)
+		{
+			InitSQLiteDb();
+		};
+		~PileEntityCreation();
+		void CreatPile();
+	private:
+		BentleyStatus CreateSquarePile(ISolidKernelEntityPtr& out);
+		BentleyStatus CreateTubePile(ISolidKernelEntityPtr& out);
+		BentleyStatus CreatePHCTubePile(ISolidKernelEntityPtr& out);
+		BentleyStatus CreateSteelTubePile(ISolidKernelEntityPtr& out);
+		BentleyStatus CreateWarperCellElement(EditElementHandleR out, ISolidKernelEntityPtr in);
+		BentleyStatus BuildECInstanceOnElement(EditElementHandleR inout);
+
+
+		BentleyStatus InitSQLiteDb();
+		WString GetCodeString(WString codeName);
+	private:
+		// Engineering data
+		PileType _pileType;
+		double _pileWidth;
+		double _pileInsideDiameter;
+		double _pileConcreteCoreLength;
+		DPoint3d _topPoint, _bottomPoint;
+
+		sqlite3 *_db;
 	};
 }

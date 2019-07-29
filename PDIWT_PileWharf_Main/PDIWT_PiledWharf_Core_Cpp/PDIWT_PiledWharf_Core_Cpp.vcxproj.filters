@@ -24,6 +24,9 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PDIWT_PiledWharf_Core_Cpp_ManagedClasses.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PDIWT_PiledWharf_Core_Cpp.cpp">
@@ -33,6 +36,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PDIWT_PiledWharf_Core_Cpp_ManagedClasses.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

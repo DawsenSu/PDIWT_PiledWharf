@@ -39,9 +39,9 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         {
             _pileTypes = new List<string> { Resources.SquarePile, Resources.TubePile, Resources.PHCTubePile, Resources.SteelTubePile };
             _selectedPileType = _pileTypes[0];
-            _pileWidth = 1.0;
-            _pileInsideDiameter = 0.9;
-            _concreteCoreLength = 1.0;
+            _pileWidth = 600;
+            _pileInsideDiameter = 500;
+            _concreteCoreLength = 1000;
             _pileTipSealTypes = new List<string> { Resources.PileTip_TotalSeal, Resources.PileTip_HalfSeal, Resources.PileTip_SingleBorad, Resources.PileTip_DoubleBoard, Resources.PileTip_QuadBoard };
             _selectedPileTipType = _pileTipSealTypes[0];
             _isStaadFileChecked = true;
@@ -171,6 +171,9 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         {
             try
             {
+                // Clear the data in datagrid before browse new file
+                PileSpatialInformation.Clear();
+
                 using (OpenFileDialog _openFileDialog = new OpenFileDialog())
                 {
                     if (_isStaadFileChecked)
@@ -274,10 +277,26 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                 if (PileSpatialInformation == null || PileSpatialInformation.Count == 0)
                     return;
                 BD.DgnModel _activeDgnModel = BM.Session.Instance.GetActiveDgnModel();
+                double uorpermm = BM.Session.Instance.GetActiveDgnModel().GetModelInfo().UorPerMaster;
                 foreach (var _pileSpInfo in PileSpatialInformation)
                 {
-                    BDE.LineElement _line = new BDE.LineElement(_activeDgnModel, null, new Bentley.GeometryNET.DSegment3d(_pileSpInfo.TopJoint.Point, _pileSpInfo.BottomJoint.Point));
-                    _line.AddToModel();
+                    //BDE.LineElement _line = new BDE.LineElement(_activeDgnModel, null, new Bentley.GeometryNET.DSegment3d(_pileSpInfo.TopJoint.Point, _pileSpInfo.BottomJoint.Point));
+                    //_line.AddToModel();
+
+                    BG.DPoint3d _topPoint = new BG.DPoint3d(_pileSpInfo.TopJoint.Point.X,
+                                                            _pileSpInfo.TopJoint.Point.Y,
+                                                            _pileSpInfo.TopJoint.Point.Z );
+                    BG.DPoint3d _bottomPoint = new BG.DPoint3d(_pileSpInfo.BottomJoint.Point.X,
+                                                                _pileSpInfo.BottomJoint.Point.Y,
+                                                                _pileSpInfo.BottomJoint.Point.Z);
+                    _topPoint.ScaleInPlace(uorpermm);
+                    _bottomPoint.ScaleInPlace(uorpermm);
+                    PDIWT_PiledWharf_Core_Cpp.EntityCreation.CreatePie(SelectedPileTypeToEnum(), 
+                                                                       _pileWidth * uorpermm, 
+                                                                       _pileInsideDiameter * uorpermm, 
+                                                                       _concreteCoreLength * uorpermm, 
+                                                                       _topPoint, 
+                                                                       _bottomPoint);
                 }
                 BM.MessageCenter.Instance.ShowInfoMessage(Resources.Success, Resources.Success, BM.MessageAlert.Balloon);
             }
@@ -290,6 +309,18 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private bool CanExecuteCreatePiles(Grid mainGrid)
         {
             return _pileSpatialInforamtion.Count != 0 && !PDIWT_Helper.EnumTextBoxHasError(mainGrid);
+        }
+
+        private PDIWT_PiledWharf_Core_Cpp.PileTypeManaged SelectedPileTypeToEnum()
+        {
+            if (_selectedPileType == Resources.SquarePile)
+                return PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.SqaurePile;
+            else if (_selectedPileType == Resources.TubePile)
+                return PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.TubePile;
+            else if (_selectedPileType == Resources.PHCTubePile)
+                return PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.PHCTubePile;
+            else
+                return PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.SteelTubePile;
         }
     }
 

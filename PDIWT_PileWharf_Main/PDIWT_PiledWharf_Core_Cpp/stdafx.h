@@ -7,6 +7,7 @@
 #include <DgnPlatform\DgnPlatformApi.h>
 #include <Mstn\PSolid\mssolid.h>
 #include <Mstn\PSolid\mssolid.fdf>
+#include <PSolid/PSolidCoreAPI.h>
 
 #include <DgnView/DgnElementSetTool.h>
 #include <DgnView/DgnTool.h>
@@ -17,6 +18,8 @@
 #include <msclr/marshal.h>
 #include <msclr/marshal_cppstd.h>
 #include <vcruntime_string.h>
+
+#include <DawsenSu/sqlite3.h>
 
 USING_NAMESPACE_BENTLEY
 USING_NAMESPACE_BENTLEY_DGNPLATFORM
