@@ -24,21 +24,24 @@ namespace PDIWT_PiledWharf_Main
         public static void Input_PilePlacement(string unparsed)
         {
             Bentley.MstnPlatformNET.MessageCenter.Instance.StatusMessage = "Input Import PliePlacement";
-
         }
-
-        public static void Process_CalculateWaveAndCurrentForce(string unparsed)
-        {
-            Bentley.MstnPlatformNET.MessageCenter.Instance.StatusMessage = "Input Process CalcuateWaveAndCurrentForce";
-
-        }
+        
 
         public static void Process_CalculateBearingCapacity(string unparsed)
         {
             Bentley.MstnPlatformNET.MessageCenter.Instance.StatusMessage = "Input Process CalcuateBearingCapacity";
 
         }
+        public static void Process_CalculateCurrentForce(string unparsed)
+        {
+            PDIWT_PiledWharf_Core.CurrentForceWindow.ShowWindow(Program.Addin);
+        }
 
+        public static void Process_CalculateWaveForce(string unparsed)
+        {
+
+            Bentley.MstnPlatformNET.MessageCenter.Instance.StatusMessage = "Input Process CalcuateWaveForce";
+        }
         public static void Process_DetectCollision(string unparsed)
         {
             Bentley.MstnPlatformNET.MessageCenter.Instance.StatusMessage = "Input Process Detectcollision";

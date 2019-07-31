@@ -30,6 +30,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
             SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<Input_ImportFromFileViewModel>();
+            SimpleIoc.Default.Register<CurrentForceViewModel>();
+            SimpleIoc.Default.Register<ReportGeneratorViewModel>();
         }
 
         /// <summary>
@@ -47,7 +49,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
         /// <summary>
-        /// Gets the view's ViewModel.
+        /// Gets the Input's ViewModel.
         /// </summary>
         public Input_ImportFromFileViewModel Input_ImportFromFile
         {
@@ -57,6 +59,15 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
         }
 
+        public CurrentForceViewModel CurrentForce
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<CurrentForceViewModel>();
+            }
+        }
+
+        public ReportGeneratorViewModel ReportGenerator => ServiceLocator.Current.GetInstance<ReportGeneratorViewModel>();
         /// <summary>
         /// Cleans up all the resources.
         /// </summary>

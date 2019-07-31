@@ -88,11 +88,38 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Calculated Item Name.
+        /// </summary>
+        public static string CalculatedItemName {
+            get {
+                return ResourceManager.GetString("CalculatedItemName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check Date.
+        /// </summary>
+        public static string CheckDate {
+            get {
+                return ResourceManager.GetString("CheckDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Checker.
+        /// </summary>
+        public static string Checker {
+            get {
+                return ResourceManager.GetString("Checker", resourceCulture);
             }
         }
         
@@ -133,11 +160,38 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Construction Design.
+        /// </summary>
+        public static string ConstructionDesign {
+            get {
+                return ResourceManager.GetString("ConstructionDesign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Density.
         /// </summary>
         public static string Density {
             get {
                 return ResourceManager.GetString("Density", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Design Date.
+        /// </summary>
+        public static string DesignDate {
+            get {
+                return ResourceManager.GetString("DesignDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Designer.
+        /// </summary>
+        public static string Designer {
+            get {
+                return ResourceManager.GetString("Designer", resourceCulture);
             }
         }
         
@@ -169,6 +223,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Feasibility Study.
+        /// </summary>
+        public static string FeasibilityStudy {
+            get {
+                return ResourceManager.GetString("FeasibilityStudy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fixed Depth Factorη.
         /// </summary>
         public static string FixedDepthFactor {
@@ -183,6 +246,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         public static string General {
             get {
                 return ResourceManager.GetString("General", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate.
+        /// </summary>
+        public static string Generate {
+            get {
+                return ResourceManager.GetString("Generate", resourceCulture);
             }
         }
         
@@ -214,6 +286,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Input.
+        /// </summary>
+        public static string Input {
+            get {
+                return ResourceManager.GetString("Input", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Is Filled With Concrete.
         /// </summary>
         public static string IsFilledWithConcrete {
@@ -237,6 +318,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         public static string Modulus {
             get {
                 return ResourceManager.GetString("Modulus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number of Volume.
+        /// </summary>
+        public static string NumberOfVolume {
+            get {
+                return ResourceManager.GetString("NumberOfVolume", resourceCulture);
             }
         }
         
@@ -421,6 +511,69 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Preliminary Design.
+        /// </summary>
+        public static string PreliminaryDesign {
+            get {
+                return ResourceManager.GetString("PreliminaryDesign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preliminary Feasibility Study.
+        /// </summary>
+        public static string PreliminaryFeasibilityStudy {
+            get {
+                return ResourceManager.GetString("PreliminaryFeasibilityStudy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project Name.
+        /// </summary>
+        public static string ProjectName {
+            get {
+                return ResourceManager.GetString("ProjectName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Project Phase.
+        /// </summary>
+        public static string ProjectPhase {
+            get {
+                return ResourceManager.GetString("ProjectPhase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Report Generator.
+        /// </summary>
+        public static string ReportGenerator {
+            get {
+                return ResourceManager.GetString("ReportGenerator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Review Date.
+        /// </summary>
+        public static string ReviewDate {
+            get {
+                return ResourceManager.GetString("ReviewDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reviewer.
+        /// </summary>
+        public static string Reviewer {
+            get {
+                return ResourceManager.GetString("Reviewer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Round.
         /// </summary>
         public static string Round {
@@ -588,6 +741,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         public static string WavePeriod {
             get {
                 return ResourceManager.GetString("WavePeriod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Word(*.docx)|*.docx.
+        /// </summary>
+        public static string WordFileFilter {
+            get {
+                return ResourceManager.GetString("WordFileFilter", resourceCulture);
             }
         }
     }

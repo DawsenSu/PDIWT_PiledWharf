@@ -294,4 +294,58 @@
   <data name="PileTypeIllustration" xml:space="preserve">
     <value>桩型示意图</value>
   </data>
+  <data name="ReportGenerator" xml:space="preserve">
+    <value>报告生成</value>
+  </data>
+  <data name="ProjectName" xml:space="preserve">
+    <value>项目名称</value>
+  </data>
+  <data name="ProjectPhase" xml:space="preserve">
+    <value>项目阶段</value>
+  </data>
+  <data name="NumberOfVolume" xml:space="preserve">
+    <value>卷册</value>
+  </data>
+  <data name="CalculatedItemName" xml:space="preserve">
+    <value>计算项目</value>
+  </data>
+  <data name="Designer" xml:space="preserve">
+    <value>设计人</value>
+  </data>
+  <data name="DesignDate" xml:space="preserve">
+    <value>设计日期</value>
+  </data>
+  <data name="Checker" xml:space="preserve">
+    <value>校核人</value>
+  </data>
+  <data name="CheckDate" xml:space="preserve">
+    <value>校核日期</value>
+  </data>
+  <data name="Reviewer" xml:space="preserve">
+    <value>审核人</value>
+  </data>
+  <data name="ReviewDate" xml:space="preserve">
+    <value>审核日期</value>
+  </data>
+  <data name="Input" xml:space="preserve">
+    <value>输入</value>
+  </data>
+  <data name="Generate" xml:space="preserve">
+    <value>生成</value>
+  </data>
+  <data name="PreliminaryFeasibilityStudy" xml:space="preserve">
+    <value>预可研阶段</value>
+  </data>
+  <data name="FeasibilityStudy" xml:space="preserve">
+    <value>工可阶段</value>
+  </data>
+  <data name="PreliminaryDesign" xml:space="preserve">
+    <value>初步设计阶段</value>
+  </data>
+  <data name="ConstructionDesign" xml:space="preserve">
+    <value>施工图阶段</value>
+  </data>
+  <data name="WordFileFilter" xml:space="preserve">
+    <value>Word文档(*.docx)|*.docx</value>
+  </data>
 </root>

@@ -294,4 +294,58 @@
   <data name="PileTypeIllustration" xml:space="preserve">
     <value>Pile Type Illustration</value>
   </data>
+  <data name="ReportGenerator" xml:space="preserve">
+    <value>Report Generator</value>
+  </data>
+  <data name="ProjectName" xml:space="preserve">
+    <value>Project Name</value>
+  </data>
+  <data name="ProjectPhase" xml:space="preserve">
+    <value>Project Phase</value>
+  </data>
+  <data name="NumberOfVolume" xml:space="preserve">
+    <value>Number of Volume</value>
+  </data>
+  <data name="CalculatedItemName" xml:space="preserve">
+    <value>Calculated Item Name</value>
+  </data>
+  <data name="Designer" xml:space="preserve">
+    <value>Designer</value>
+  </data>
+  <data name="DesignDate" xml:space="preserve">
+    <value>Design Date</value>
+  </data>
+  <data name="Checker" xml:space="preserve">
+    <value>Checker</value>
+  </data>
+  <data name="CheckDate" xml:space="preserve">
+    <value>Check Date</value>
+  </data>
+  <data name="Reviewer" xml:space="preserve">
+    <value>Reviewer</value>
+  </data>
+  <data name="ReviewDate" xml:space="preserve">
+    <value>Review Date</value>
+  </data>
+  <data name="Input" xml:space="preserve">
+    <value>Input</value>
+  </data>
+  <data name="Generate" xml:space="preserve">
+    <value>Generate</value>
+  </data>
+  <data name="PreliminaryFeasibilityStudy" xml:space="preserve">
+    <value>Preliminary Feasibility Study</value>
+  </data>
+  <data name="FeasibilityStudy" xml:space="preserve">
+    <value>Feasibility Study</value>
+  </data>
+  <data name="PreliminaryDesign" xml:space="preserve">
+    <value>Preliminary Design</value>
+  </data>
+  <data name="ConstructionDesign" xml:space="preserve">
+    <value>Construction Design</value>
+  </data>
+  <data name="WordFileFilter" xml:space="preserve">
+    <value>Word(*.docx)|*.docx</value>
+  </data>
 </root>

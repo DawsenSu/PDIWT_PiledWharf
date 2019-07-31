@@ -1,0 +1,165 @@
+﻿<Window
+    x:Class="PDIWT_PiledWharf_Core.ReportGeneratorWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:loc="clr-namespace:PDIWT.Resources.Localization.MainModule;assembly=PDIWT.Resources"
+    xmlns:local="clr-namespace:PDIWT_PiledWharf_Core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="{x:Static loc:Resources.ReportGenerator}"
+    Width="400"
+    Height="300"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Skins\MainSkin.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid x:Name="GridMainLayout" Margin="1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="{x:Static loc:Resources.Input}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Content="{x:Static loc:Resources.ProjectName}" />
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="3"
+                    Text="{Binding ProjectName}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Content="{x:Static loc:Resources.ProjectPhase}" />
+                <ComboBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="3"
+                    ItemsSource="{Binding ProjectPhaseCategory, Mode=OneTime}"
+                    SelectedItem="{Binding SelectedPhase}" />
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Content="{x:Static loc:Resources.NumberOfVolume}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Text="{Binding NumberOfVolume}" />
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Content="{x:Static loc:Resources.CalculatedItemName}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="3"
+                    Text="{Binding CalculatedItemName}" />
+                <Rectangle
+                    Grid.Row="3"
+                    Grid.ColumnSpan="4"
+                    Margin="0,2"
+                    Stroke="Black"
+                    StrokeThickness="1" />
+                <Label
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Content="{x:Static loc:Resources.Designer}" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Text="{Binding Designer}" />
+                <Label
+                    Grid.Row="4"
+                    Grid.Column="2"
+                    Content="{x:Static loc:Resources.DesignDate}" />
+                <DatePicker
+                    Grid.Row="4"
+                    Grid.Column="3"
+                    SelectedDate="{Binding DesignDate}" />
+                <Label
+                    Grid.Row="5"
+                    Grid.Column="0"
+                    Content="{x:Static loc:Resources.Checker}" />
+                <TextBox
+                    Grid.Row="5"
+                    Grid.Column="1"
+                    Text="{Binding Checker}" />
+                <Label
+                    Grid.Row="5"
+                    Grid.Column="2"
+                    Content="{x:Static loc:Resources.CheckDate}" />
+                <DatePicker
+                    Grid.Row="5"
+                    Grid.Column="3"
+                    SelectedDate="{Binding CheckDate}" />
+                <Label
+                    Grid.Row="6"
+                    Grid.Column="0"
+                    Content="{x:Static loc:Resources.Reviewer}" />
+                <TextBox
+                    Grid.Row="6"
+                    Grid.Column="1"
+                    Text="{Binding Reviewer}" />
+                <Label
+                    Grid.Row="6"
+                    Grid.Column="2"
+                    Content="{x:Static loc:Resources.ReviewDate}" />
+                <DatePicker
+                    Grid.Row="6"
+                    Grid.Column="3"
+                    SelectedDate="{Binding ReviewDate}" />
+            </Grid>
+        </GroupBox>
+        <Grid Grid.Row="1" Margin="0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="{x:Static loc:Resources.Path}" />
+            <TextBox Grid.Column="1" Text="{Binding OutFilePath, Mode=OneWay}" />
+            <Button
+                Grid.Column="2"
+                Command="{Binding BrowseOutFilePath}"
+                Content="{x:Static loc:Resources.Browse}"
+                Style="{StaticResource BasicButton}" />
+        </Grid>
+        <StackPanel
+            Grid.Row="2"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+                Command="{Binding Generate}"
+                Content="{x:Static loc:Resources.Generate}"
+                Style="{StaticResource BasicButton}" />
+            <Button
+                Click="Button_Click"
+                Content="{x:Static loc:Resources.Cancel}"
+                Style="{StaticResource BasicButton}" />
+        </StackPanel>
+
+    </Grid>
+
+</Window>

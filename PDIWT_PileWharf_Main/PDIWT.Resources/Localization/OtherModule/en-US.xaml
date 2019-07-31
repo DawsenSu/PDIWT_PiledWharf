@@ -1,0 +1,44 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="InputParameter">Input Parameter</sys:String>
+    <sys:String x:Key="CurrentForceCalculation">Current Force Calculation</sys:String>
+    <sys:String x:Key="PileTopElevation">Pile Top Elevation</sys:String>
+    <sys:String x:Key="HAT">HAT</sys:String>
+    <sys:String x:Key="SoilElevation">Soil Elevation</sys:String>
+    <sys:String x:Key="ProjectedWidth">Projected Width</sys:String>
+    <sys:String x:Key="Shape">Shape</sys:String>
+    <sys:String x:Key="Angle">Angle</sys:String>
+    <sys:String x:Key="CurrentVelocity">Current Velocity</sys:String>
+    <sys:String x:Key="HorizontalPileCentraSpan">Pile Horizontal Centra Span</sys:String>
+    <sys:String x:Key="VerticalPileCentraSpan">Pile Vertical Centra Span</sys:String>
+    <sys:String x:Key="WaterDensity">Water Density</sys:String>
+
+
+    <sys:String x:Key="CalculatedParameter">Calculated Parameter</sys:String>
+    <sys:String x:Key="Height">Height</sys:String>
+    <sys:String x:Key="ProjectedArea">Projected Area</sys:String>
+    <sys:String x:Key="CurrentResistentCoeff">Current Resistant Coefficient</sys:String>
+    <sys:String x:Key="ShelteringCoeff">Sheltering Affect Coefficient</sys:String>
+    <sys:String x:Key="SubmergedCoeff">Submerged Affect Coefficient</sys:String>
+    <sys:String x:Key="WaterDepthCoeff">Water Depth Affect Coefficient</sys:String>
+    <sys:String x:Key="HorizontalAffectCoeff">Horizontal Affect Coefficient</sys:String>
+    <sys:String x:Key="IncliningAffectCoeff">Inclining Affect Coefficient</sys:String>
+
+    <sys:String x:Key="CalculatedResult">Calculated Result</sys:String>
+    <sys:String x:Key="CurrentForceStandardValue">Current Force Standard Value</sys:String>
+    <sys:String x:Key="ActionPoint">Point of Action</sys:String>
+
+    <sys:String x:Key="FrontRow">Front Row</sys:String>
+    <sys:String x:Key="RearRow">Rear Row</sys:String>
+
+    <sys:String x:Key="LoadParameter">LoadParameter</sys:String>
+    <sys:String x:Key="Calculate">Calculate</sys:String>
+    <sys:String x:Key="GenerateNote">Generate Note</sys:String>
+    <sys:String x:Key="Cancel">Cancel</sys:String>
+
+    <sys:String x:Key="Round">Round</sys:String>
+    <sys:String x:Key="Square">Square</sys:String>
+    <sys:String x:Key="Others">Others</sys:String>
+</ResourceDictionary>

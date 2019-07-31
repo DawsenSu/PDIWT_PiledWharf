@@ -1,0 +1,311 @@
+﻿<Window
+    x:Class="PDIWT_PiledWharf_Core.CurrentForceWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pdi="clr-namespace:PDIWT.Resources.CustomUserControl;assembly=PDIWT.Resources"
+    Title="{DynamicResource CurrentForceCalculation}"
+    Width="400"
+    Height="450"
+    mc:Ignorable="d">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/Units.xaml" />
+                <ResourceDictionary Source="Skins/MainSkin.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/zh-CN.xaml" />-->
+                <ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/en-US.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid x:Name="MainLayoutGrid" Margin="2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <TabControl>
+            <TabItem Header="{DynamicResource InputParameter}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <pdi:LabelTextBox
+                        Grid.Row="0"
+                        DisplayName="{DynamicResource PileTopElevation}"
+                        Parameter="{Binding PileTopElevation, UpdateSourceTrigger=LostFocus}"
+                        Unit="{DynamicResource Length}" />
+                    <pdi:LabelTextBox
+                        Grid.Row="1"
+                        DisplayName="{DynamicResource HAT}"
+                        Parameter="{Binding HAT, UpdateSourceTrigger=LostFocus}"
+                        Unit="{DynamicResource Length}" />
+                    <pdi:LabelTextBox
+                        Grid.Row="2"
+                        DisplayName="{DynamicResource SoilElevation}"
+                        Parameter="{Binding SoilElevation, UpdateSourceTrigger=LostFocus}"
+                        Unit="{DynamicResource Length}" />
+                    <!--<TextBox Grid.Row="2" Text="{Binding SoilElevation}" />-->
+                    <pdi:LabelTextBox
+                        Grid.Row="3"
+                        DisplayName="{DynamicResource ProjectedWidth}"
+                        Parameter="{Binding ProjectedWidth, UpdateSourceTrigger=LostFocus}"
+                        Unit="{DynamicResource Length}" />
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="150" />
+                        </Grid.ColumnDefinitions>
+                        <Label Content="{DynamicResource Shape}" />
+                        <ComboBox
+                            Grid.Column="1"
+                            DisplayMemberPath="Shape"
+                            ItemsSource="{Binding ShapeCategory, Mode=OneTime}"
+                            SelectedItem="{Binding SelectedShape}"
+                            SelectedValuePath="Value" />
+                    </Grid>
+                    <pdi:LabelTextBox
+                        Grid.Row="5"
+                        DisplayName="{DynamicResource Angle}"
+                        IsEnabled="{Binding SelectedShape.Value, Converter={StaticResource SquarePileShapeValueOfListToBooleanConverter}}"
+                        Parameter="{Binding SquarePileAngle, UpdateSourceTrigger=LostFocus}"
+                        Unit="{DynamicResource AnglePoint}" />
+                    <pdi:LabelTextBox
+                        Grid.Row="6"
+                        DisplayName="{DynamicResource CurrentVelocity}"
+                        Parameter="{Binding CurrentVelocity, UpdateSourceTrigger=LostFocus}"
+                        Unit="{DynamicResource Velocity}" />
+                    <pdi:LabelTextBox
+                        Grid.Row="7"
+                        DisplayName="{DynamicResource HorizontalPileCentraSpan}"
+                        Parameter="{Binding PileHorizontalCentraSpan, UpdateSourceTrigger=LostFocus}"
+                        Unit="{DynamicResource Length}" />
+                    <pdi:LabelTextBox
+                        Grid.Row="8"
+                        DisplayName="{DynamicResource VerticalPileCentraSpan}"
+                        Parameter="{Binding PileVerticalCentraSpan, UpdateSourceTrigger=LostFocus}"
+                        Unit="{DynamicResource Length}" />
+                    <pdi:LabelTextBox
+                        Grid.Row="9"
+                        DisplayName="{DynamicResource WaterDensity}"
+                        Parameter="{Binding WaterDensity, UpdateSourceTrigger=LostFocus}"
+                        Unit="{DynamicResource Density}" />
+                </Grid>
+            </TabItem>
+            <TabItem Header="{DynamicResource CalculatedParameter}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="90" />
+                        <ColumnDefinition Width="60" />
+                    </Grid.ColumnDefinitions>
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Content="{DynamicResource Height}" />
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Content="{Binding PileHeight, Mode=OneWay}"
+                        ContentStringFormat="{}{0:F2}"
+                        Style="{StaticResource ResultLabel}" />
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Content="{DynamicResource Length}" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Content="{DynamicResource ProjectedArea}" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Content="{Binding ProjectedArea, Mode=OneWay}"
+                        ContentStringFormat="{}{0:F2}"
+                        Style="{StaticResource ResultLabel}" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Content="{DynamicResource AreaPerLength}" />
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Content="{DynamicResource CurrentResistentCoeff}" />
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Content="{Binding CurrentResistentCoeff, Mode=OneWay}"
+                        ContentStringFormat="{}{0:F2}"
+                        Style="{StaticResource ResultLabel}" />
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Content="{DynamicResource ShelteringCoeff}" />
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Content="{Binding ShelteringCoeff, Mode=OneWay}"
+                        ContentStringFormat="{}{0:F2}"
+                        Style="{StaticResource ResultLabel}" />
+                    <Label
+                        Grid.Row="4"
+                        Grid.Column="0"
+                        Content="{DynamicResource SubmergedCoeff}" />
+                    <Label
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        Content="{Binding SubmergedCoeff, Mode=OneWay}"
+                        ContentStringFormat="{}{0:F2}"
+                        Style="{StaticResource ResultLabel}" />
+                    <Label
+                        Grid.Row="5"
+                        Grid.Column="0"
+                        Content="{DynamicResource WaterDepthCoeff}" />
+                    <Label
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        Content="{Binding WaterDepthCoeff, Mode=OneWay}"
+                        ContentStringFormat="{}{0:F2}"
+                        Style="{StaticResource ResultLabel}" />
+                    <Label
+                        Grid.Row="6"
+                        Grid.Column="0"
+                        Content="{DynamicResource HorizontalAffectCoeff}" />
+                    <Label
+                        Grid.Row="6"
+                        Grid.Column="1"
+                        Content="{Binding HorizontalAffectCoeff, Mode=OneWay}"
+                        ContentStringFormat="{}{0:F2}"
+                        Style="{StaticResource ResultLabel}" />
+                    <Label
+                        Grid.Row="7"
+                        Grid.Column="0"
+                        Content="{DynamicResource IncliningAffectCoeff}" />
+                    <Label
+                        Grid.Row="7"
+                        Grid.Column="1"
+                        Content="{Binding IncliningAffectCoeff, Mode=OneWay}"
+                        ContentStringFormat="{}{0:F2}"
+                        Style="{StaticResource ResultLabel}" />
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <GroupBox Grid.Row="2" Header="{DynamicResource CalculatedResult}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Content="{DynamicResource FrontRow}" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Content="{DynamicResource RearRow}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Content="{DynamicResource CurrentForceStandardValue}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Content="{Binding CurrentForceForFrontPile, Mode=OneWay}"
+                    ContentStringFormat="{}{0:F2}"
+                    Style="{StaticResource ResultLabel}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Content="{Binding CurrentForceForRearPile, Mode=OneWay}"
+                    ContentStringFormat="{}{0:F2}"
+                    Style="{StaticResource ResultLabel}" />
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Content="{DynamicResource ActionPoint}" />
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Content="{Binding ActionPointForFrontPile, Mode=OneWay}"
+                    ContentStringFormat="{}{0:F2}"
+                    Style="{StaticResource ResultLabel}" />
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Content="{Binding ActionPointForRearPile, Mode=OneWay}"
+                    ContentStringFormat="{}{0:F2}"
+                    Style="{StaticResource ResultLabel}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="3"
+                    Content="{DynamicResource Force}" />
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="3"
+                    Content="{DynamicResource Length}" />
+            </Grid>
+        </GroupBox>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <Button
+                Grid.Column="0"
+                Command="{Binding LoadParameter}"
+                Content="{DynamicResource LoadParameter}"
+                Style="{StaticResource BasicButton}" />
+            <Button
+                Grid.Column="2"
+                Command="{Binding Calculate}"
+                Content="{DynamicResource Calculate}"
+                Style="{StaticResource BasicButton}" />
+            <Button
+                Grid.Column="3"
+                Command="{Binding GenerateNote}"
+                Content="{DynamicResource GenerateNote}"
+                Style="{StaticResource BasicButton}" />
+            <!--<Button
+                Grid.Column="3"
+                Click="Button_Click"
+                Content="{DynamicResource Cancel}"
+                Style="{StaticResource BasicButton}" />-->
+        </Grid>
+    </Grid>
+
+</Window>

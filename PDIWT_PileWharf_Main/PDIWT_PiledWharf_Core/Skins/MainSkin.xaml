@@ -39,6 +39,11 @@
     </Style>
     <SolidColorBrush x:Key="GroupBoxCaptionColor" Color="#0099CC" />
 
+    <Style x:Key="ResultLabel" TargetType="Label">
+        <Setter Property="Foreground" Value="OrangeRed" />
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+
     <!--  ValidationRules  -->
     <valid:RangeValidationRule
         x:Key="RealRangeValidationRule"
@@ -52,6 +57,7 @@
         Item2="{x:Static loc:Resources.PHCTubePile}"
         Item3="{x:Static loc:Resources.SteelTubePile}" />
     <converter:StringOfListToBooleanConverter x:Key="SteelPileStringOfListToBooleanConverter" Item1="{x:Static loc:Resources.SteelTubePile}" />
+    <converter:StringOfListToBooleanConverter x:Key="SquarePileShapeValueOfListToBooleanConverter" Item1="2" />
     <converter:StringOfListToVisibilityConverter
         x:Key="RoundPileStringOfListToVisibilityConverter"
         Item1="{x:Static loc:Resources.TubePile}"

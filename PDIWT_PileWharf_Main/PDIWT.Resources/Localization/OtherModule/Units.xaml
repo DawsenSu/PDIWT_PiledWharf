@@ -1,0 +1,11 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="Length">m</sys:String>
+    <sys:String x:Key="Velocity">m/s</sys:String>
+    <sys:String x:Key="Density">kg/m3</sys:String>
+    <sys:String x:Key="AreaPerLength">m2/m</sys:String>
+    <sys:String x:Key="Force">kN</sys:String>
+    <sys:String x:Key="AnglePoint">°</sys:String>
+</ResourceDictionary>

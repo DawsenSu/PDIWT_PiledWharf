@@ -35,6 +35,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,6 +46,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\SelectedPileTypeToBooleanConverter.cs" />
+    <Compile Include="CustomUserControl\LabelTextBox.xaml.cs">
+      <DependentUpon>LabelTextBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Localization\MainModule\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -54,7 +58,7 @@
     <Compile Include="ValidationRules\RangeValidationRule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Localization\OtherModule\" />
+    <Resource Include="Images\Icons\WaveForce.ico" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Localization\MainModule\Resources.en-US.resx" />
@@ -73,6 +77,27 @@
     <Resource Include="Images\Icons\PilePositionDrawing.ico" />
     <Resource Include="Images\Icons\Settings.ico" />
     <Resource Include="Images\Icons\WaveAndCurrentForceCalculation.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="CustomUserControl\LabelTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Resource Include="Localization\OtherModule\en-US.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+    <Resource Include="Localization\OtherModule\Units.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+    <Resource Include="Localization\OtherModule\zh-CN.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\WaterForce.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
