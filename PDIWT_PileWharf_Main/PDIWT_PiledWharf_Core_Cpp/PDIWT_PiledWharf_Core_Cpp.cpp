@@ -371,10 +371,10 @@ BentleyStatus PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::BuildECInstanceOnEl
 
 	_proplist.Insert(L"Length", WPrintfString(L"%f",DSegment3d::From(_bottomPoint, _topPoint).Length()/_uorpermm));
 	if (_pileType == PileType::PHCTubePile || _pileType == PileType::SteelTubePile || _pileType == PileType::TubePile)
-		_proplist.Insert(L"OutSideDiameter", WPrintfString(L"%f", _pileWidth / _uorpermm));
+		_proplist.Insert(L"OutsideDiameter", WPrintfString(L"%f", _pileWidth / _uorpermm));
 	if (_pileType == PileType::PHCTubePile || _pileType == PileType::SteelTubePile)
 	{
-		_proplist.Insert(L"WallTickness", WPrintfString(L"%f", (_pileWidth - _pileInsideDiameter) / _uorpermm));
+		_proplist.Insert(L"WallThickness", WPrintfString(L"%f", (_pileWidth - _pileInsideDiameter) / _uorpermm));
 		_proplist.Insert(L"InnerDiameter", WPrintfString(L"%f", _pileInsideDiameter /_uorpermm));
 	}
 	if (_pileType == PileType::SqaurePile)

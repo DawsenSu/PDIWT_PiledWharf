@@ -19,11 +19,11 @@ namespace PDIWT_PiledWharf_Main
         public static void Input_ImportFromFile(string unparsed)
         {
             PDIWT_PiledWharf_Core.Input_ImportFromFileWindow.ShowWindow(Program.Addin);
-            //Bentley.MstnPlatformNET.MessageCenter.Instance.StatusMessage = "Input Import FromFile";
         }
         public static void Input_PilePlacement(string unparsed)
         {
-            Bentley.MstnPlatformNET.MessageCenter.Instance.StatusMessage = "Input Import PliePlacement";
+            var _pilePlacementTool = new PDIWT_PiledWharf_Core.Model.Tools.PilePlacementTool(Program.Addin);
+            _pilePlacementTool.InstallNewInstance();
         }
         
 
@@ -39,8 +39,8 @@ namespace PDIWT_PiledWharf_Main
 
         public static void Process_CalculateWaveForce(string unparsed)
         {
-
-            Bentley.MstnPlatformNET.MessageCenter.Instance.StatusMessage = "Input Process CalcuateWaveForce";
+            PDIWT_PiledWharf_Core.WaveForceWindow.ShowWindow(Program.Addin);
+            //Bentley.MstnPlatformNET.MessageCenter.Instance.StatusMessage = "Input Process CalcuateWaveForce";
         }
         public static void Process_DetectCollision(string unparsed)
         {

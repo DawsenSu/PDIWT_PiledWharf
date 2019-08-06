@@ -375,7 +375,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             get
             {
                 return _writeEnvParameters
-                    ?? (_writeEnvParameters = new RelayCommand<Grid>(WriteEnvParametersExcuteMethod, grid => !PDIWT_Helper.EnumTextBoxHasError(grid)));
+                    ?? (_writeEnvParameters = new RelayCommand<Grid>(WriteEnvParametersExcuteMethod, grid => !PDIWT.Resources.PDIWT_Helper.EnumTextBoxHasError(grid)));
             }
         }
 

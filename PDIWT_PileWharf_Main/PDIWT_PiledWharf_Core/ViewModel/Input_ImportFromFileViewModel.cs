@@ -291,7 +291,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                                                                 _pileSpInfo.BottomJoint.Point.Z);
                     _topPoint.ScaleInPlace(uorpermm);
                     _bottomPoint.ScaleInPlace(uorpermm);
-                    PDIWT_PiledWharf_Core_Cpp.EntityCreation.CreatePie(SelectedPileTypeToEnum(), 
+                    PDIWT_PiledWharf_Core_Cpp.EntityCreation.CreatePile(SelectedPileTypeToEnum(), 
                                                                        _pileWidth * uorpermm, 
                                                                        _pileInsideDiameter * uorpermm, 
                                                                        _concreteCoreLength * uorpermm, 
@@ -308,7 +308,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
         private bool CanExecuteCreatePiles(Grid mainGrid)
         {
-            return _pileSpatialInforamtion.Count != 0 && !PDIWT_Helper.EnumTextBoxHasError(mainGrid);
+            return _pileSpatialInforamtion.Count != 0 && !PDIWT.Resources.PDIWT_Helper.EnumTextBoxHasError(mainGrid);
         }
 
         private PDIWT_PiledWharf_Core_Cpp.PileTypeManaged SelectedPileTypeToEnum()

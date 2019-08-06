@@ -46,22 +46,26 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                     <pdi:LabelTextBox
+                        x:Name="LabelTextBox_PileTopElevation"
                         Grid.Row="0"
                         DisplayName="{DynamicResource PileTopElevation}"
                         Parameter="{Binding PileTopElevation, UpdateSourceTrigger=LostFocus}"
                         Unit="{DynamicResource Length}" />
                     <pdi:LabelTextBox
+                        x:Name="LabelTextBox_PileHAT"
                         Grid.Row="1"
                         DisplayName="{DynamicResource HAT}"
                         Parameter="{Binding HAT, UpdateSourceTrigger=LostFocus}"
                         Unit="{DynamicResource Length}" />
                     <pdi:LabelTextBox
+                        x:Name="LabelTextBox_SoilElevation"
                         Grid.Row="2"
                         DisplayName="{DynamicResource SoilElevation}"
                         Parameter="{Binding SoilElevation, UpdateSourceTrigger=LostFocus}"
                         Unit="{DynamicResource Length}" />
                     <!--<TextBox Grid.Row="2" Text="{Binding SoilElevation}" />-->
                     <pdi:LabelTextBox
+                        x:Name="LabelTextBox_ProjectedWidth"
                         Grid.Row="3"
                         DisplayName="{DynamicResource ProjectedWidth}"
                         Parameter="{Binding ProjectedWidth, UpdateSourceTrigger=LostFocus}"
@@ -71,7 +75,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="150" />
                         </Grid.ColumnDefinitions>
-                        <Label Content="{DynamicResource Shape}" />
+                        <Label x:Name="Label_Shape" Content="{DynamicResource Shape}" />
                         <ComboBox
                             Grid.Column="1"
                             DisplayMemberPath="Shape"
@@ -80,27 +84,32 @@
                             SelectedValuePath="Value" />
                     </Grid>
                     <pdi:LabelTextBox
+                        x:Name="LabelTextBox_SquarePileAngle"
                         Grid.Row="5"
                         DisplayName="{DynamicResource Angle}"
                         IsEnabled="{Binding SelectedShape.Value, Converter={StaticResource SquarePileShapeValueOfListToBooleanConverter}}"
                         Parameter="{Binding SquarePileAngle, UpdateSourceTrigger=LostFocus}"
                         Unit="{DynamicResource AnglePoint}" />
                     <pdi:LabelTextBox
+                        x:Name="LabelTextBox_CurrentVelocity"
                         Grid.Row="6"
                         DisplayName="{DynamicResource CurrentVelocity}"
                         Parameter="{Binding CurrentVelocity, UpdateSourceTrigger=LostFocus}"
                         Unit="{DynamicResource Velocity}" />
                     <pdi:LabelTextBox
+                        x:Name="LabelTextBox_PileHorizontalCentraSpan"
                         Grid.Row="7"
                         DisplayName="{DynamicResource HorizontalPileCentraSpan}"
                         Parameter="{Binding PileHorizontalCentraSpan, UpdateSourceTrigger=LostFocus}"
                         Unit="{DynamicResource Length}" />
                     <pdi:LabelTextBox
+                        x:Name="LabelTextBox_PileVerticalCentraSpan"
                         Grid.Row="8"
                         DisplayName="{DynamicResource VerticalPileCentraSpan}"
                         Parameter="{Binding PileVerticalCentraSpan, UpdateSourceTrigger=LostFocus}"
                         Unit="{DynamicResource Length}" />
                     <pdi:LabelTextBox
+                        x:Name="LabelTextBox_WaterDensity"
                         Grid.Row="9"
                         DisplayName="{DynamicResource WaterDensity}"
                         Parameter="{Binding WaterDensity, UpdateSourceTrigger=LostFocus}"

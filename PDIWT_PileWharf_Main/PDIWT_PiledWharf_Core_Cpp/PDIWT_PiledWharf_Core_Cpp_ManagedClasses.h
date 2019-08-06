@@ -24,6 +24,6 @@ namespace PDIWT_PiledWharf_Core_Cpp {
 	public ref class EntityCreation
 	{
 	public:
-		static void CreatePie(PileTypeManaged pileType, double pileWidth, double pileInsideDiameter, double pileConcreteCoreLength, Bentley::GeometryNET::DPoint3d topPoint, Bentley::GeometryNET::DPoint3d bottomPoint);
+		static void CreatePile(PileTypeManaged pileType, double pileWidth, double pileInsideDiameter, double pileConcreteCoreLength, Bentley::GeometryNET::DPoint3d topPoint, Bentley::GeometryNET::DPoint3d bottomPoint);
 	};
 }

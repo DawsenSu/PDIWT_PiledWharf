@@ -16,6 +16,7 @@ using PDIWT_PiledWharf_Core.ViewModel;
 
 using BM = Bentley.MstnPlatformNET;
 using BMWPF = Bentley.MstnPlatformNET.WPF;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace PDIWT_PiledWharf_Core
 {
@@ -34,6 +35,20 @@ namespace PDIWT_PiledWharf_Core
             m_wpfhelper = new BMWPF.WPFInteropHelper(this);
             m_wpfhelper.Attach(addIn, true, "CurrentForceWindow");
             Icon = new BitmapImage(new Uri("pack://application:,,,/PDIWT.Resources;component/Images/Icons/WaterForce.ico", UriKind.RelativeOrAbsolute));
+
+            _controlListNeedForChange = new List<Control> {
+                LabelTextBox_PileTopElevation,
+                LabelTextBox_PileHAT,
+                LabelTextBox_SoilElevation,
+                LabelTextBox_ProjectedWidth,
+                Label_Shape,
+                //LabelTextBox_SquarePileAngle,
+                //LabelTextBox_CurrentVelocity,
+                //LabelTextBox_PileHorizontalCentraSpan,
+                //LabelTextBox_PileVerticalCentraSpan,
+                LabelTextBox_WaterDensity};
+
+            Messenger.Default.Register<NotificationMessage<bool>>(this, "ControlForegroundChange" ,ChangeControlsForeground);
         }
 
         static CurrentForceWindow m_CurrentForceWindowhost;
@@ -76,5 +91,20 @@ namespace PDIWT_PiledWharf_Core
         {
             Close();
         }
+
+        List<Control> _controlListNeedForChange;
+
+        private void ChangeControlsForeground(NotificationMessage<bool> notification)
+        {
+            bool _isLoadFromEntity = notification.Content;
+            foreach (var _control in _controlListNeedForChange)
+            {
+                if (_isLoadFromEntity)
+                    _control.Foreground = new SolidColorBrush(Colors.DodgerBlue);
+                else
+                    _control.Foreground = new SolidColorBrush(Colors.Black);
+            }
+        }
+
     }
 }

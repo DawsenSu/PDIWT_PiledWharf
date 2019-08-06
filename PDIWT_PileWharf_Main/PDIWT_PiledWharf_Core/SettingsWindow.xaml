@@ -318,7 +318,7 @@
                     <Label
                         Grid.Row="0"
                         Grid.Column="0"
-                        Content="HAT:" />
+                        Content="{x:Static loc:Resources.HAT}" />
                     <TextBox
                         Grid.Row="0"
                         Grid.Column="1"
@@ -336,7 +336,7 @@
                     <Label
                         Grid.Row="1"
                         Grid.Column="0"
-                        Content="MHW:" />
+                        Content="{x:Static loc:Resources.MHW}" />
                     <TextBox
                         Grid.Row="1"
                         Grid.Column="1"
@@ -354,7 +354,7 @@
                     <Label
                         Grid.Row="2"
                         Grid.Column="0"
-                        Content="MSL:" />
+                        Content="{x:Static loc:Resources.MSL}" />
                     <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
@@ -372,7 +372,7 @@
                     <Label
                         Grid.Row="3"
                         Grid.Column="0"
-                        Content="MLW:" />
+                        Content="{x:Static loc:Resources.MLW}" />
                     <TextBox
                         Grid.Row="3"
                         Grid.Column="1"
@@ -390,7 +390,7 @@
                     <Label
                         Grid.Row="4"
                         Grid.Column="0"
-                        Content="LAT:" />
+                        Content="{x:Static loc:Resources.LAT}" />
                     <TextBox
                         Grid.Row="4"
                         Grid.Column="1"

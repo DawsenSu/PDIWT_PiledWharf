@@ -38,7 +38,27 @@
     <sys:String x:Key="GenerateNote">Generate Note</sys:String>
     <sys:String x:Key="Cancel">Cancel</sys:String>
 
-    <sys:String x:Key="Round">Round</sys:String>
-    <sys:String x:Key="Square">Square</sys:String>
+    <sys:String x:Key="Round">Tube Pile</sys:String>
+    <sys:String x:Key="Square">Square Pile</sys:String>
     <sys:String x:Key="Others">Others</sys:String>
+
+    <sys:String x:Key="WaveForceWindowTitle">Wave Action Force for Pile and Pier Structure</sys:String>
+    <sys:String x:Key="PileParameters">Pile Parameters</sys:String>
+    <sys:String x:Key="PileDiameter">Pile Diameter</sys:String>
+    <sys:String x:Key="PileCentraSpan">Pile Centra Span</sys:String>
+    <sys:String x:Key="ForceCoeffs">Force Coefficients</sys:String>
+    <sys:String x:Key="VelocityForceCoeffCD">Velocity Force Coefficient(CD)</sys:String>
+    <sys:String x:Key="VelocityForceCoeffCM">Velocity Force Coefficient(CM)</sys:String>
+    <sys:String x:Key="GravitationalAcceleration">Gravitational Acceleration(g)</sys:String>
+    <sys:String x:Key="WaterWeight">Water Weight(γ)</sys:String>
+    <sys:String x:Key="WharfElevations">Wharf Elevations</sys:String>
+    <sys:String x:Key="TopElevation">Top Elevation</sys:String>
+    <sys:String x:Key="BottomElevation">Bottom Elevation</sys:String>
+    <sys:String x:Key="DesignWaterLevel">Design Water Level</sys:String>
+    <sys:String x:Key="MHW">MHW</sys:String>
+    <sys:String x:Key="MLW">MLW</sys:String>
+    <sys:String x:Key="LAT">LAT</sys:String>
+    <sys:String x:Key="WaveParameters">Wave Parameters</sys:String>
+    <sys:String x:Key="WaterDepth">Water Depth d(m)</sys:String>
+    <sys:String x:Key="WaveLength">Wave Length L(m)</sys:String>
 </ResourceDictionary>

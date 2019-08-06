@@ -8,4 +8,6 @@
     <sys:String x:Key="AreaPerLength">m2/m</sys:String>
     <sys:String x:Key="Force">kN</sys:String>
     <sys:String x:Key="AnglePoint">°</sys:String>
+    <sys:String x:Key="Weight">kN/m3</sys:String>
+    <sys:String x:Key="Acceleration">m/s2</sys:String>
 </ResourceDictionary>

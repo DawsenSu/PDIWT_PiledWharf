@@ -21,7 +21,7 @@ PDIWT_PiledWharf_Core_Cpp::SettingsWriteStatus PDIWT_PiledWharf_Core_Cpp::ECFram
 	return SettingsWriteStatus::SUCCESS;
 }
 
-void PDIWT_PiledWharf_Core_Cpp::EntityCreation::CreatePie(PileTypeManaged pileType, double pileWidth, double pileInsideDiameter, double pileConcreteCoreLength, Bentley::GeometryNET::DPoint3d topPoint, Bentley::GeometryNET::DPoint3d bottomPoint)
+void PDIWT_PiledWharf_Core_Cpp::EntityCreation::CreatePile(PileTypeManaged pileType, double pileWidth, double pileInsideDiameter, double pileConcreteCoreLength, Bentley::GeometryNET::DPoint3d topPoint, Bentley::GeometryNET::DPoint3d bottomPoint)
 {
 	DPoint3d _topPointUnmanaged = DPoint3d::From(topPoint.X, topPoint.Y, topPoint.Z);
 	DPoint3d _bottomPointUnmanaged = DPoint3d::From(bottomPoint.X, bottomPoint.Y, bottomPoint.Z);

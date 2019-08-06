@@ -1,0 +1,421 @@
+﻿<Window
+    x:Class="PDIWT_PiledWharf_Core.WaveForceWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:loc="clr-namespace:PDIWT.Resources.Localization.MainModule;assembly=PDIWT.Resources"
+    xmlns:local="clr-namespace:PDIWT_PiledWharf_Core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pdi="clr-namespace:PDIWT.Resources.CustomUserControl;assembly=PDIWT.Resources"
+    Title="WaveForceWindow"
+    Width="800"
+    Height="591.333"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/Units.xaml" />
+                <ResourceDictionary Source="Skins/MainSkin.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/zh-CN.xaml" />-->
+                <ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/en-US.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid x:Name="MainGridLayout" Margin="2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <TabControl Grid.Row="0">
+            <TabItem Margin="-2,0,-2,-2" Header="{DynamicResource InputParameter}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <GroupBox
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Margin="2"
+                        Header="{DynamicResource PileParameters}">
+                        <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="150" />
+                                </Grid.ColumnDefinitions>
+                                <Label x:Name="Label_Shape" Content="{DynamicResource Shape}" />
+                                <ComboBox
+                                    Grid.Column="1"
+                                    DisplayMemberPath="Shape"
+                                    ItemsSource="{Binding ShapeCategory, Mode=OneTime}"
+                                    SelectedItem="{Binding SelectedShape}"
+                                    SelectedValuePath="Value" />
+                            </Grid>
+                            <pdi:LabelTextBox
+                                DisplayName="{DynamicResource PileDiameter}"
+                                Parameter="{Binding PileDiameter}"
+                                Unit="{DynamicResource Length}" />
+                            <pdi:LabelTextBox
+                                DisplayName="{DynamicResource PileCentraSpan}"
+                                Parameter="{Binding PileCentraSpan}"
+                                Unit="{DynamicResource Length}" />
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Margin="2"
+                        Header="{DynamicResource WharfElevations}">
+                        <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
+                            <pdi:LabelTextBox
+                                DisplayName="{DynamicResource TopElevation}"
+                                Parameter="{Binding TopElevation}"
+                                Unit="{DynamicResource Length}" />
+                            <pdi:LabelTextBox
+                                DisplayName="{DynamicResource BottomElevation}"
+                                Parameter="{Binding BottomElevation}"
+                                Unit="{DynamicResource Length}" />
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="2"
+                        Header="{DynamicResource DesignWaterLevel}">
+                        <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
+                            <pdi:LabelTextBox
+                                DisplayName="{DynamicResource HAT}"
+                                Parameter="{Binding HAT}"
+                                Unit="{DynamicResource Length}" />
+                            <pdi:LabelTextBox
+                                DisplayName="{DynamicResource MHW}"
+                                Parameter="{Binding MHW}"
+                                Unit="{DynamicResource Length}" />
+                            <pdi:LabelTextBox
+                                DisplayName="{DynamicResource MLW}"
+                                Parameter="{Binding MLW}"
+                                Unit="{DynamicResource Length}" />
+                            <pdi:LabelTextBox
+                                DisplayName="{DynamicResource LAT}"
+                                Parameter="{Binding LAT}"
+                                Unit="{DynamicResource Length}" />
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="2"
+                        Header="{DynamicResource ForceCoeffs}">
+                        <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
+                            <pdi:LabelTextBox DisplayName="{DynamicResource VelocityForceCoeffCD}" Parameter="{Binding VelocityForceCoeffCD}" />
+                            <pdi:LabelTextBox
+                                DisplayName="{DynamicResource VelocityForceCoeffCM}"
+                                IsEnabled="False"
+                                Parameter="{Binding VelocityForceCoeffCM}" />
+                            <pdi:LabelTextBox
+                                DisplayName="{DynamicResource WaterWeight}"
+                                Parameter="{Binding WaterWeight}"
+                                Unit="{DynamicResource Weight}" />
+                            <pdi:LabelTextBox
+                                DisplayName="{DynamicResource GravitationalAcceleration}"
+                                Parameter="{Binding GravitationalAcceleration}"
+                                Unit="{DynamicResource Acceleration}" />
+                        </StackPanel>
+                    </GroupBox>
+                    <DataGrid
+                        Grid.Row="2"
+                        Grid.ColumnSpan="2"
+                        Margin="3"
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        CanUserDeleteRows="False"
+                        CanUserReorderColumns="False"
+                        CanUserSortColumns="False"
+                        ColumnWidth="*"
+                        ItemsSource="{Binding DesignInputParameters}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding DesignWaterLevel}" IsReadOnly="True">
+                                <DataGridTextColumn.Header>
+                                    <TextBlock Text="{DynamicResource DesignWaterLevel}" />
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding H1}" Header="H1%(m)" />
+                            <DataGridTextColumn Binding="{Binding H13}" Header="H13%(m)" />
+                            <DataGridTextColumn Binding="{Binding T}" Header="T(s)" />
+                            <DataGridTextColumn Binding="{Binding WaterDepth}">
+                                <DataGridTextColumn.Header>
+                                    <TextBlock Text="{DynamicResource WaterDepth}" />
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Binding="{Binding WaveLength, Mode=OneWay, StringFormat={}{0:F2}}" IsReadOnly="True">
+                                <DataGridTextColumn.Header>
+                                    <TextBlock Text="{DynamicResource WaveLength}" />
+                                </DataGridTextColumn.Header>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="{DynamicResource CalculatedParameter}">
+                <DataGrid
+                    Margin="3"
+                    AutoGenerateColumns="False"
+                    CanUserAddRows="False"
+                    CanUserDeleteRows="False"
+                    CanUserReorderColumns="False"
+                    CanUserResizeRows="False"
+                    CanUserSortColumns="False"
+                    ColumnWidth="50"
+                    HorizontalScrollBarVisibility="Visible"
+                    IsReadOnly="True"
+                    ItemsSource="{Binding CalculatedParameters}"
+                    RowHeight="50">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding DesignWaterLevel}" Foreground="Red">
+                            <DataGridTextColumn.Header>
+                                <TextBlock Text="{DynamicResource DesignWaterLevel}" />
+                            </DataGridTextColumn.Header>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn
+                            Binding="{Binding D_L, Mode=OneWay, StringFormat={}{0:F3}}"
+                            Foreground="Red"
+                            Header="D/L" />
+                        <DataGridTextColumn
+                            Binding="{Binding H_D, Mode=OneWay, StringFormat={}{0:F3}}"
+                            Foreground="Red"
+                            Header="H/d" />
+                        <DataGridTextColumn
+                            Binding="{Binding DD_L, Mode=OneWay, StringFormat={}{0:F3}}"
+                            Foreground="Red"
+                            Header="d/L" />
+                        <DataGridTextColumn
+                            Binding="{Binding YitaMax, Mode=OneWay, StringFormat={}{0:F2}}"
+                            Foreground="Red"
+                            Header="ηmax" />
+                        <DataGridTextColumn
+                            Binding="{Binding Alpha, Mode=OneWay, StringFormat={}{0:F2}}"
+                            Foreground="Red"
+                            Header="α" />
+                        <DataGridTextColumn
+                            Binding="{Binding Beta, Mode=OneWay, StringFormat={}{0:F2}}"
+                            Foreground="Red"
+                            Header="β" />
+                        <DataGridTextColumn
+                            Binding="{Binding GammaP, Mode=OneWay, StringFormat={}{0:F2}}"
+                            Foreground="Red"
+                            Header="γP" />
+                        <DataGridTextColumn
+                            Binding="{Binding GammaM, Mode=OneWay, StringFormat={}{0:F2}}"
+                            Foreground="Red"
+                            Header="γM" />
+                        <DataGridTextColumn
+                            Binding="{Binding K, Mode=OneWay, StringFormat={}{0:F2}}"
+                            Foreground="Red"
+                            Header="K" />
+                        <DataGridTextColumn
+                            Binding="{Binding F0, Mode=OneWay, StringFormat={}{0:F2}}"
+                            Foreground="Red"
+                            Header="f0" />
+                        <DataGridTextColumn
+                            Binding="{Binding F1, Mode=OneWay, StringFormat={}{0:F2}}"
+                            Foreground="Red"
+                            Header="f1" />
+                        <DataGridTextColumn
+                            Binding="{Binding F2, Mode=OneWay, StringFormat={}{0:F2}}"
+                            Foreground="Red"
+                            Header="f2" />
+                        <DataGridTextColumn
+                            Binding="{Binding F3, Mode=OneWay, StringFormat={}{0:F2}}"
+                            Foreground="Red"
+                            Header="f3" />
+                        <DataGridTextColumn
+                            Binding="{Binding OmgaT, Mode=OneWay, StringFormat={}{0:F2}}"
+                            Foreground="Red"
+                            Header="ωt" />
+                        <DataGridTextColumn
+                            Binding="{Binding K1, Mode=OneWay, StringFormat={}{0:F3}}"
+                            Foreground="Red"
+                            Header="K1" />
+                        <DataGridTextColumn
+                            Binding="{Binding K2, Mode=OneWay, StringFormat={}{0:F3}}"
+                            Foreground="Red"
+                            Header="K2" />
+                        <DataGridTextColumn
+                            Binding="{Binding K3, Mode=OneWay, StringFormat={}{0:F3}}"
+                            Foreground="Red"
+                            Header="K3" />
+                        <DataGridTextColumn
+                            Binding="{Binding K4, Mode=OneWay, StringFormat={}{0:F3}}"
+                            Foreground="Red"
+                            Header="K4" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+        </TabControl>
+
+        <GroupBox
+            Grid.Row="1"
+            Margin="2"
+            Header="{DynamicResource CalculatedResult}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Content="Pmax(kN)" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Content="Mmax(kN.m)" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="3"
+                    Content="Pu(kN)" />
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="4"
+                    Content="Mu(kN.m)" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Content="{DynamicResource HAT}" />
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Style="{StaticResource TextBox_Result}"
+                    Text="{Binding Results[0].PMax, StringFormat={}{0:F1}}" />
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Style="{StaticResource TextBox_Result}"
+                    Text="{Binding Results[0].MMax, StringFormat={}{0:F1}}" />
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="3"
+                    Style="{StaticResource TextBox_Result}"
+                    Text="{Binding Results[0].Pu, StringFormat={}{0:F1}}" />
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="4"
+                    Style="{StaticResource TextBox_Result}"
+                    Text="{Binding Results[0].Mu, StringFormat={}{0:F1}}" />
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Content="{DynamicResource MHW}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Style="{StaticResource TextBox_Result}"
+                    Text="{Binding Results[1].PMax, StringFormat={}{0:F1}}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Style="{StaticResource TextBox_Result}"
+                    Text="{Binding Results[1].MMax, StringFormat={}{0:F1}}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="3"
+                    Style="{StaticResource TextBox_Result}"
+                    Text="{Binding Results[1].Pu, StringFormat={}{0:F1}}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="4"
+                    Style="{StaticResource TextBox_Result}"
+                    Text="{Binding Results[1].Mu, StringFormat={}{0:F1}}" />
+                <Label
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Content="{DynamicResource MLW}" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Style="{StaticResource TextBox_Result}"
+                    Text="{Binding Results[2].PMax, StringFormat={}{0:F1}}" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Style="{StaticResource TextBox_Result}"
+                    Text="{Binding Results[2].MMax, StringFormat={}{0:F1}}" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="3"
+                    Style="{StaticResource TextBox_Result}"
+                    Text="{Binding Results[2].Pu, StringFormat={}{0:F1}}" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="4"
+                    Style="{StaticResource TextBox_Result}"
+                    Text="{Binding Results[2].Mu, StringFormat={}{0:F1}}" />
+                <Label
+                    Grid.Row="4"
+                    Grid.Column="0"
+                    Content="{DynamicResource LAT}" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Style="{StaticResource TextBox_Result}"
+                    Text="{Binding Results[3].PMax, StringFormat={}{0:F1}}" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="2"
+                    Style="{StaticResource TextBox_Result}"
+                    Text="{Binding Results[3].MMax, StringFormat={}{0:F1}}" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="3"
+                    Style="{StaticResource TextBox_Result}"
+                    Text="{Binding Results[3].Pu, StringFormat={}{0:F1}}" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="4"
+                    Style="{StaticResource TextBox_Result}"
+                    Text="{Binding Results[3].Mu, StringFormat={}{0:F1}}" />
+            </Grid>
+        </GroupBox>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <Button
+                Grid.Column="0"
+                Command="{Binding LoadParameter}"
+                Content="{DynamicResource LoadParameter}"
+                Style="{StaticResource BasicButton}" />
+            <Button
+                Grid.Column="2"
+                Command="{Binding Calculate}"
+                Content="{DynamicResource Calculate}"
+                Style="{StaticResource BasicButton}" />
+            <Button
+                Grid.Column="3"
+                Click="Button_Click"
+                Content="{DynamicResource Cancel}"
+                Style="{StaticResource BasicButton}" />
+        </Grid>
+    </Grid>
+</Window>

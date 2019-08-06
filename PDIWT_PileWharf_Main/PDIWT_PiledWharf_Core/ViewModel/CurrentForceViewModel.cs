@@ -10,8 +10,11 @@ using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 
 using PDIWT_PiledWharf_Core.Model;
-using MN = MathNet.Numerics;
+using PDIWT.Resources.Localization.MainModule;
+using PDIWT.Formulas;
 
+using MN = MathNet.Numerics;
+using BM = Bentley.MstnPlatformNET;
 namespace PDIWT_PiledWharf_Core.ViewModel
 {
     public class CurrentForceViewModel : ViewModelBase
@@ -23,12 +26,14 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             SoilElevation = -22.4;
             ProjectedWidth = 1.6;
 
-            ResourceDictionary _resDic = new ResourceDictionary();
-            _resDic.Source = new Uri("PDIWT.Resources;component/Localization/OtherModule/en-US.xaml", UriKind.Relative);
+            //ResourceDictionary _resDic = new ResourceDictionary();
+            //_resDic.Source = new Uri("PDIWT.Resources;component/Localization/OtherModule/en-US.xaml", UriKind.Relative);
             ShapeCategory = new List<ShapeInfo>
                 {
-                    new ShapeInfo() { Shape = (string)_resDic["Round"], Value =1 },
-                    new ShapeInfo() { Shape = (string)_resDic["Square"], Value =2 },
+                    new ShapeInfo() { Shape = Resources.SquarePile, Value =2 },
+                    new ShapeInfo() { Shape = Resources.TubePile, Value =1 },
+                    new ShapeInfo() { Shape = Resources.PHCTubePile, Value =1 },
+                    new ShapeInfo() { Shape = Resources.SteelTubePile, Value =1 }
                 };
             SelectedShape = ShapeCategory[0];
             SquarePileAngle = 0;
@@ -40,6 +45,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             UpdatedRelatedProperties(new PropertyChangedMessage<double>(0, 0, "Initial"));
             MessengerInstance.Register<PropertyChangedMessage<double>>(this, UpdatedRelatedProperties);
             MessengerInstance.Register<PropertyChangedMessage<ShapeInfo>>(this, UpdatedRelatedProperties);
+            Messenger.Default.Register<NotificationMessage<Model.Tools.PDIWT_CurrentForePileInfo>>(this,LoadParameterFromPileEntity);
         }
 
 
@@ -582,7 +588,25 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
         private void ExecuteLoadParameter()
         {
-            MessageBox.Show("Load Parameter");
+            Model.Tools.LoadPileParametersTool.InstallNewInstance();
+        }
+
+        private void LoadParameterFromPileEntity(NotificationMessage<Model.Tools.PDIWT_CurrentForePileInfo> notification)
+        {
+            if (notification.Notification == PDIWT.Resources.Localization.MainModule.Resources.Error)
+                BM.MessageCenter.Instance.ShowErrorMessage("Can't Load Parameter From selected element","Error",BM.MessageAlert.None);
+            else
+            {
+                var _pileInfo = notification.Content;
+                PileTopElevation = _pileInfo.TopElevation;
+                HAT = _pileInfo.HAT;
+                ProjectedWidth = _pileInfo.ProjectedWidth;
+                SelectedShape = ShapeCategory.Where(shapeinfo => shapeinfo.Shape == _pileInfo.Shape).FirstOrDefault();
+                WaterDensity = _pileInfo.WaterDensity;
+                BM.MessageCenter.Instance.ShowInfoMessage("SUCCESS", "Load Parameter", BM.MessageAlert.None);
+                Messenger.Default.Send(new NotificationMessage<bool>(true, "ChangeControlForegroud"), "ControlForegroundChange");
+            }
+
         }
 
         private RelayCommand _calculate;
@@ -606,6 +630,9 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             CurrentForceForRearPile = CurrentResistentCoeff * WaterDensity / 1000 / 2 * Math.Pow(CurrentVelocity, 2) * ProjectedArea * ShelteringCoeff * SubmergedCoeff * WaterDepthCoeff * HorizontalAffectCoeff * IncliningAffectCoeff;
             ActionPointForFrontPile = PileTopElevation - HAT + PileHeight / 3;
             ActionPointForRearPile = ActionPointForFrontPile;
+            //Change The Loaded Controls Forground
+            Messenger.Default.Send(new NotificationMessage<bool>(false, "ChangeControlForegroud"), "ControlForegroundChange");
+
         }
 
         private void UpdatedRelatedProperties(PropertyChangedMessage<ShapeInfo> propertyChangedMessage)
@@ -620,11 +647,11 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                 CurrentResistentCoeff = 0.73;
             else
                 CurrentResistentCoeff = 1.5;
-            ShelteringCoeff = CalculateShelteringCoeff((PileVerticalCentraSpan - ProjectedWidth) / ProjectedWidth);
+            ShelteringCoeff = CurrentForce.CalculateShelteringCoeff((PileVerticalCentraSpan - ProjectedWidth) / ProjectedWidth);
             SubmergedCoeff = 1;
-            WaterDepthCoeff = CalculateWaterDepthCoeff(PileHeight - ProjectedWidth);
-            HorizontalAffectCoeff = CalculatedHorizontalAffectCoeff((PileHorizontalCentraSpan - ProjectedWidth) / ProjectedWidth, SelectedShape);
-            IncliningAffectCoeff = CalculateIncliningAffectCoeff(SquarePileAngle, SelectedShape);
+            WaterDepthCoeff = CurrentForce.CalculateWaterDepthCoeff(PileHeight - ProjectedWidth);
+            HorizontalAffectCoeff = CurrentForce.CalculatedHorizontalAffectCoeff((PileHorizontalCentraSpan - ProjectedWidth) / ProjectedWidth, SelectedShape);
+            IncliningAffectCoeff = CurrentForce.CalculateIncliningAffectCoeff(SquarePileAngle, SelectedShape);
 
             CurrentForceForFrontPile = 0.0;
             CurrentForceForRearPile = 0.0;
@@ -632,71 +659,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             ActionPointForRearPile = 0.0;
         }
 
-        private double CalculateShelteringCoeff(double input, bool isFrontPile = false)
-        {
-
-            double _result = 1.0;
-            if (isFrontPile)
-                return _result;
-            else
-            {
-                double[] _LD = { 1, 2, 3, 4, 6, 8, 12, 16, 18, 20 };
-                double[] _m1Rear = { -0.38, 0.25, 0.54, 0.66, 0.78, 0.82, 0.86, 0.88, 0.9, 1 };
-                MN.Interpolation.LinearSpline _linearSolver = MN.Interpolation.LinearSpline.InterpolateSorted(_LD, _m1Rear);
-                _result = _linearSolver.Interpolate(input);
-                if (_result > 1)
-                    _result = 1;
-                return _result;
-            }
-        }
-
-        private double CalculateWaterDepthCoeff(double H_D)
-        {
-            double _result = 0.0;
-            double[] _h_d = { 1, 2, 4, 6, 8, 10, 12, 14 };
-            double[] _n2 = { 0.76, 0.78, 0.82, 0.85, 0.89, 0.93, 0.97, 1 };
-            var _linearSolver = MN.Interpolate.Linear(_h_d, _n2);
-            _result = _linearSolver.Interpolate(H_D);
-            if (_result > 1)
-                _result = 1;
-            return _result;
-        }
-
-        private double CalculatedHorizontalAffectCoeff(double B_D, ShapeInfo shape)
-        {
-            double _result = 0;
-            if (shape.Value == 1)
-            {
-                double[] _b_d = { 3, 7, 10, 15 };
-                double[] _m2 = { 1.83, 1.25, 1.15, 1 };
-                var _linearSolver = MN.Interpolation.LinearSpline.InterpolateSorted(_b_d, _m2);
-                _result = _linearSolver.Interpolate(B_D);
-            }
-            else
-            {
-                double[] _b_d = { 4, 6, 8, 10, 12 };
-                double[] _m2 = { 1.21, 1.08, 1.06, 1.03, 1 };
-                var _linearSolver = MN.Interpolation.LinearSpline.InterpolateSorted(_b_d, _m2);
-                _result = _linearSolver.Interpolate(B_D);
-            }
-
-            if (_result < 1)
-                _result = 1;
-            return _result;
-        }
-
-        private double CalculateIncliningAffectCoeff(double alpha, ShapeInfo shape)
-        {
-            double _result = 1;
-            if(shape.Value == 2)
-            {
-                double[] _alpha = { 0, 10, 20, 30, 45 };
-                double[] _m3 = { 1, 0.67, 0.67, 0.71, 0.75 };
-                var _linerSolver = MN.Interpolate.Linear(_alpha, _m3);
-                _result = _linerSolver.Interpolate(alpha);
-            }
-            return _result;
-        }
+        
 
         private RelayCommand _generateNote;
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.ComponentModel;
 using System.IO;
 using Aspose.Words;
 using WpfMath;
@@ -11,7 +11,9 @@ using BD = Bentley.DgnPlatformNET;
 
 namespace PDIWT_PiledWharf_Core.Model
 {
-
+    /// <summary>
+    /// The base calls for Generate Calculation Note
+    /// </summary>
     public abstract class PDIWT_CalculationNoteBuilderBase
     {
         public PDIWT_CalculationNoteBuilderBase(string templateName, string outFilePath)
@@ -37,6 +39,8 @@ namespace PDIWT_PiledWharf_Core.Model
 
         protected Document _document;
     }
+
+
 
     public class PDIWT_CurrentForceCalculationNoteBuilder : PDIWT_CalculationNoteBuilderBase 
     {
@@ -182,9 +186,13 @@ namespace PDIWT_PiledWharf_Core.Model
 
     public enum PDIWT_ProjectPhase
     {
+        [Description("PreliminaryFeasibilityStudy")]
         Preliminary_Feasibility_Study,
+        [Description("FeasibilityStudy")]
         Feasibility_Study,
+        [Description("PreliminaryDesign")]
         PreliminaryDesign,
+        [Description("ConstructionDesign")]
         Construction_Design
     }
 }

@@ -38,7 +38,27 @@
     <sys:String x:Key="Calculate">计算</sys:String>
     <sys:String x:Key="Cancel">取消</sys:String>
 
-    <sys:String x:Key="Round">圆形</sys:String>
-    <sys:String x:Key="Square">方形</sys:String>
+    <sys:String x:Key="Round">管桩</sys:String>
+    <sys:String x:Key="Square">方桩</sys:String>
     <sys:String x:Key="Others">其他</sys:String>
+
+    <sys:String x:Key="WaveForceWindowTitle">波浪对圆形桩基和墩柱建筑物的作用</sys:String>
+    <sys:String x:Key="PileParameters">柱体参数</sys:String>
+    <sys:String x:Key="PileDiameter">柱体直径</sys:String>
+    <sys:String x:Key="PileCentraSpan">柱体中心距</sys:String>
+    <sys:String x:Key="ForceCoeffs">计算力系数</sys:String>
+    <sys:String x:Key="VelocityForceCoeffCD">速度力系数CD</sys:String>
+    <sys:String x:Key="VelocityForceCoeffCM">速度力系数CM</sys:String>
+    <sys:String x:Key="GravitationalAcceleration">重力加速度g</sys:String>
+    <sys:String x:Key="WaterWeight">水重度γ</sys:String>
+    <sys:String x:Key="WharfElevations">码头标高</sys:String>
+    <sys:String x:Key="TopElevation">顶标高</sys:String>
+    <sys:String x:Key="BottomElevation">底标高</sys:String>
+    <sys:String x:Key="DesignWaterLevel">设计水位</sys:String>
+    <sys:String x:Key="MHW">设计高水位</sys:String>
+    <sys:String x:Key="MLW">设计低水位</sys:String>
+    <sys:String x:Key="LAT">极端低水位</sys:String>
+    <sys:String x:Key="WaveParameters">波浪要素</sys:String>
+    <sys:String x:Key="WaterDepth">水深d(m)</sys:String>
+    <sys:String x:Key="WaveLength">波长L(m)</sys:String>
 </ResourceDictionary>

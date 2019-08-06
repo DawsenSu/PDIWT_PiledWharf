@@ -250,7 +250,7 @@
     <value>PHC管桩</value>
   </data>
   <data name="SteelTubePile" xml:space="preserve">
-    <value>Steel Tube Pile</value>
+    <value>钢管桩</value>
   </data>
   <data name="PileWidth" xml:space="preserve">
     <value>桩宽(桩径)</value>
@@ -347,5 +347,26 @@
   </data>
   <data name="WordFileFilter" xml:space="preserve">
     <value>Word文档(*.docx)|*.docx</value>
+  </data>
+  <data name="PilePlacementTool" xml:space="preserve">
+    <value>桩基放置工具</value>
+  </data>
+  <data name="HAT" xml:space="preserve">
+    <value>极端高水位</value>
+  </data>
+  <data name="MHW" xml:space="preserve">
+    <value>设计高水位</value>
+  </data>
+  <data name="MSL" xml:space="preserve">
+    <value>平均水位</value>
+  </data>
+  <data name="MLW" xml:space="preserve">
+    <value>设计低水位</value>
+  </data>
+  <data name="LAT" xml:space="preserve">
+    <value>极端低水位</value>
+  </data>
+  <data name="WaterDepth" xml:space="preserve">
+    <value>水深d(m)</value>
   </data>
 </root>

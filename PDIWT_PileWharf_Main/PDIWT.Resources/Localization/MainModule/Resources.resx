@@ -348,4 +348,25 @@
   <data name="WordFileFilter" xml:space="preserve">
     <value>Word(*.docx)|*.docx</value>
   </data>
+  <data name="PilePlacementTool" xml:space="preserve">
+    <value>Pile Placement Tool</value>
+  </data>
+  <data name="HAT" xml:space="preserve">
+    <value>HAT</value>
+  </data>
+  <data name="MHW" xml:space="preserve">
+    <value>MHW</value>
+  </data>
+  <data name="MSL" xml:space="preserve">
+    <value>MSL</value>
+  </data>
+  <data name="MLW" xml:space="preserve">
+    <value>MLW</value>
+  </data>
+  <data name="LAT" xml:space="preserve">
+    <value>LAT</value>
+  </data>
+  <data name="WaterDepth" xml:space="preserve">
+    <value>Water Depth d(m)</value>
+  </data>
 </root>

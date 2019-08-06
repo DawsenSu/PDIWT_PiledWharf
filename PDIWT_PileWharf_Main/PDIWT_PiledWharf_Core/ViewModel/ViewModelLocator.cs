@@ -32,6 +32,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             SimpleIoc.Default.Register<Input_ImportFromFileViewModel>();
             SimpleIoc.Default.Register<CurrentForceViewModel>();
             SimpleIoc.Default.Register<ReportGeneratorViewModel>();
+            SimpleIoc.Default.Register<PilePlacementViewModel>();
+            SimpleIoc.Default.Register<WaveForceViewModel>();
         }
 
         /// <summary>
@@ -68,6 +70,11 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
         public ReportGeneratorViewModel ReportGenerator => ServiceLocator.Current.GetInstance<ReportGeneratorViewModel>();
+
+        public PilePlacementViewModel PilePlacement => ServiceLocator.Current.GetInstance<PilePlacementViewModel>();
+
+        public WaveForceViewModel WaveForce => ServiceLocator.Current.GetInstance<WaveForceViewModel>();
+
         /// <summary>
         /// Cleans up all the resources.
         /// </summary>

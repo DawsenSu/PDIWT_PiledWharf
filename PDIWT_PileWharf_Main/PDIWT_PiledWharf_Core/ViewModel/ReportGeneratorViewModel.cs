@@ -19,7 +19,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
     {
         public ReportGeneratorViewModel()
         {
-            _projectPhaseCategory = new List<string> { Resources.PreliminaryFeasibilityStudy, Resources.FeasibilityStudy,Resources.PreliminaryDesign,Resources.ConstructionDesign};
+            //_projectPhaseCategory = new List<string> { Resources.PreliminaryFeasibilityStudy, Resources.FeasibilityStudy,Resources.PreliminaryDesign,Resources.ConstructionDesign};
+            _projectPhaseCategory = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<Model.PDIWT_ProjectPhase>().Values.ToList();
             _selectedPhase = _projectPhaseCategory[0];
             _calculatedItemName = "桩基水流力计算";
             _designDate = DateTime.Now;

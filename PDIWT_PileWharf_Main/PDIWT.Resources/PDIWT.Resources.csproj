@@ -49,6 +49,7 @@
     <Compile Include="CustomUserControl\LabelTextBox.xaml.cs">
       <DependentUpon>LabelTextBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PDIWT_Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Localization\MainModule\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

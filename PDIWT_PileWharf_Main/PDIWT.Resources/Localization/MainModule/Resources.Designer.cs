@@ -268,6 +268,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HAT.
+        /// </summary>
+        public static string HAT {
+            get {
+                return ResourceManager.GetString("HAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import.
         /// </summary>
         public static string Import {
@@ -304,6 +313,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to LAT.
+        /// </summary>
+        public static string LAT {
+            get {
+                return ResourceManager.GetString("LAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Material.
         /// </summary>
         public static string Material {
@@ -313,11 +331,38 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MHW.
+        /// </summary>
+        public static string MHW {
+            get {
+                return ResourceManager.GetString("MHW", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MLW.
+        /// </summary>
+        public static string MLW {
+            get {
+                return ResourceManager.GetString("MLW", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Modulus(E).
         /// </summary>
         public static string Modulus {
             get {
                 return ResourceManager.GetString("Modulus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MSL.
+        /// </summary>
+        public static string MSL {
+            get {
+                return ResourceManager.GetString("MSL", resourceCulture);
             }
         }
         
@@ -390,6 +435,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         public static string PileNumber {
             get {
                 return ResourceManager.GetString("PileNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pile Placement Tool.
+        /// </summary>
+        public static string PilePlacementTool {
+            get {
+                return ResourceManager.GetString("PilePlacementTool", resourceCulture);
             }
         }
         
@@ -696,6 +750,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         public static string Water {
             get {
                 return ResourceManager.GetString("Water", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Water Depth d(m).
+        /// </summary>
+        public static string WaterDepth {
+            get {
+                return ResourceManager.GetString("WaterDepth", resourceCulture);
             }
         }
         
