@@ -30,10 +30,14 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
             SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<Input_ImportFromFileViewModel>();
-            SimpleIoc.Default.Register<CurrentForceViewModel>();
-            SimpleIoc.Default.Register<ReportGeneratorViewModel>();
+            SimpleIoc.Default.Register<BearingCapacityViewModel>();
             SimpleIoc.Default.Register<PilePlacementViewModel>();
+            SimpleIoc.Default.Register<AttachBCInstanceViewModel>();
+            SimpleIoc.Default.Register<CurrentForceViewModel>();
+            //SimpleIoc.Default.Register<ReportGeneratorViewModel>();
             SimpleIoc.Default.Register<WaveForceViewModel>();
+            //SimpleIoc.Default.Register<BuildUpSoilLayersViewModel>();
+
         }
 
         /// <summary>
@@ -61,6 +65,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
         }
 
+        public BearingCapacityViewModel BearingCapacity => ServiceLocator.Current.GetInstance<BearingCapacityViewModel>();
+
         public CurrentForceViewModel CurrentForce
         {
             get
@@ -69,12 +75,14 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
         }
 
-        public ReportGeneratorViewModel ReportGenerator => ServiceLocator.Current.GetInstance<ReportGeneratorViewModel>();
+        //public ReportGeneratorViewModel ReportGenerator => ServiceLocator.Current.GetInstance<ReportGeneratorViewModel>();
 
         public PilePlacementViewModel PilePlacement => ServiceLocator.Current.GetInstance<PilePlacementViewModel>();
 
+        public AttachBCInstanceViewModel AttachBCInstance => ServiceLocator.Current.GetInstance<AttachBCInstanceViewModel>();
         public WaveForceViewModel WaveForce => ServiceLocator.Current.GetInstance<WaveForceViewModel>();
 
+        //public BuildUpSoilLayersViewModel BuildUpSoilLayers => ServiceLocator.Current.GetInstance<BuildUpSoilLayersViewModel>();
         /// <summary>
         /// Cleans up all the resources.
         /// </summary>

@@ -1,0 +1,100 @@
+﻿<Window
+    x:Class="PDIWT_PiledWharf_Core.PickUpSoilLayersFromLibWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:loc="clr-namespace:PDIWT.Resources.Localization.MainModule;assembly=PDIWT.Resources"
+    xmlns:local="clr-namespace:PDIWT_PiledWharf_Core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="{x:Static loc:Resources.PickupSoilLayersFromLib}"
+    Width="500"
+    Height="450"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Skins/MainSkin.xaml" />
+                <ResourceDictionary>
+                    <DataTemplate x:Key="SoilLayerListItemDataTemplate">
+                        <Border
+                            Margin="3"
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="SteelBlue"
+                            BorderThickness="1"
+                            CornerRadius="4">
+                            <Grid Margin="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock FontWeight="Bold" Text="{Binding SoilLayerNumber, Mode=OneWay}" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Margin="2,0"
+                                    Text="|" />
+                                <TextBlock Grid.Column="2" Text="{Binding SoilLayerName, Mode=OneWay}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <GroupBox Grid.Column="0" Header="{x:Static loc:Resources.Library}">
+                <ListBox
+                    x:Name="ListBox_Library"
+                    ItemTemplate="{StaticResource SoilLayerListItemDataTemplate}"
+                    ItemsSource="{Binding SelectedItemsFromLib}"
+                    SelectionMode="Multiple" />
+            </GroupBox>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <Button
+                    x:Name="Button_ToRight"
+                    Click="Button_Click_ToRight"
+                    Content="-&gt;"
+                    Style="{StaticResource BasicButton}" />
+                <Button
+                    x:Name="Button_ToLeft"
+                    Click="Button_Click_ToLeft"
+                    Content="&lt;-"
+                    Style="{StaticResource BasicButton}" />
+            </StackPanel>
+            <GroupBox Grid.Column="2" Header="{x:Static loc:Resources.Picked}">
+                <ListBox
+                    x:Name="ListBox_Picked"
+                    ItemTemplate="{StaticResource SoilLayerListItemDataTemplate}"
+                    ItemsSource="{Binding SelectedSoilLayerInfos}"
+                    SelectionMode="Multiple" />
+            </GroupBox>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button
+                Grid.Column="1"
+                Command="{Binding Confirm}"
+                Content="{x:Static loc:Resources.OK}"
+                Style="{StaticResource BasicButton}" />
+            <Button
+                Grid.Column="2"
+                Command="{Binding Cancel}"
+                Content="{x:Static loc:Resources.Cancel}"
+                Style="{StaticResource BasicButton}" />
+        </Grid>
+    </Grid>
+</Window>

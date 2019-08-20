@@ -9,7 +9,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 
-using PDIWT_PiledWharf_Core.Model;
+using PDIWT_PiledWharf_Core.Model.Tools;
 using PDIWT.Resources.Localization.MainModule;
 using PDIWT.Formulas;
 
@@ -588,7 +588,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
         private void ExecuteLoadParameter()
         {
-            Model.Tools.LoadPileParametersTool.InstallNewInstance();
+            Model.Tools.LoadPileParametersTool<PDIWT_CurrentForePileInfo>.InstallNewInstance(LoadParametersToolEnablerProvider.CurrentForceInfoEnabler);
         }
 
         private void LoadParameterFromPileEntity(NotificationMessage<Model.Tools.PDIWT_CurrentForePileInfo> notification)
@@ -598,11 +598,11 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             else
             {
                 var _pileInfo = notification.Content;
-                PileTopElevation = _pileInfo.TopElevation;
+                PileTopElevation = _pileInfo.TopElevation / 1000; // need to change mm to meter;
                 HAT = _pileInfo.HAT;
-                ProjectedWidth = _pileInfo.ProjectedWidth;
+                ProjectedWidth = _pileInfo.ProjectedWidth /1000; // need to change mm to meter;
                 SelectedShape = ShapeCategory.Where(shapeinfo => shapeinfo.Shape == _pileInfo.Shape).FirstOrDefault();
-                WaterDensity = _pileInfo.WaterDensity;
+                WaterDensity = _pileInfo.WaterDensity * 1000 / 10; // ECSchema stored in water weight
                 BM.MessageCenter.Instance.ShowInfoMessage("SUCCESS", "Load Parameter", BM.MessageAlert.None);
                 Messenger.Default.Send(new NotificationMessage<bool>(true, "ChangeControlForegroud"), "ControlForegroundChange");
             }
@@ -675,7 +675,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                     () =>
                     {
                         ReportGeneratorWindow _reportWindow = new ReportGeneratorWindow();
-                        Messenger.Default.Send(new NotificationMessage<CurrentForceViewModel>(this, "Report"), "ViewModelForReport");
+                        Messenger.Default.Send(new NotificationMessage(this, "CurrentForceViewModelInvoke"), "ViewModelForReport");
                         _reportWindow.ShowDialog();
                     },
                     () => CurrentForceForFrontPile != 0));

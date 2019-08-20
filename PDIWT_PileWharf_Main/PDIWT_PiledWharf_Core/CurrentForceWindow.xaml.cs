@@ -100,7 +100,7 @@ namespace PDIWT_PiledWharf_Core
             foreach (var _control in _controlListNeedForChange)
             {
                 if (_isLoadFromEntity)
-                    _control.Foreground = new SolidColorBrush(Colors.DodgerBlue);
+                    _control.Foreground = FindResource("LoadedParametersForeground") as SolidColorBrush;
                 else
                     _control.Foreground = new SolidColorBrush(Colors.Black);
             }

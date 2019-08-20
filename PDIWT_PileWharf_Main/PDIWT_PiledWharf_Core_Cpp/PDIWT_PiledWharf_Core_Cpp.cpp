@@ -154,42 +154,54 @@ void PDIWT_PiledWharf_Core_Cpp::PDIWTECFramework::SetPropValueList(IECInstanceR 
 //! ****************************************************
 //!		Pile Creation Part
 //! ****************************************************
-PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::PileEntityCreation()
-{
-	_pileType = PileType::SqaurePile;
-	_pileWidth = 0;
-	_pileInsideDiameter = 0;
-	_pileConcreteCoreLength = 0;
-	_topPoint = DPoint3d::FromZero();
-	_bottomPoint = DPoint3d::FromZero();
-	InitSQLiteDb();
-}
+//PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::PileEntityCreation()
+//{
+//	_pileType = PileType::SqaurePile;
+//	_pileWidth = 0;
+//	_pileInsideDiameter = 0;
+//	_pileConcreteCoreLength = 0;
+//	_topPoint = DPoint3d::FromZero();
+//	_bottomPoint = DPoint3d::FromZero();
+//	InitSQLiteDb();
+//}
 
 PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::~PileEntityCreation()
 {
 	sqlite3_close_v2(_db);
 }
 
-void PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::CreatPile()
+BentleyStatus PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::CreatPile()
 {
 	ISolidKernelEntityPtr _solid;
 	switch (_pileType)
 	{
 	case PileType::SqaurePile:
 		if (SUCCESS != CreateSquarePile(_solid))
-			mdlOutput_error(L"Fail to Create Pile!");
+		{
+			mdlOutput_error(L"Fail to Create square Pile!");
+			return ERROR;
+		}
 		break;
 	case PileType::TubePile:
 		if (SUCCESS != CreateTubePile(_solid))
-			mdlOutput_error(L"Fail to Create Pile!");
+		{
+			mdlOutput_error(L"Fail to Create tube Pile!");
+			return ERROR;
+		}
 		break;
 	case PileType::PHCTubePile:
 		if (SUCCESS != CreatePHCTubePile(_solid))
-			mdlOutput_error(L"Fail to Create Pile!");
+		{
+			mdlOutput_error(L"Fail to Create PHC Tube Pile!");
+			return ERROR;
+		}
 		break;
 	case PileType::SteelTubePile:
 		if (SUCCESS != CreateSteelTubePile(_solid))
-			mdlOutput_error(L"Fail to Create Pile!");
+		{
+			mdlOutput_error(L"Fail to Create Steel Tube Pile!");
+			return ERROR;
+		}
 		break;
 	default:
 		break;
@@ -198,14 +210,24 @@ void PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::CreatPile()
 	{
 		EditElementHandle _eeh;
 		if (SUCCESS != CreateWarperCellElement(_eeh, _solid))
+		{
 			mdlOutput_error(L"Fail to Attach IFC Information!");
+			return ERROR;
+		}
 
 		if (SUCCESS != _eeh.AddToModel())
+		{
 			mdlOutput_error(L"Fail to add to element");
+			return ERROR;
+		}
 
-		if(SUCCESS != BuildECInstanceOnElement(_eeh))
+		if (SUCCESS != BuildECInstanceOnElement(_eeh))
+		{
 			mdlOutput_error(L"Fail to attach information to element");
+			return ERROR;
+		}
 	}
+	return SUCCESS;
 }
 
 
@@ -368,24 +390,29 @@ BentleyStatus PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::BuildECInstanceOnEl
 	//Build PropList and Set Values
 	bmap<WString, WString> _proplist;
 	double _uorpermm = ACTIVEMODEL->GetModelInfoCP()->GetUorPerMeter() / 1000;
+	
 
 	_proplist.Insert(L"Length", WPrintfString(L"%f",DSegment3d::From(_bottomPoint, _topPoint).Length()/_uorpermm));
 	if (_pileType == PileType::PHCTubePile || _pileType == PileType::SteelTubePile || _pileType == PileType::TubePile)
-		_proplist.Insert(L"OutsideDiameter", WPrintfString(L"%f", _pileWidth / _uorpermm));
+		_proplist.Insert(L"OutsideDiameter", WPrintfString(L"%f", _pileWidth));
 	if (_pileType == PileType::PHCTubePile || _pileType == PileType::SteelTubePile)
 	{
-		_proplist.Insert(L"WallThickness", WPrintfString(L"%f", (_pileWidth - _pileInsideDiameter) / _uorpermm));
-		_proplist.Insert(L"InnerDiameter", WPrintfString(L"%f", _pileInsideDiameter /_uorpermm));
+		_proplist.Insert(L"WallThickness", WPrintfString(L"%f", _pileWidth - _pileInsideDiameter));
+		_proplist.Insert(L"InnerDiameter", WPrintfString(L"%f", _pileInsideDiameter));
 	}
 	if (_pileType == PileType::SqaurePile)
 	{
-		_proplist.Insert(L"CrossSectionLength", WPrintfString(L"%f", _pileWidth / _uorpermm));
-		_proplist.Insert(L"CrossSectionWidth", WPrintfString(L"%f", _pileWidth / _uorpermm));
+		_proplist.Insert(L"CrossSectionLength", WPrintfString(L"%f", _pileWidth ));
+		_proplist.Insert(L"CrossSectionWidth", WPrintfString(L"%f", _pileWidth ));
 	}
 	_proplist.Insert(L"TopElevation", WPrintfString(L"%f", _topPoint.z / _uorpermm));
 
 	DVec3d _pileVec3d = DVec3d::FromStartEnd(_topPoint, _bottomPoint);
-	_proplist.Insert(L"Skewness", WPrintfString(L"%f", atan(_pileVec3d.AngleTo(DVec3d::From(0, 0, -1)))));
+	double _theta = _pileVec3d.AngleTo(DVec3d::From(0, 0, -1));
+	if (_theta == 0)
+		_proplist.Insert(L"Skewness", WPrintfString(L"%0.2f", 0));
+	else
+		_proplist.Insert(L"Skewness", WPrintfString(L"%0.2f", 1/tan(_theta)));
 	_proplist.Insert(L"PlanRotationAngle", WPrintfString(L"%f¡ã", _pileVec3d.AngleXY()));
 	_proplist.Insert(L"BottomElevation", WPrintfString(L"%f", _bottomPoint.z / _uorpermm));
 
@@ -395,34 +422,33 @@ BentleyStatus PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::BuildECInstanceOnEl
 	{
 		if (SUCCESS == mdlMeasure_volumeProperties(&_pileVolume, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, _elementDescr, 1e-4))
 		{
-			_proplist.Insert(L"Volume", WPrintfString(L"%f", _pileVolume / pow(_uorpermm,3)));
+			_proplist.Insert(L"Volume", WPrintfString(L"%f", _pileVolume / pow(ACTIVEMODEL->GetModelInfoCP()->GetUorPerMeter(),3)));
 			break;
 		}
 		_elementDescr = _elementDescr->h.next;
 	}
-
-
+	
 	_proplist.Insert(L"Code", GetCodeString(L"IfcPile"));
-	WString _pileTypeStr;
-	switch (_pileType)
-	{
-	case PDIWT_PiledWharf_Core_Cpp::SqaurePile:
-		_pileTypeStr = L"Square Pile";
-		break;
-	case PDIWT_PiledWharf_Core_Cpp::TubePile:
-		_pileTypeStr = L"Tube Pile";
-		break;
-	case PDIWT_PiledWharf_Core_Cpp::PHCTubePile:
-		_pileTypeStr = L"PHC Tube Pile";
-		break;
-	case PDIWT_PiledWharf_Core_Cpp::SteelTubePile:
-		_pileTypeStr = L"Steel Tube Pile";
-		break;
-	default:
-		_pileTypeStr = L"Unknown";
-		break;
-	}
-	_proplist.Insert(L"Type", _pileTypeStr);
+	//WString _pileTypeStr;
+	//switch (_pileType)
+	//{
+	//case PDIWT_PiledWharf_Core_Cpp::SqaurePile:
+	//	_pileTypeStr = L"Square Pile";
+	//	break;
+	//case PDIWT_PiledWharf_Core_Cpp::TubePile:
+	//	_pileTypeStr = L"Round Pile";
+	//	break;
+	//case PDIWT_PiledWharf_Core_Cpp::PHCTubePile:
+	//	_pileTypeStr = L"PHC Tube Pile";
+	//	break;
+	//case PDIWT_PiledWharf_Core_Cpp::SteelTubePile:
+	//	_pileTypeStr = L"Steel Tube Pile";
+	//	break;
+	//default:
+	//	_pileTypeStr = L"Unknown";
+	//	break;
+	//}
+	_proplist.Insert(L"Type", _pileTypeMap[_pileType]);
 
 	PDIWTECFramework::SetPropValueList(_ifcPileWIPECInstance, _proplist);
 	DgnECInstanceStatus _status = _ifcPileInstanceEnablerP->CreateInstanceOnElement(&_ifcPileElementInstancePtr, _ifcPileWIPECInstance, inout);

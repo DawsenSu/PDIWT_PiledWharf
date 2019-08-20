@@ -13,8 +13,13 @@ using PDIWT.Formulas;
 using PDIWT.Resources.Localization.MainModule;
 using System.Collections.ObjectModel;
 
+using BD = Bentley.DgnPlatformNET;
+using BM = Bentley.MstnPlatformNET;
+using System.Windows;
 namespace PDIWT_PiledWharf_Core.ViewModel
 {
+    using Model.Tools;
+
     public class WaveForceViewModel : ViewModelBase
     {
         public WaveForceViewModel()
@@ -22,7 +27,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
             // Register Broadcast message 
             Messenger.Default.Register<PropertyChangedMessage<ShapeInfo>>(this, SelectedShapeChanged);
-
+            Messenger.Default.Register<NotificationMessage<PDIWT_WaveForcePileInfo>>(this, LoadParametersFromPileEntity);
             //Init Data
             ShapeCategory = new List<ShapeInfo>
                 {
@@ -44,10 +49,10 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             GravitationalAcceleration = 9.8;
             DesignInputParameters = new ObservableCollection<PDIWT_WaveForce_DesignInputParamters>
             {
-                new PDIWT_WaveForce_DesignInputParamters(){DesignWaterLevel = DesignWaterLevelCondition.HAT, H1=4.2,H13=3.1,T=11.2,WaterDepth =26.02},
-                new PDIWT_WaveForce_DesignInputParamters(){DesignWaterLevel = DesignWaterLevelCondition.MHW, H1=4,H13=2.9,T=6.6,WaterDepth =24.82},
-                new PDIWT_WaveForce_DesignInputParamters(){DesignWaterLevel = DesignWaterLevelCondition.MLW, H1=3.7,H13=2.8,T=6.3,WaterDepth =20.97},
-                new PDIWT_WaveForce_DesignInputParamters(){DesignWaterLevel = DesignWaterLevelCondition.LAT, H1=2.9,H13=2.8,T=11.2,WaterDepth =19.67}
+                new PDIWT_WaveForce_DesignInputParamters(){DesignWaterLevel = DesignWaterLevelCondition.HAT, H1=4.2,H13=3.1,T=11.2},
+                new PDIWT_WaveForce_DesignInputParamters(){DesignWaterLevel = DesignWaterLevelCondition.MHW, H1=4,H13=2.9,T=6.6},
+                new PDIWT_WaveForce_DesignInputParamters(){DesignWaterLevel = DesignWaterLevelCondition.MLW, H1=3.7,H13=2.8,T=6.3},
+                new PDIWT_WaveForce_DesignInputParamters(){DesignWaterLevel = DesignWaterLevelCondition.LAT, H1=2.9,H13=2.8,T=11.2}
             };
             CalculatedParameters = new ObservableCollection<PDIWT_WaveForce_CalculatedParameters>
             {
@@ -66,6 +71,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
 
         }
+
+
 
         private List<ShapeInfo> _shapeCategory;
         /// <summary>
@@ -272,7 +279,49 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
         private void ExecuteLoadParameters()
         {
+            try
+            {
+                LoadPileParametersTool<PDIWT_WaveForcePileInfo>.InstallNewInstance(LoadParametersToolEnablerProvider.WaveForceInfoEnabler);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+        }
 
+        private void LoadParametersFromPileEntity(NotificationMessage<PDIWT_WaveForcePileInfo> notification)
+        {
+            try
+            {
+                if (notification.Notification == Resources.Error)
+                    BM.MessageCenter.Instance.ShowErrorMessage("Can't Load Parameter From selected element", "Error", BM.MessageAlert.None);
+                else
+                {
+                    var _pileInfo = notification.Content;
+
+                    PileDiameter = _pileInfo.PileDiameter /1000; // ECShema store in mm, need to converter to m.
+                    HAT = _pileInfo.HAT;
+                    MHW = _pileInfo.MHW;
+                    MLW = _pileInfo.MLW;
+                    LAT = _pileInfo.LAT;
+
+                    SelectedShape = ShapeCategory.Where(shapeinfo => shapeinfo.Shape == _pileInfo.Shape).FirstOrDefault();
+                    WaterWeight = _pileInfo.WaterDensity;
+
+                    for (int i = 0; i < 4; i++)
+                    {
+                        DesignInputParameters[i].H1 = _pileInfo.WaveHeight[i];
+                        DesignInputParameters[i].T = _pileInfo.WavePeriod[i];
+                    }
+
+                    BM.MessageCenter.Instance.ShowInfoMessage("SUCCESS", "Load Parameter", BM.MessageAlert.None);
+                    Messenger.Default.Send(new NotificationMessage<bool>(true,"Changed!"), "WaveForceForegroundChange");
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
         }
 
         private RelayCommand _calculate;
@@ -291,44 +340,128 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
         private void ExecuteCalculate()
         {
-            foreach (var _input in DesignInputParameters)
-            {
-                _input.WaveLength = WaveForce.CalculateWaveLength(_input.T, _input.WaterDepth, GravitationalAcceleration);
-            }
+            Messenger.Default.Send(new NotificationMessage<bool>(false, "Changed!"), "WaveForceForegroundChange");
 
-            foreach (var _parameter in CalculatedParameters)
+            try
             {
-                var _inputparameters = DesignInputParameters.Where(e => e.DesignWaterLevel == _parameter.DesignWaterLevel).FirstOrDefault();
-                _parameter.D_L = PileDiameter / _inputparameters.WaveLength;
-                _parameter.H_D = _inputparameters.H1 / _inputparameters.WaterDepth;
-                _parameter.DD_L = _inputparameters.WaterDepth / _inputparameters.WaveLength;
-                _parameter.YitaMax = WaveForce.CalculateYitaMax(_inputparameters.H1, _inputparameters.WaterDepth);
-                _parameter.Alpha = WaveForce.CalculateAlpha(_inputparameters.H1, _inputparameters.WaterDepth, _inputparameters.WaveLength);
-                _parameter.Beta = WaveForce.CalculateBeta(_inputparameters.H1, _inputparameters.WaterDepth, _inputparameters.WaveLength);
-                _parameter.GammaP = WaveForce.CalculateGammaP(_inputparameters.WaterDepth, _inputparameters.WaveLength);
-                _parameter.GammaM = WaveForce.CalculateGammaM(_inputparameters.WaterDepth, _inputparameters.WaveLength);
-                _parameter.K = WaveForce.CalculateK(PileCentraSpan, PileDiameter);
-                _parameter.F0 = WaveForce.Calculatef0(PileDiameter, _inputparameters.WaveLength);
-                _parameter.F1 = WaveForce.Calculatef1(PileDiameter, _inputparameters.WaveLength);
-                _parameter.F2 = WaveForce.Calculatef2(PileDiameter, _inputparameters.WaveLength);
-                _parameter.F3 = WaveForce.Calculatef3(PileDiameter, _inputparameters.WaveLength);
-                _parameter.OmgaT = WaveForce.CalculateOmgaT(_inputparameters.H1, _inputparameters.WaterDepth, _inputparameters.WaveLength);
-                _parameter.K1 = WaveForce.CalculateK1(0, _inputparameters.WaterDepth + _parameter.YitaMax, _inputparameters.WaveLength, _inputparameters.WaterDepth);
-                _parameter.K2 = WaveForce.CalculateK2(0, _inputparameters.WaterDepth + _parameter.YitaMax - _inputparameters.H1/2, _inputparameters.WaveLength, _inputparameters.WaterDepth);
-                _parameter.K3 = WaveForce.CalculateK3(0, _inputparameters.WaterDepth + _parameter.YitaMax, _inputparameters.WaveLength, _inputparameters.WaterDepth);
-                _parameter.K4 = WaveForce.CalculateK4(0, _inputparameters.WaterDepth + _parameter.YitaMax - _inputparameters.H1 / 2, _inputparameters.WaveLength, _inputparameters.WaterDepth);
+                foreach (var _input in DesignInputParameters)
+                {
+                    switch (_input.DesignWaterLevel)
+                    {
+                        case DesignWaterLevelCondition.HAT:
+                            _input.WaterDepth = HAT - BottomElevation;
+                            break;
+                        case DesignWaterLevelCondition.MHW:
+                            _input.WaterDepth = MHW - BottomElevation;
+                            break;
+                        case DesignWaterLevelCondition.MLW:
+                            _input.WaterDepth = MLW - BottomElevation;
+                            break;
+                        case DesignWaterLevelCondition.LAT:
+                            _input.WaterDepth = LAT - BottomElevation;
+                            break;
+                    }
+                    _input.WaveLength = WaveForce.CalculateWaveLength(_input.T, _input.WaterDepth, GravitationalAcceleration);
+                }
+
+                foreach (var _parameter in CalculatedParameters)
+                {
+                    var _inputparameters = DesignInputParameters.Where(e => e.DesignWaterLevel == _parameter.DesignWaterLevel).FirstOrDefault();
+                    _parameter.D_L = PileDiameter / _inputparameters.WaveLength;
+                    _parameter.H_D = _inputparameters.H1 / _inputparameters.WaterDepth;
+                    _parameter.DD_L = _inputparameters.WaterDepth / _inputparameters.WaveLength;
+                    double _relativeperiod = WaveForce.CalculateReltiavePeriod(_inputparameters.T, _inputparameters.WaterDepth);
+                    _parameter.YitaMax = WaveForce.CalculateYitaMax(_inputparameters.H1, _inputparameters.WaterDepth,_inputparameters.WaveLength,PileDiameter,_relativeperiod);
+                    _parameter.Alpha = WaveForce.CalculateAlpha(_inputparameters.H1, _inputparameters.WaterDepth, _inputparameters.WaveLength);
+                    _parameter.Beta = WaveForce.CalculateBeta(_inputparameters.H1, _inputparameters.WaterDepth, _inputparameters.WaveLength);
+                    _parameter.GammaP = WaveForce.CalculateGammaP(_inputparameters.WaterDepth, _inputparameters.WaveLength);
+                    _parameter.GammaM = WaveForce.CalculateGammaM(_inputparameters.WaterDepth, _inputparameters.WaveLength);
+                    _parameter.K = WaveForce.CalculateK(PileCentraSpan, PileDiameter);
+                    _parameter.F0 = WaveForce.Calculatef0(PileDiameter, _inputparameters.WaveLength);
+                    _parameter.F1 = WaveForce.Calculatef1(PileDiameter, _inputparameters.WaveLength);
+                    _parameter.F2 = WaveForce.Calculatef2(PileDiameter, _inputparameters.WaveLength);
+                    _parameter.F3 = WaveForce.Calculatef3(PileDiameter, _inputparameters.WaveLength);
+                    _parameter.OmgaT = WaveForce.CalculateOmgaT(_inputparameters.H1, _inputparameters.WaterDepth, _inputparameters.WaveLength);
+                    _parameter.K1 = WaveForce.CalculateK1(0, _inputparameters.WaterDepth + _parameter.YitaMax, _inputparameters.WaveLength, _inputparameters.WaterDepth);
+                    _parameter.K2 = WaveForce.CalculateK2(0, _inputparameters.WaterDepth + _parameter.YitaMax - _inputparameters.H1 / 2, _inputparameters.WaveLength, _inputparameters.WaterDepth);
+                    _parameter.K3 = WaveForce.CalculateK3(0, _inputparameters.WaterDepth + _parameter.YitaMax, _inputparameters.WaveLength, _inputparameters.WaterDepth);
+                    _parameter.K4 = WaveForce.CalculateK4(0, _inputparameters.WaterDepth + _parameter.YitaMax - _inputparameters.H1 / 2, _inputparameters.WaveLength, _inputparameters.WaterDepth);
+                }
+                //Calculate the pile cross section area
+                double _crossectionarea;
+                if (SelectedShape.Value == 1)
+                    _crossectionarea = Math.PI * Math.Pow(PileDiameter / 2, 2);
+                else
+                    _crossectionarea = PileDiameter * PileDiameter;
+
+                foreach (var _result in Results)
+                {
+                    var _inputparams = DesignInputParameters.Where(e => e.DesignWaterLevel == _result.DesignWaterLevel).FirstOrDefault();
+                    var _calculatedparams = CalculatedParameters.Where(e => e.DesignWaterLevel == _result.DesignWaterLevel).FirstOrDefault();
+                    // Calculate Final PDMax, PIMax, MDMax, MIMax
+                    double _cd = WaveForce.CalculateCD(SelectedShape);
+                    double _cm = WaveForce.CalculateCM(PileDiameter, _inputparams.WaveLength, SelectedShape);
+                    _result.PDMax = WaveForce.CalculatePDMax(_cd, WaterWeight, PileDiameter, _inputparams.H1, _calculatedparams.K1);
+                    _result.PIMax = WaveForce.CalculatePIMax(_cm, WaterWeight, _crossectionarea, _inputparams.H1, _calculatedparams.K2);
+                    _result.MDMax = WaveForce.CalculateMDMax(_cd, WaterWeight, PileDiameter, _inputparams.H1, _inputparams.WaveLength, _calculatedparams.K3);
+                    _result.MIMax = WaveForce.CalculateMIMax(_cm, WaterWeight, _crossectionarea, _inputparams.H1, _inputparams.WaveLength, _calculatedparams.K4);
+
+                    double _PDMax_Final, _PIMax_Final, _MDMax_Final, _MIMax_Final;
+
+                    WaveForce.CalculateFinalCompOfWaveForce(
+                        PileDiameter, _inputparams.WaveLength, _inputparams.H1, _inputparams.WaterDepth, _calculatedparams.Alpha, _calculatedparams.Beta, _calculatedparams.GammaP,
+                        _calculatedparams.GammaM, _result.PDMax, _result.MDMax, _result.PIMax, _result.MIMax, out _PDMax_Final, out _MDMax_Final, out _PIMax_Final, out _MIMax_Final);
+
+                    _result.PDMax_Final = _PDMax_Final;
+                    _result.PIMax_Final = _PIMax_Final;
+                    _result.MDMax_Final = _MDMax_Final;
+                    _result.MIMax_Final = _MIMax_Final;
+
+                    double _PMax, _MMax, _ogmaT;
+                    WaveForce.CalculateMaxWaveAndMoment(PileDiameter, _inputparams.WaveLength, _inputparams.H1, _inputparams.WaterDepth, PileCentraSpan,
+                        _PDMax_Final, _MDMax_Final, _PIMax_Final, _MIMax_Final, out _PMax, out _MMax, out _ogmaT);
+
+                    _result.PMax = _PMax;
+                    _result.MMax = _MMax;
+                    _result.OmgaT = _ogmaT;
+                    _result.Pu = WaveForce.CalculatePu(WaterWeight, _inputparams.H1, PileDiameter, 0, _inputparams.WaveLength, _inputparams.WaterDepth, _calculatedparams.F2, _calculatedparams.F0, _calculatedparams.OmgaT);
+                    _result.Mu = WaveForce.CalculateMu(WaterWeight, _inputparams.H1, PileDiameter, 0, _inputparams.WaveLength, _inputparams.WaterDepth, _calculatedparams.F3, _calculatedparams.F1, _calculatedparams.OmgaT);
+                }
             }
-            double _crossectionarea = Math.PI * Math.Pow(PileDiameter / 2, 2);
-            foreach (var _result in Results)
+            catch (Exception e)
             {
-                var _inputparams = DesignInputParameters.Where(e => e.DesignWaterLevel == _result.DesignWaterLevel).FirstOrDefault();
-                var _calculatedparams = CalculatedParameters.Where(e => e.DesignWaterLevel == _result.DesignWaterLevel).FirstOrDefault();
-                _result.PMax = _calculatedparams.K * WaveForce.CalculateMaxInertiaComponentOfWaveForce(_calculatedparams.GammaP, VelocityForceCoeffCM, WaterWeight,
-                    _crossectionarea, _inputparams.H1,_calculatedparams.K2);
-                _result.MMax = _calculatedparams.K * WaveForce.CalculateMaxInertiaComponentOfWaveMonment(_calculatedparams.GammaM, VelocityForceCoeffCM, WaterWeight,
-                    _crossectionarea, _inputparams.H1, _inputparams.WaveLength, _calculatedparams.K4);
-                _result.Pu = WaveForce.CalculatePu(WaterWeight, _inputparams.H1, PileDiameter, 0, _inputparams.WaveLength, _inputparams.WaterDepth, _calculatedparams.F2, _calculatedparams.F0, _calculatedparams.OmgaT);
-                _result.Mu = WaveForce.CalculateMu(WaterWeight, _inputparams.H1, PileDiameter, 0, _inputparams.WaveLength, _inputparams.WaterDepth, _calculatedparams.F3, _calculatedparams.F1, _calculatedparams.OmgaT);
+                MessageBox.Show(e.ToString());
+            }
+            
+        }
+
+        private RelayCommand _generateNote;
+
+        /// <summary>
+        /// Gets the GenerateNote.
+        /// </summary>
+        public RelayCommand GenerateNote
+        {
+            get
+            {
+                return _generateNote
+                    ?? (_generateNote = new RelayCommand(ExecuteGenerateNote,
+                    () => Results.FirstOrDefault().PMax != 0));
+            }
+        }
+
+        private void ExecuteGenerateNote()
+        {
+            try
+            {
+                ReportGeneratorWindow _reportWindow = new ReportGeneratorWindow();
+                Messenger.Default.Send(new NotificationMessage(this, "WaveForceViewModelInvoke"), "ViewModelForReport");
+                _reportWindow.ShowDialog();
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
             }
         }
     }
@@ -926,6 +1059,98 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
     public class PDIWT_WaveForce_Results : ObservableObject
     {
+
+        private double _pDMax;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public double PDMax
+        {
+            get { return _pDMax; }
+            set { Set(ref _pDMax, value); }
+        }
+
+        private double _mDMax;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public double MDMax
+        {
+            get { return _mDMax; }
+            set { Set(ref _mDMax, value); }
+        }
+
+        private double _pIMax;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public double PIMax
+        {
+            get { return _pIMax; }
+            set { Set(ref _pIMax, value); }
+        }
+
+        private double _mIMax;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public double MIMax
+        {
+            get { return _mIMax; }
+            set { Set(ref _mIMax, value); }
+        }
+
+        private double _pDMax_Final;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public double PDMax_Final
+        {
+            get { return _pDMax_Final; }
+            set { Set(ref _pDMax_Final, value); }
+        }
+
+        private double _mDMax_Final;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public double MDMax_Final
+        {
+            get { return _mDMax_Final; }
+            set { Set(ref _mDMax_Final, value); }
+        }
+
+        private double _pIMax_Final;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public double PIMax_Final
+        {
+            get { return _pIMax_Final; }
+            set { Set(ref _pIMax_Final, value); }
+        }
+
+        private double _mIMax_Final;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public double MIMax_Final
+        {
+            get { return _mIMax_Final; }
+            set { Set(ref _mIMax_Final, value); }
+        }
+
+
+        private double _omgaT;
+        /// <summary>
+        /// 
+        /// </summary>
+        public double OmgaT
+        {
+            get { return _omgaT; }
+            set { Set(ref _omgaT, value); }
+        }
+
         /// <summary>
             /// The <see cref="DesignWaterLevel" /> property's name.
             /// </summary>

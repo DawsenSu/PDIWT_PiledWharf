@@ -147,11 +147,11 @@
   <data name="Poisson" xml:space="preserve">
     <value>Poisson(γ)</value>
   </data>
-  <data name="Density" xml:space="preserve">
-    <value>Density</value>
+  <data name="Weight" xml:space="preserve">
+    <value>Weight</value>
   </data>
-  <data name="UnderWaterDensity" xml:space="preserve">
-    <value>UnderWater Density</value>
+  <data name="UnderWaterUnitWeight" xml:space="preserve">
+    <value>UnderWater Unit Weight</value>
   </data>
   <data name="Steel" xml:space="preserve">
     <value>Steel</value>
@@ -244,7 +244,7 @@
     <value>Square Pile</value>
   </data>
   <data name="TubePile" xml:space="preserve">
-    <value>Tube Pile</value>
+    <value>Round Pile</value>
   </data>
   <data name="PHCTubePile" xml:space="preserve">
     <value>PHC Tube Pile</value>
@@ -286,10 +286,10 @@
     <value>Pile Number</value>
   </data>
   <data name="PileTopPoint" xml:space="preserve">
-    <value>Top Point</value>
+    <value>Pile Top Point</value>
   </data>
   <data name="PileBottomPoint" xml:space="preserve">
-    <value>Bottom Point</value>
+    <value>Pile Bottom Point</value>
   </data>
   <data name="PileTypeIllustration" xml:space="preserve">
     <value>Pile Type Illustration</value>
@@ -368,5 +368,176 @@
   </data>
   <data name="WaterDepth" xml:space="preserve">
     <value>Water Depth d(m)</value>
+  </data>
+  <data name="Density" xml:space="preserve">
+    <value>Density</value>
+  </data>
+  <data name="BearingCapacityWindow" xml:space="preserve">
+    <value>Bearing Capacity Window</value>
+  </data>
+  <data name="LoadParameters" xml:space="preserve">
+    <value>Load Parameters</value>
+  </data>
+  <data name="Calculate" xml:space="preserve">
+    <value>Calculate</value>
+  </data>
+  <data name="GenerateCalculationNote" xml:space="preserve">
+    <value>Generate Calculation Note</value>
+  </data>
+  <data name="PileList" xml:space="preserve">
+    <value>Pile List</value>
+  </data>
+  <data name="PileParameters" xml:space="preserve">
+    <value>Pile Parameters</value>
+  </data>
+  <data name="SoilParameters" xml:space="preserve">
+    <value>Soil Parameters</value>
+  </data>
+  <data name="SoilLayerNumber" xml:space="preserve">
+    <value>Soil Layer Number</value>
+  </data>
+  <data name="SoilLayerName" xml:space="preserve">
+    <value>Soil Layer Name</value>
+  </data>
+  <data name="LayerTopElevation" xml:space="preserve">
+    <value>Layer Top Elevation(m)</value>
+  </data>
+  <data name="SoilLayerThickness" xml:space="preserve">
+    <value>Soil Layer Thickness</value>
+  </data>
+  <data name="InputParameters" xml:space="preserve">
+    <value>Input Parameters</value>
+  </data>
+  <data name="CalculatedParameters" xml:space="preserve">
+    <value>Calculated Parameters</value>
+  </data>
+  <data name="CalculatedResults" xml:space="preserve">
+    <value>Calculated Results</value>
+  </data>
+  <data name="PartialCoefficient" xml:space="preserve">
+    <value>Partial Coefficient</value>
+  </data>
+  <data name="BlockCoefficient" xml:space="preserve">
+    <value>Block Coefficient</value>
+  </data>
+  <data name="PileTopElevation" xml:space="preserve">
+    <value>Pile Top Elevation</value>
+  </data>
+  <data name="PileBottomElevation" xml:space="preserve">
+    <value>Pile Bottom Elevation</value>
+  </data>
+  <data name="PileSkewness" xml:space="preserve">
+    <value>Pile Skewness</value>
+  </data>
+  <data name="DesignAxialBearingCapacity" xml:space="preserve">
+    <value>Design Axial Bearing Capacity of Single Pile</value>
+  </data>
+  <data name="DesignAxialUpliftCapacity" xml:space="preserve">
+    <value>Design Axial Uplift Capacity of Single Pile</value>
+  </data>
+  <data name="CalculatedWaterLevel" xml:space="preserve">
+    <value>Calculated Waterlevel</value>
+  </data>
+  <data name="PilePerimeter" xml:space="preserve">
+    <value>Pile Perimeter</value>
+  </data>
+  <data name="PileCrossSectionArea" xml:space="preserve">
+    <value>Pile Cross Section Area</value>
+  </data>
+  <data name="PileLength" xml:space="preserve">
+    <value>Pile Length</value>
+  </data>
+  <data name="SideFrictionStandardValue" xml:space="preserve">
+    <value>Side Friction Value</value>
+  </data>
+  <data name="EndResistanceStandardValue" xml:space="preserve">
+    <value>End Resistance Value</value>
+  </data>
+  <data name="DiscountCoefficient" xml:space="preserve">
+    <value>Discount Coefficient</value>
+  </data>
+  <data name="CreatePile" xml:space="preserve">
+    <value>Create Pile</value>
+  </data>
+  <data name="DeletePile" xml:space="preserve">
+    <value>Delete Pile</value>
+  </data>
+  <data name="IsVerticalPile" xml:space="preserve">
+    <value>Is Vertical Pile</value>
+  </data>
+  <data name="DrivenPileWithSealedEnd" xml:space="preserve">
+    <value>Driven Pile With Sealed End</value>
+  </data>
+  <data name="TubePileOrSteelPile" xml:space="preserve">
+    <value>Tube Pile or Steel Pile</value>
+  </data>
+  <data name="CastInSituPile" xml:space="preserve">
+    <value>Cast In-Situ Pile</value>
+  </data>
+  <data name="CastInSituAfterGrountingPile" xml:space="preserve">
+    <value>Cast In-Situ Grounting Pile</value>
+  </data>
+  <data name="PileName" xml:space="preserve">
+    <value>Pile Name</value>
+  </data>
+  <data name="InputPileParameters" xml:space="preserve">
+    <value>Input Pile Parameters</value>
+  </data>
+  <data name="InputSoilLayerParameters" xml:space="preserve">
+    <value>Input Soil Layer Parameters</value>
+  </data>
+  <data name="BasicInformation" xml:space="preserve">
+    <value>Basic Information</value>
+  </data>
+  <data name="GeometryInformation" xml:space="preserve">
+    <value>Geometry</value>
+  </data>
+  <data name="CalculationCoefficients" xml:space="preserve">
+    <value>Calculation Coefficient</value>
+  </data>
+  <data name="MaterialInformation" xml:space="preserve">
+    <value>Material Information</value>
+  </data>
+  <data name="BuildUpSoilLayerLib" xml:space="preserve">
+    <value>Build Up Soil Layer Library</value>
+  </data>
+  <data name="PickupSoilLayersFromLib" xml:space="preserve">
+    <value>Pick Up Soil Layers From Lib</value>
+  </data>
+  <data name="SoilLayersLibrary" xml:space="preserve">
+    <value>Soil Layers Library</value>
+  </data>
+  <data name="Library" xml:space="preserve">
+    <value>Library</value>
+  </data>
+  <data name="Picked" xml:space="preserve">
+    <value>Picked</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Note_PSP" xml:space="preserve">
+    <value>Please select pile!</value>
+  </data>
+  <data name="Note_EEIL" xml:space="preserve">
+    <value>Error exist in library, please correct it!</value>
+  </data>
+  <data name="PileWorkmanshipType" xml:space="preserve">
+    <value>Pile Workmanship Type</value>
+  </data>
+  <data name="PileGeoType" xml:space="preserve">
+    <value>Pile Geometry Type</value>
+  </data>
+  <data name="RoundPile" xml:space="preserve">
+    <value>Round Pile</value>
+  </data>
+  <data name="PileSelfWeight" xml:space="preserve">
+    <value>Pile Self Weight</value>
+  </data>
+  <data name="TN_AttachBCEC" xml:space="preserve">
+    <value>Attach Bearing Capacity EC Instance</value>
   </data>
 </root>

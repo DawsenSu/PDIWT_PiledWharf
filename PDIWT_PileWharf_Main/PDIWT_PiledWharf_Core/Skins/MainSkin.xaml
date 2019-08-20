@@ -1,8 +1,10 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:com="clr-namespace:PDIWT_PiledWharf_Core.Common"
     xmlns:converter="clr-namespace:PDIWT.Resources.Converters;assembly=PDIWT.Resources"
     xmlns:loc="clr-namespace:PDIWT.Resources.Localization.MainModule;assembly=PDIWT.Resources"
+    xmlns:pdi="clr-namespace:PDIWT.Resources.CustomUserControl;assembly=PDIWT.Resources"
     xmlns:valid="clr-namespace:PDIWT.Resources.ValidationRules;assembly=PDIWT.Resources">
     <!--  Set Default Style  -->
     <Style x:Key="BasicButton" TargetType="Button">
@@ -48,12 +50,32 @@
         <Setter Property="Margin" Value="1" />
     </Style>
     <SolidColorBrush x:Key="GroupBoxCaptionColor" Color="#0099CC" />
+    <SolidColorBrush x:Key="LoadedParametersForeground" Color="#FF82CC00" />
+    <Style TargetType="GroupBox">
+        <Setter Property="Foreground" Value="#0099CC" />
+    </Style>
+    <Style TargetType="pdi:LabelTextBox">
+        <Setter Property="Foreground" Value="Black" />
+    </Style>
+
 
     <Style x:Key="ResultLabel" TargetType="Label">
         <Setter Property="Foreground" Value="OrangeRed" />
         <Setter Property="FontWeight" Value="Bold" />
     </Style>
 
+    <ContextMenu x:Key="GridAndListContextMenu">
+        <MenuItem Command="{Binding Add}" Header="{x:Static loc:Resources.Add}">
+            <MenuItem.Icon>
+                <Image Source="pack://application:,,,/PDIWT.Resources;Component/Images/Icons/New.ico" />
+            </MenuItem.Icon>
+        </MenuItem>
+        <MenuItem Command="{Binding Delete}" Header="{x:Static loc:Resources.Delete}">
+            <MenuItem.Icon>
+                <Image Source="pack://application:,,,/PDIWT.Resources;Component/Images/Icons/Delete.ico" />
+            </MenuItem.Icon>
+        </MenuItem>
+    </ContextMenu>
     <!--  ValidationRules  -->
     <valid:RangeValidationRule
         x:Key="RealRangeValidationRule"
@@ -63,15 +85,24 @@
     <!--  ValidationRules  -->
     <converter:StringOfListToBooleanConverter
         x:Key="RoundPileStringOfListToBooleanConverter"
-        Item1="{x:Static loc:Resources.TubePile}"
-        Item2="{x:Static loc:Resources.PHCTubePile}"
-        Item3="{x:Static loc:Resources.SteelTubePile}" />
+        Item1="{x:Static loc:Resources.PHCTubePile}"
+        Item2="{x:Static loc:Resources.SteelTubePile}" />
     <converter:StringOfListToBooleanConverter x:Key="SteelPileStringOfListToBooleanConverter" Item1="{x:Static loc:Resources.SteelTubePile}" />
+
     <converter:StringOfListToBooleanConverter x:Key="SquarePileShapeValueOfListToBooleanConverter" Item1="2" />
-    <converter:StringOfListToVisibilityConverter
-        x:Key="RoundPileStringOfListToVisibilityConverter"
-        Item1="{x:Static loc:Resources.TubePile}"
-        Item2="{x:Static loc:Resources.PHCTubePile}"
-        Item3="{x:Static loc:Resources.SteelTubePile}" />
-    <converter:StringOfListToVisibilityConverter x:Key="SquarePileStringOfListToVisibilityConverter" Item1="{x:Static loc:Resources.SquarePile}" />
+
+    <com:PileTypeToVisibilityConverter x:Key="RoundPileStringOfListToVisibilityConverter" Item1="{x:Static loc:Resources.TubePile}" />
+    <com:PileTypeToVisibilityConverter
+        x:Key="TubePileStringOfListToVisibilityConverter"
+        Item1="{x:Static loc:Resources.PHCTubePile}"
+        Item2="{x:Static loc:Resources.SteelTubePile}" />
+    <com:PileTypeToVisibilityConverter x:Key="SteelPileStringOfListToVisibilityConverter" Item1="{x:Static loc:Resources.SteelTubePile}" />
+    <com:PileTypeToVisibilityConverter x:Key="SquarePileStringOfListToVisibilityConverter" Item1="{x:Static loc:Resources.SquarePile}" />
+
+    <converter:NullBooleanToReversedBooleanConverter x:Key="IsCheckedToReversedIsEnableConverter" />
+
+    <com:PileWorkmanshipTypeToVisibilityConverter x:Key="CastInSituAfterGrountingToVisibilityConverter" Item1="{x:Static loc:Resources.CastInSituAfterGrountingPile}" />
+    <com:PileWorkmanshipTypeToVisibilityConverter x:Key="CastInSituToVisibilityConverter" Item1="{x:Static loc:Resources.CastInSituPile}" />
+    <com:PileWorkmanshipTypeToVisibilityConverter x:Key="TubeorSteelToVisibilityConverter" Item1="{x:Static loc:Resources.TubePileOrSteelPile}" />
+    <com:PileWorkmanshipTypeToVisibilityConverter x:Key="DrivenToVisibilityConverter" Item1="{x:Static loc:Resources.DrivenPileWithSealedEnd}" />
 </ResourceDictionary>

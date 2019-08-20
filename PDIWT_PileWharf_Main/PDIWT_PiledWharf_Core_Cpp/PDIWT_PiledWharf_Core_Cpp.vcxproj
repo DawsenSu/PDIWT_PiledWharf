@@ -223,6 +223,10 @@
     <Image Include="app.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Bentley.DgnPlatformNET">
+      <HintPath>..\..\MicrostationAssemblies\Bentley.DgnPlatformNET.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="Bentley.GeometryNET.Structs">
       <HintPath>..\..\..\PDIWT_Waterway\PDIWT_Waterway\MicrostationAssemblies\Bentley.GeometryNET.Structs.dll</HintPath>
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>

@@ -147,10 +147,10 @@
   <data name="Poisson" xml:space="preserve">
     <value>泊松率(γ)</value>
   </data>
-  <data name="Density" xml:space="preserve">
+  <data name="Weight" xml:space="preserve">
     <value>重度</value>
   </data>
-  <data name="UnderWaterDensity" xml:space="preserve">
+  <data name="UnderWaterUnitWeight" xml:space="preserve">
     <value>水下重度</value>
   </data>
   <data name="Steel" xml:space="preserve">
@@ -244,7 +244,7 @@
     <value>方桩</value>
   </data>
   <data name="TubePile" xml:space="preserve">
-    <value>管桩</value>
+    <value>圆桩</value>
   </data>
   <data name="PHCTubePile" xml:space="preserve">
     <value>PHC管桩</value>
@@ -368,5 +368,176 @@
   </data>
   <data name="WaterDepth" xml:space="preserve">
     <value>水深d(m)</value>
+  </data>
+  <data name="Density" xml:space="preserve">
+    <value>密度</value>
+  </data>
+  <data name="BearingCapacityWindow" xml:space="preserve">
+    <value>桩基承载力计算</value>
+  </data>
+  <data name="LoadParameters" xml:space="preserve">
+    <value>载入参数</value>
+  </data>
+  <data name="Calculate" xml:space="preserve">
+    <value>计算</value>
+  </data>
+  <data name="GenerateCalculationNote" xml:space="preserve">
+    <value>生成计算书</value>
+  </data>
+  <data name="PileList" xml:space="preserve">
+    <value>桩列表</value>
+  </data>
+  <data name="PileParameters" xml:space="preserve">
+    <value>桩参数</value>
+  </data>
+  <data name="SoilParameters" xml:space="preserve">
+    <value>土层参数</value>
+  </data>
+  <data name="SoilLayerNumber" xml:space="preserve">
+    <value>土层号</value>
+  </data>
+  <data name="SoilLayerName" xml:space="preserve">
+    <value>土层名</value>
+  </data>
+  <data name="LayerTopElevation" xml:space="preserve">
+    <value>层顶高程(m)</value>
+  </data>
+  <data name="SoilLayerThickness" xml:space="preserve">
+    <value>土层厚度</value>
+  </data>
+  <data name="InputParameters" xml:space="preserve">
+    <value>输入参数</value>
+  </data>
+  <data name="CalculatedParameters" xml:space="preserve">
+    <value>计算参数</value>
+  </data>
+  <data name="CalculatedResults" xml:space="preserve">
+    <value>计算结果</value>
+  </data>
+  <data name="PartialCoefficient" xml:space="preserve">
+    <value>分项系数</value>
+  </data>
+  <data name="BlockCoefficient" xml:space="preserve">
+    <value>闭塞系数</value>
+  </data>
+  <data name="PileTopElevation" xml:space="preserve">
+    <value>桩顶标高</value>
+  </data>
+  <data name="PileBottomElevation" xml:space="preserve">
+    <value>桩底高程</value>
+  </data>
+  <data name="PileSkewness" xml:space="preserve">
+    <value>桩斜度</value>
+  </data>
+  <data name="DesignAxialBearingCapacity" xml:space="preserve">
+    <value>单桩轴向承载力设计值</value>
+  </data>
+  <data name="DesignAxialUpliftCapacity" xml:space="preserve">
+    <value>单桩轴向抗拔承载力设计值</value>
+  </data>
+  <data name="CalculatedWaterLevel" xml:space="preserve">
+    <value>计算水位</value>
+  </data>
+  <data name="PilePerimeter" xml:space="preserve">
+    <value>桩周长</value>
+  </data>
+  <data name="PileCrossSectionArea" xml:space="preserve">
+    <value>桩截面面积</value>
+  </data>
+  <data name="PileLength" xml:space="preserve">
+    <value>桩长</value>
+  </data>
+  <data name="SideFrictionStandardValue" xml:space="preserve">
+    <value>极限侧摩阻力标准值</value>
+  </data>
+  <data name="EndResistanceStandardValue" xml:space="preserve">
+    <value>桩端阻力标准值</value>
+  </data>
+  <data name="DiscountCoefficient" xml:space="preserve">
+    <value>折减系数</value>
+  </data>
+  <data name="CreatePile" xml:space="preserve">
+    <value>创建桩</value>
+  </data>
+  <data name="DeletePile" xml:space="preserve">
+    <value>删除桩</value>
+  </data>
+  <data name="IsVerticalPile" xml:space="preserve">
+    <value>是否为直桩</value>
+  </data>
+  <data name="DrivenPileWithSealedEnd" xml:space="preserve">
+    <value>实心桩或桩端封闭的打入桩</value>
+  </data>
+  <data name="TubePileOrSteelPile" xml:space="preserve">
+    <value>钢管桩或混凝土管桩</value>
+  </data>
+  <data name="CastInSituPile" xml:space="preserve">
+    <value>灌注桩</value>
+  </data>
+  <data name="CastInSituAfterGrountingPile" xml:space="preserve">
+    <value>后注浆灌注桩</value>
+  </data>
+  <data name="PileName" xml:space="preserve">
+    <value>桩名称</value>
+  </data>
+  <data name="InputPileParameters" xml:space="preserve">
+    <value>桩输入参数</value>
+  </data>
+  <data name="InputSoilLayerParameters" xml:space="preserve">
+    <value>土层输入参数</value>
+  </data>
+  <data name="BasicInformation" xml:space="preserve">
+    <value>基本信息</value>
+  </data>
+  <data name="GeometryInformation" xml:space="preserve">
+    <value>几何信息</value>
+  </data>
+  <data name="CalculationCoefficients" xml:space="preserve">
+    <value>计算参数</value>
+  </data>
+  <data name="MaterialInformation" xml:space="preserve">
+    <value>材料信息</value>
+  </data>
+  <data name="BuildUpSoilLayerLib" xml:space="preserve">
+    <value>建立土层库</value>
+  </data>
+  <data name="PickupSoilLayersFromLib" xml:space="preserve">
+    <value>从库中选取相应土层</value>
+  </data>
+  <data name="SoilLayersLibrary" xml:space="preserve">
+    <value>土层信息库</value>
+  </data>
+  <data name="Library" xml:space="preserve">
+    <value>库</value>
+  </data>
+  <data name="Picked" xml:space="preserve">
+    <value>选取</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>增加</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Note_PSP" xml:space="preserve">
+    <value>请选择桩!</value>
+  </data>
+  <data name="Note_EEIL" xml:space="preserve">
+    <value>数据存在错误，请改正！</value>
+  </data>
+  <data name="PileWorkmanshipType" xml:space="preserve">
+    <value>沉桩工艺类型</value>
+  </data>
+  <data name="PileGeoType" xml:space="preserve">
+    <value>桩基几何类型</value>
+  </data>
+  <data name="RoundPile" xml:space="preserve">
+    <value>圆桩</value>
+  </data>
+  <data name="PileSelfWeight" xml:space="preserve">
+    <value>桩自重</value>
+  </data>
+  <data name="TN_AttachBCEC" xml:space="preserve">
+    <value>附加EC属性值</value>
   </data>
 </root>

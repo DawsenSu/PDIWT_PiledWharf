@@ -20,6 +20,7 @@
     <KeyinTable ID="PDIWT_PiledWharf_Input">
       <Keyword CommandWord="ImportFromFile"></Keyword>
       <Keyword CommandWord="PilePlacement"></Keyword>
+      <Keyword CommandWord="AttachBCECInstance"></Keyword>
     </KeyinTable>
   </SubKeyinTables>
   <SubKeyinTables>
@@ -42,6 +43,7 @@
     <!--Input part-->
     <KeyinHandler Keyin="PDIWT_PiledWharf Input ImportFromFile" Function="PDIWT_PiledWharf_Main.KeyinCommands.Input_ImportFromFile"/>
     <KeyinHandler Keyin="PDIWT_PiledWharf Input PilePlacement" Function="PDIWT_PiledWharf_Main.KeyinCommands.Input_PilePlacement"/>
+    <KeyinHandler Keyin="PDIWT_PiledWharf Input AttachBCECInstance" Function="PDIWT_PiledWharf_Main.KeyinCommands.Input_AttachBCECInstance"/>
     <!--Process part-->
     <KeyinHandler Keyin="PDIWT_PiledWharf Process CalculateBearingCapacity" Function="PDIWT_PiledWharf_Main.KeyinCommands.Process_CalculateBearingCapacity"/>
     <KeyinHandler Keyin="PDIWT_PiledWharf Process CalculateCurrentForce" Function="PDIWT_PiledWharf_Main.KeyinCommands.Process_CalculateCurrentForce"/>

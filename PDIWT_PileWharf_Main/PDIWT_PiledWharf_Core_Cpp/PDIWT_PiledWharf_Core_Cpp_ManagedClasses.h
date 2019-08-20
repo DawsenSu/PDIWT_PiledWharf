@@ -2,6 +2,8 @@
 using namespace System;
 using namespace System::Collections::Generic;
 
+namespace BD = Bentley::DgnPlatformNET;
+
 namespace PDIWT_PiledWharf_Core_Cpp {
 
 	// #region Managed Code
@@ -9,9 +11,13 @@ namespace PDIWT_PiledWharf_Core_Cpp {
 
 	public enum struct PileTypeManaged
 	{
+		[ComponentModel::DescriptionAttribute("SquarePile")]
 		SqaurePile = 1,
+		[ComponentModel::DescriptionAttribute("TubePile")]
 		TubePile,
+		[ComponentModel::DescriptionAttribute("PHCTubePile")]
 		PHCTubePile,
+		[ComponentModel::DescriptionAttribute("SteelTubePile")]
 		SteelTubePile
 	};
 
@@ -24,6 +30,6 @@ namespace PDIWT_PiledWharf_Core_Cpp {
 	public ref class EntityCreation
 	{
 	public:
-		static void CreatePile(PileTypeManaged pileType, double pileWidth, double pileInsideDiameter, double pileConcreteCoreLength, Bentley::GeometryNET::DPoint3d topPoint, Bentley::GeometryNET::DPoint3d bottomPoint);
+		static BD::StatusInt CreatePile(PileTypeManaged pileType, Dictionary<PileTypeManaged, String^>^ pileMap, double pileWidth, double pileInsideDiameter, double pileConcreteCoreLength, Bentley::GeometryNET::DPoint3d topPoint, Bentley::GeometryNET::DPoint3d bottomPoint);
 	};
 }

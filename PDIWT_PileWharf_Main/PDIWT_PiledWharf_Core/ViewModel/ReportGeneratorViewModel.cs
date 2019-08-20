@@ -20,17 +20,22 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         public ReportGeneratorViewModel()
         {
             //_projectPhaseCategory = new List<string> { Resources.PreliminaryFeasibilityStudy, Resources.FeasibilityStudy,Resources.PreliminaryDesign,Resources.ConstructionDesign};
-            _projectPhaseCategory = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<Model.PDIWT_ProjectPhase>().Values.ToList();
+            _projectPhaseCategory = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<PDIWT_ProjectPhase>().Values.ToList();
             _selectedPhase = _projectPhaseCategory[0];
-            _calculatedItemName = "桩基水流力计算";
+            //_calculatedItemName = "桩基水流力计算";
             _designDate = DateTime.Now;
             _checkDate = DateTime.Now;
             _reviewDate = DateTime.Now;
+            
 
-            Messenger.Default.Register<NotificationMessage<CurrentForceViewModel>>(this, "ViewModelForReport", notification => _currentViewModelForReport = notification.Content);
+            Messenger.Default.Register<NotificationMessage>(this,"ViewModelForReport",NotificationMethod);
         }
 
-
+        private void NotificationMethod(NotificationMessage message)
+        {
+            _message = message;
+        }
+        
         private string _projectName;
         /// <summary>
         /// Property Description
@@ -204,11 +209,11 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                 if (File.Exists(OutFilePath)) File.Delete(OutFilePath);
                 PDIWT_CalculationNoteInfo _info = new PDIWT_CalculationNoteInfo
                 {
-                    ProjectName = this.ProjectName,
-                    ProjectPhase = PDIWT_CalculationNoteInfo.GetProjectPhaseEnumFromString(SelectedPhase),
+                    ProjectName =ProjectName,
+                    ProjectPhase = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<PDIWT_ProjectPhase>().Where(pair => pair.Value == SelectedPhase).FirstOrDefault().Key,
                     NumberOfVolume = NumberOfVolume,
                     CalculatedItemName = CalculatedItemName,
-                    Designer = this.Designer,
+                    Designer = Designer,
                     DesignDate = DesignDate.GetValueOrDefault(),
                     Checker = Checker,
                     CheckDate = CheckDate.GetValueOrDefault(),
@@ -216,13 +221,29 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                     ReviewDate = ReviewDate.GetValueOrDefault()
                 };
 
-                if (_currentViewModelForReport == null)
-                    throw new NullReferenceException("currentforceviewmodel is null");
+                string _templateFileName = "pdiwt_calculationnote.docx";
+                
+                if (_message == null)
+                    throw new NullReferenceException("No Notification message is received");
 
-                PDIWT_CurrentForceCalculationNoteBuilder _docbuilder = new PDIWT_CurrentForceCalculationNoteBuilder("pdiwt_calculationnote.docx",
-                            OutFilePath, _info, _currentViewModelForReport);
-                _docbuilder.Build();
-                System.Windows.Forms.MessageBox.Show(Resources.Success, Resources.Success, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                PDIWT_CalculationNoteBuilderBase _docBuilder = null;
+
+                if (_message.Sender is CurrentForceViewModel)
+                {
+                    _docBuilder = new PDIWT_CurrentForceCalculationNoteBuilder(_templateFileName, OutFilePath, _info, (CurrentForceViewModel)_message.Sender);
+                }
+                if(_message.Sender is WaveForceViewModel)
+                {
+                    _docBuilder = new PDIWT_WaveForceCalculationNoteBuilder(_templateFileName, OutFilePath, _info, (WaveForceViewModel)_message.Sender);
+                }
+                if(_message.Sender is BearingCapacityViewModel)
+                {
+                    _docBuilder = new PDIWT_AxialBearingCapacityCalculationNoteBuilder(_templateFileName, OutFilePath, _info, (BearingCapacityViewModel)_message.Sender);
+                }
+                if (_docBuilder == null)
+                    throw new NullReferenceException("PDIWT_CalculationNoteBuilderBase is null");
+                _docBuilder.Build();
+                System.Windows.MessageBox.Show($"File is created in {OutFilePath}", Resources.Success,MessageBoxButton.OK,MessageBoxImage.Information);
             }
             catch (Exception e)
             {
@@ -231,7 +252,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
         private bool CanExcuteGenerate() => !string.IsNullOrEmpty(OutFilePath);
 
-        private CurrentForceViewModel _currentViewModelForReport = null;
+        private NotificationMessage _message = null;
         
     }
 }

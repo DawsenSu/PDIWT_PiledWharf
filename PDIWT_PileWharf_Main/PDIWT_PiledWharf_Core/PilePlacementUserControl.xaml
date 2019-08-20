@@ -39,8 +39,10 @@
         <ComboBox
             Grid.Row="0"
             Grid.Column="1"
+            DisplayMemberPath="Value"
             ItemsSource="{Binding PileTypes, Mode=OneTime}"
-            SelectedItem="{Binding SelectedPileType}" />
+            SelectedValue="{Binding SelectedPileType}"
+            SelectedValuePath="Key" />
         <Label
             Grid.Row="1"
             Grid.Column="0"
@@ -59,11 +61,12 @@
         <Label
             Grid.Row="2"
             Grid.Column="0"
-            Content="{x:Static loc:Resources.PileInsideDiameter}" />
+            Content="{x:Static loc:Resources.PileInsideDiameter}"
+            Visibility="{Binding SelectedPileType, Converter={StaticResource TubePileStringOfListToVisibilityConverter}, Mode=OneWay}" />
         <TextBox
             Grid.Row="2"
             Grid.Column="1"
-            IsEnabled="{Binding SelectedPileType, Converter={StaticResource RoundPileStringOfListToBooleanConverter}, Mode=OneWay}">
+            Visibility="{Binding SelectedPileType, Converter={StaticResource TubePileStringOfListToVisibilityConverter}, Mode=OneWay}">
             <Binding NotifyOnValidationError="True" Path="PileInsideDiameter">
                 <Binding.ValidationRules>
                     <StaticResource ResourceKey="RealRangeValidationRule" />
@@ -77,11 +80,12 @@
         <Label
             Grid.Row="3"
             Grid.Column="0"
-            Content="{x:Static loc:Resources.ConcreteCoreLength}" />
+            Content="{x:Static loc:Resources.ConcreteCoreLength}"
+            Visibility="{Binding SelectedPileType, Converter={StaticResource SteelPileStringOfListToVisibilityConverter}, Mode=OneWay}" />
         <TextBox
             Grid.Row="3"
             Grid.Column="1"
-            IsEnabled="{Binding SelectedPileType, Converter={StaticResource SteelPileStringOfListToBooleanConverter}, Mode=OneWay}">
+            Visibility="{Binding SelectedPileType, Converter={StaticResource SteelPileStringOfListToVisibilityConverter}, Mode=OneWay}">
             <Binding NotifyOnValidationError="True" Path="ConcreteCoreLength">
                 <Binding.ValidationRules>
                     <StaticResource ResourceKey="RealRangeValidationRule" />
@@ -91,16 +95,18 @@
         <Label
             Grid.Row="3"
             Grid.Column="2"
-            Content="mm" />
+            Content="mm"
+            Visibility="{Binding SelectedPileType, Converter={StaticResource SteelPileStringOfListToVisibilityConverter}, Mode=OneWay}" />
         <Label
             Grid.Row="4"
             Grid.Column="0"
-            Content="{x:Static loc:Resources.PileTipSealType}" />
+            Content="{x:Static loc:Resources.PileTipSealType}"
+            Visibility="{Binding SelectedPileType, Converter={StaticResource SteelPileStringOfListToVisibilityConverter}, Mode=OneWay}" />
         <ComboBox
             Grid.Row="4"
             Grid.Column="1"
-            IsEnabled="{Binding SelectedPileType, Converter={StaticResource SteelPileStringOfListToBooleanConverter}, Mode=OneWay}"
             ItemsSource="{Binding PileTipSealTypes, Mode=OneTime}"
-            SelectedItem="{Binding SelectedPileTipType}" />
+            SelectedItem="{Binding SelectedPileTipType}"
+            Visibility="{Binding SelectedPileType, Converter={StaticResource SteelPileStringOfListToVisibilityConverter}, Mode=OneWay}" />
     </Grid>
 </UserControl>

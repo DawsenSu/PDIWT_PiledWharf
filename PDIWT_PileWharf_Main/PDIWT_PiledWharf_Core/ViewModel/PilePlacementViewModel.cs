@@ -15,8 +15,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
     {
         public PilePlacementViewModel()
         {
-            _pileTypes = new List<string> { Resources.SquarePile, Resources.TubePile, Resources.PHCTubePile, Resources.SteelTubePile };
-            _selectedPileType = _pileTypes[0];
+            _pileTypes = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<PDIWT_PiledWharf_Core_Cpp.PileTypeManaged>();
+            _selectedPileType = PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.SqaurePile;
             _pileWidth = 600;
             _pileInsideDiameter = 500;
             _concreteCoreLength = 1000;
@@ -24,21 +24,22 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             _selectedPileTipType = _pileTipSealTypes[0];
         }
 
-        private List<string> _pileTypes;
+        private Dictionary<PDIWT_PiledWharf_Core_Cpp.PileTypeManaged, string> _pileTypes;
         /// <summary>
         /// Property Description
         /// </summary>
-        public List<string> PileTypes
+        public Dictionary<PDIWT_PiledWharf_Core_Cpp.PileTypeManaged, string> PileTypes
         {
             get { return _pileTypes; }
             set { Set(ref _pileTypes, value); }
         }
 
-        private string _selectedPileType;
+
+        private PDIWT_PiledWharf_Core_Cpp.PileTypeManaged _selectedPileType;
         /// <summary>
         /// Property Description
         /// </summary>
-        public string SelectedPileType
+        public PDIWT_PiledWharf_Core_Cpp.PileTypeManaged SelectedPileType
         {
             get { return _selectedPileType; }
             set { Set(ref _selectedPileType, value); }
@@ -93,18 +94,6 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         {
             get { return _selectedPileTipType; }
             set { Set(ref _selectedPileTipType, value); }
-        }
-
-        public PDIWT_PiledWharf_Core_Cpp.PileTypeManaged SelectedPileTypeToEnum()
-        {
-            if (_selectedPileType == Resources.SquarePile)
-                return PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.SqaurePile;
-            else if (_selectedPileType == Resources.TubePile)
-                return PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.TubePile;
-            else if (_selectedPileType == Resources.PHCTubePile)
-                return PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.PHCTubePile;
-            else
-                return PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.SteelTubePile;
         }
     }
 }

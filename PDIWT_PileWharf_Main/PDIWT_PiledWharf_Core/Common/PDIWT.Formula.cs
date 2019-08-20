@@ -14,6 +14,235 @@ using BD = Bentley.DgnPlatformNET;
 namespace PDIWT.Formulas
 {
     /// <summary>
+    /// Formulas for calculating Axial Bearing Capacity
+    /// </summary>
+    public static class AxialBearingCapacity
+    {
+        public static double CalculatePilePrimeter(ShapeInfo shape, double daimeter)
+        {
+            if (shape.Value == 1)
+                return Math.PI * daimeter;
+            else
+                return 4 * daimeter;
+        }
+
+        public static double CalculatePileEndOutsideArea(ShapeInfo shape, double outerdiameter)
+        {
+            if (shape.Value == 1)
+                return Math.PI * Math.Pow(outerdiameter, 2) / 4;
+            else
+                return Math.Pow(outerdiameter, 2);
+        }
+
+        public static double CalculatePileSelfWeight(
+            PDIWT_PiledWharf_Core_Cpp.PileTypeManaged pileGeoType,
+            double pileOuterDiameter,
+            double pileInnerDiameter,
+            double pileTopElevation,
+            double pileLength,
+            double pileskewness,
+            double calculatedWaterLevel,
+            double concreteWeight,
+            double concreteUnderwaterWeight,
+            double steelWeight,
+            double steelUnderwaterWeight,
+            double concretecorelength
+            )
+        {
+            double _pilelength_aboveWaterLevel = 0;
+            double _pileLength_underWaterLevel = 0;
+
+            double _pileBottomElevation = CalculatePileBottomElevation(pileTopElevation, pileLength, pileskewness);
+            double _cosAlpha = CalculateCosAlpha(pileskewness);
+
+            if(calculatedWaterLevel>=pileTopElevation)
+            {
+                _pileLength_underWaterLevel = pileLength;
+            }
+            else if(calculatedWaterLevel <= _pileBottomElevation)
+            {
+                _pilelength_aboveWaterLevel = pileLength;
+            }
+            else
+            {
+                double _heightDiffBetweenPileTopandWaterLevel = pileTopElevation - calculatedWaterLevel;
+                _pilelength_aboveWaterLevel = _heightDiffBetweenPileTopandWaterLevel / _cosAlpha;
+                _pileLength_underWaterLevel = pileLength - _pilelength_aboveWaterLevel;
+            }
+
+            double _crossSectionArea = 0;
+
+            switch (pileGeoType)
+            {
+                case PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.SqaurePile:
+                    _crossSectionArea = pileOuterDiameter * pileOuterDiameter;
+                    break;
+                case PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.TubePile:
+                    _crossSectionArea = Math.PI * pileOuterDiameter * pileOuterDiameter / 4;
+                    break;
+                case PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.PHCTubePile:
+                    _crossSectionArea = Math.PI * (pileOuterDiameter * pileOuterDiameter - pileInnerDiameter * pileInnerDiameter) / 4;
+                    break;
+                case PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.SteelTubePile:
+                    _crossSectionArea = Math.PI * (pileOuterDiameter * pileOuterDiameter - pileInnerDiameter * pileInnerDiameter) / 4;
+                    break;
+                default:
+                    break;
+            }
+            double _pileWeight =  _crossSectionArea * (_pilelength_aboveWaterLevel * concreteWeight + _pileLength_underWaterLevel * concreteUnderwaterWeight);
+            if (pileGeoType == PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.SteelTubePile)
+            {
+                double _outterWeight = _crossSectionArea * (_pilelength_aboveWaterLevel * steelWeight + _pileLength_underWaterLevel * steelUnderwaterWeight);
+                double _concretecorelength_abovewater = 0;
+                double _concretecorelength_underwater = 0;
+                double _coreTopElevation = _pileBottomElevation + concretecorelength * _cosAlpha;
+                if (calculatedWaterLevel >= _coreTopElevation)
+                    _concretecorelength_underwater = concretecorelength;
+                else if (calculatedWaterLevel <= _pileBottomElevation)
+                    _concretecorelength_abovewater = concretecorelength;
+                else
+                {
+                    double _heightDiffBetweenCoreTopandWaterLevel = _coreTopElevation - calculatedWaterLevel;
+                    _concretecorelength_abovewater = _heightDiffBetweenCoreTopandWaterLevel / _cosAlpha;
+                    _concretecorelength_underwater = concretecorelength - _concretecorelength_abovewater;
+                }
+                double _coreWeight = _crossSectionArea * (_concretecorelength_abovewater * concreteWeight + _concretecorelength_underwater * concreteUnderwaterWeight);
+                _pileWeight = _outterWeight + _coreWeight;
+            }
+            return _pileWeight;
+        }
+
+        /// <summary>
+        /// Calculate Angle based on skewness
+        /// </summary>
+        /// <param name="skewness">if double.NaN, it's vertical pile</param>
+        /// <returns></returns>
+        public static double CalculateCosAlpha(double skewness)
+        {
+            if (skewness == 0)
+                throw new InvalidParameterException(0, new Exception("skewness can't be 0!"));
+            if (double.IsNaN(skewness))
+                return 1;
+            else
+                return skewness / Math.Sqrt(1 + skewness * skewness);
+        }
+
+        public static double CalculatePileBottomElevation(double pileTopElevation, double pileLength, double skewness)
+        {
+            return pileTopElevation - pileLength * CalculateCosAlpha(skewness);
+        }
+
+        
+
+
+        public static double CalculateCastInSituAfterGrountingPileBearingCapacity(
+            double gammar,
+            List<double> qfi,
+            List<double> li,
+            List<double> psii,
+            List<double> betasi,
+            double U,
+            double qr,
+            double A,
+            double psip,
+            double betap)
+        {
+            int _count = qfi.Count();
+            if(li.Count() != _count || psii.Count() != _count || betasi.Count() != _count)
+            {
+                throw new InvalidParameterException(1,new Exception("The parameters [qfi, li, psii, betasi] is not same length"));
+            }
+            double _sidefriction = 0;
+            for (int i = 0; i < _count; i++)
+            {
+                _sidefriction += betasi[i] * psii[i] * qfi[i] * li[i];
+            }
+            _sidefriction *= U;
+            return (_sidefriction + betap * psip * qr * A) / gammar;
+        }
+
+        public static double CalculateCasInSituPileBearingCapacity(
+            double gammar,
+            List<double> qfi,
+            List<double> li,
+            List<double> psii,
+            double U,
+            double qr,
+            double A,
+            double psip)
+        {
+            int _count = qfi.Count();
+            if (li.Count() != _count || psii.Count() != _count )
+            {
+                throw new InvalidParameterException(1, new Exception("The parameters [qfi, li, psii] is not same length"));
+            }
+            List<double> _betasiWithOnes = new List<double>();
+            foreach (var item in qfi)
+            {
+                _betasiWithOnes.Add(1);
+            }
+            return CalculateCastInSituAfterGrountingPileBearingCapacity(gammar, qfi, li, psii, _betasiWithOnes, U, qr, A, psip, 1);
+        }
+
+
+        /// <summary>
+        /// Calculate both for clause 4.2.8.1 and 4.2.8.2 
+        /// </summary>
+        /// <param name="gammar"></param>
+        /// <param name="qfi"></param>
+        /// <param name="li"></param>
+        /// <param name="U"></param>
+        /// <param name="qr"></param>
+        /// <param name="A"></param>
+        /// <param name="yita">When it comes to clause 4.2.8.1 yita set to 1 as default</param>
+        /// <returns></returns>
+        public static double DrivenPileBearingCapacity(
+            double gammar,
+            List<double> qfi,
+            List<double> li,
+            double U,
+            double qr,
+            double A,
+            double yita=1)
+        {
+            if(qfi.Count() != li.Count())
+            {
+                throw new InvalidParameterException(1, new Exception("The parameters [qfi, li] is not same length"));
+            }
+            List<double> _psiiWithOnes = new List<double>();
+            foreach (var item in qfi)
+            {
+                _psiiWithOnes.Add(1);
+            }
+            return CalculateCasInSituPileBearingCapacity(gammar, qfi, li, _psiiWithOnes, U, qr, A, yita);
+        }
+
+        public static double CalculateDrivenAndCastInSituPileUpliftForce(
+            double gammar,
+            List<double> qfi,
+            List<double> li,
+            List<double> psii,
+            double U,
+            double G,
+            double Cosalpha)
+        {
+            double _count = qfi.Count();
+            if (li.Count() != _count || psii.Count() !=  _count)
+            {
+                throw new InvalidParameterException(1, new Exception("The parameters [qfi, li] is not same length"));
+            }
+            double _sidefriction = 0;
+            for (int i = 0; i < _count; i++)
+            {
+                _sidefriction += psii[i] * qfi[i] * li[i];
+            }
+            _sidefriction *= U;
+            return (_sidefriction + G * Cosalpha) / gammar;
+        }
+
+    }
+
+    /// <summary>
     /// Formulas for calculating Current force imposing pile
     /// </summary>
     public static class CurrentForce
@@ -98,43 +327,171 @@ namespace PDIWT.Formulas
            }, 0, 1000);
         }
 
-        public static double CalculateMaxVelocityComponentOfWaveForce(
-            double alpha,
+        public static double CalculatePDMax(
             double CD,
             double gamma,
             double D,
             double H,
             double K1) =>
-            alpha * CD * gamma * D * H * H / 2 * K1;
+            CD * gamma * D * H * H / 2 * K1;
 
-        public static double CalculateMaxInertiaComponentOfWaveForce(
-            double gammap,
+        public static double CalculatePIMax(
             double CM,
             double gamma,
             double A,
             double H,
             double K2) =>
-            gammap * CM * gamma * A * H / 2 * K2;
+            CM * gamma * A * H / 2 * K2;
 
-        public static double CalculateMaxVelocityComponentOfWaveMonment(
-            double beta,
-            double Cp,
+        public static double CalculateMDMax(
+            double CD,
             double gamma,
             double D,
             double H,
             double L,
             double K3) =>
-            beta * Cp * gamma * D * H * H * L / (2 * Math.PI) * K3;
+            CD * gamma * D * H * H * L / (2 * Math.PI) * K3;
 
-        public static double CalculateMaxInertiaComponentOfWaveMonment(
-            double gammaM,
+        public static double CalculateMIMax(
             double CM,
             double gamma,
             double A,
             double H,
             double L,
             double K4) =>
-            gammaM * CM * gamma * A * H * L / (4 * Math.PI) * K4;
+            CM * gamma * A * H * L / (4 * Math.PI) * K4;
+
+        public static void CalculateFinalCompOfWaveForce(
+            double diameter,
+            double L,
+            double H1,
+            double waterDepth,
+            double alpha,
+            double beta,
+            double gammaP,
+            double gammaM,
+            double PDMax,
+            double MDMax,
+            double PIMax,
+            double MIMax,
+            out double PDMax_Final,
+            out double MDMax_Final,
+            out double PIMax_Final,
+            out double MIMax_Final)
+        {
+            if(diameter/L <= 0.2)
+            {
+                if((H1/waterDepth <= 0.2 && waterDepth/L >= 0.2) ||
+                    (H1/waterDepth >0.2 && waterDepth/L >= 0.35))
+                {
+                    PDMax_Final = PDMax;
+                    MDMax_Final = MDMax;
+                    PIMax_Final = PDMax;
+                    MIMax_Final = MIMax;
+                }
+                else
+                {
+                    PDMax_Final = alpha * PDMax;
+                    MDMax_Final = beta * MDMax;
+                    if(0.04 <= waterDepth /L && waterDepth / L <= 0.2)
+                    {
+                        PIMax_Final = gammaP * PIMax;
+                        MIMax_Final = gammaM * MIMax;
+                    }
+                    else
+                    {
+                        PIMax_Final = PIMax;
+                        MIMax_Final = MIMax;
+                    }
+                }
+            }
+            else
+            {
+                //if(H1 / waterDepth <= 0.1)
+                //{
+                //    PIMax_Final = PIMax;
+                //    MIMax_Final = MIMax;
+                //    PDMax_Final = PDMax;
+                //    MDMax_Final = MDMax;
+                //}
+                //else
+                //{
+
+                //}
+                //PDMax_Final = MDMax_Final = PIMax_Final = MIMax_Final = 0;
+                PIMax_Final = PIMax;
+                MIMax_Final = MIMax;
+                PDMax_Final = PDMax;
+                MDMax_Final = MDMax;
+                //throw new NotImplementedException("Big Scale calculation algorithm hasn't been added!");
+                //Todo: Need to complement big scale pile calculation process.
+            }
+        }
+
+        public static void CalculateMaxWaveAndMoment(
+            double diameter,
+            double L,
+            double H1,
+            double d,
+            double pileSpan,
+            double PDMax_Final,
+            double MDMax_FInal,
+            double PIMax_Final, 
+            double MIMax_Final,
+            out double PMax,
+            out double MMax,
+            out double omgaT/*angel*/)
+        {
+            if(diameter / L  <= 0.2)
+            {
+                if(PDMax_Final <= PIMax_Final / 2)
+                {
+                    PMax = PIMax_Final;
+                    MMax = MIMax_Final;
+                    omgaT = 270;
+                }
+                else
+                {
+                    PMax = PDMax_Final * (1 + Math.Pow(PIMax_Final / 2 / PDMax_Final, 2));
+                    MMax = MDMax_FInal * (1 + Math.Pow(MIMax_Final / 2 / MDMax_FInal, 2));
+                    omgaT = Math.Asin(-0.5 * PIMax_Final / PDMax_Final) * 180 / Math.PI;
+                }
+                if(pileSpan < 4*diameter)
+                {
+                    double _K = CalculateK(pileSpan, diameter);
+                    PMax *= _K;
+                    MMax *= _K;
+                }
+            }
+            else
+            {
+                if (H1 / d < 0.1)
+                {
+                    PMax = PIMax_Final;
+                    MMax = MIMax_Final;
+                    omgaT = double.NaN;
+                }
+                else
+                {
+                    if(H1/ d >= 0.1 && diameter / d >=0.4)
+                    {
+                        double _alphaP = 0;
+                        double _alphaM = 0;
+                        PMax = _alphaP * PIMax_Final;
+                        MMax = _alphaM * MIMax_Final;
+                        omgaT = double.NaN;
+                    }
+                    else
+                    {
+
+                    }
+                    PMax = MMax = omgaT = 0;
+                    throw new NotImplementedException("Big Scale calculation algorithm hasn't been added!");
+                    //Todo: To complement big scale pile calculation algorithm.
+                }
+            }
+        }
+
 
         public static double CalculateK1(
             double Z1,
@@ -231,9 +588,72 @@ namespace PDIWT.Formulas
             return Interpolate.Linear(_xdata, _ydata).Interpolate(value);
         }
 
-        public static double CalculateYitaMax(double H1, double d)
+        public static double CalculateYitaMax(double H1, double d,  double L, double diameter, double relativeperiod)
         {
-            return CalculateInterploateFromDB(H1 / d, "Yitamax") * H1;
+            if(diameter / L <= 0.2 )
+                return CalculateInterploateFromDB(H1 / d, "Yitamax") * H1;
+            else
+            {
+                double _r = diameter / 2;
+                if(H1/d >= 0.1 && diameter / d >= 0.4)
+                {
+
+                    if( relativeperiod >= 8)
+                    {
+                        var rp = new List<double>();
+                        var C1 = new List<double>();
+                        var C2 = new List<double>();
+                        var C3 = new List<double>();
+                        var alpha = new List<double>();
+                        var beta = new List<double>();
+#if DEBUG
+                        var _dbFilePath = @"D:\softwarefile\Bentley\Microstation\Configuration\Organization\Data\";
+#else
+                        var _dbFilePath = BD.ConfigurationManager.GetVariable("PDIWT_ORGANIZATION_DATABASEPATH", BD.ConfigurationVariableLevel.Organization);
+#endif
+                        using (SQLiteConnection _conn = new SQLiteConnection(string.Format($"Data Source={_dbFilePath}{_databasename};Version=3;")))
+                        {
+                            _conn.Open();
+                            using (SQLiteCommand _cmd = new SQLiteCommand())
+                            {
+                                _cmd.Connection = _conn;
+                                _cmd.CommandText = string.Format(@"select * from RelativePeriod");
+                                using (SQLiteDataReader _dr = _cmd.ExecuteReader(System.Data.CommandBehavior.CloseConnection))
+                                {
+                                    while (_dr.Read())
+                                    {
+                                        rp.Add(_dr.GetDouble(1));
+                                        C1.Add(_dr.GetDouble(2));
+                                        C2.Add(_dr.GetDouble(2));
+                                        C3.Add(_dr.GetDouble(2));
+                                        alpha.Add(_dr.GetDouble(2));
+                                        beta.Add(_dr.GetDouble(2));
+                                    }
+                                }
+                            }
+                        }
+                        double _c1 = Interpolate.Linear(rp, C1).Interpolate(relativeperiod);
+                        double _c2 = Interpolate.Linear(rp, C2).Interpolate(relativeperiod);
+                        double _c3 = Interpolate.Linear(rp, C3).Interpolate(relativeperiod);
+                        double _alpha = Interpolate.Linear(rp, alpha).Interpolate(relativeperiod);
+                        double _beta = Interpolate.Linear(rp, beta).Interpolate(relativeperiod);
+                        return H1 * (_c1 - _c2 * Math.Exp(-_alpha * _r / d)) * (1 + _c3 * Math.Pow(H1 / d - 0.1, _beta));
+                    }
+                    else
+                    {
+                        return CalculateInterploateFromDB(H1 / d, "Yitamax") * H1;
+                    }
+                }
+                else
+                {
+                    return CalculateInterploateFromDB(H1 / d, "Yitamax") * H1;
+                }
+            }
+        }
+
+        public static double CalculateReltiavePeriod(double period, double d, double gravitationalAcceleration = 9.8)
+        {
+            return period * Math.Sqrt(gravitationalAcceleration / d); 
         }
 
         public static double CalculateAlpha(double H1, double d, double L)
@@ -308,9 +728,19 @@ namespace PDIWT.Formulas
                 _result = 1;
             return _result;
         }
-        public static double CalcuateCM(double Diameter, double L)
+        public static double CalculateCM(double Diameter, double L,ShapeInfo shapeInfo)
         {
-            return CalculateInterploateFromDB(Diameter / L, "CM");
+            if(Diameter / L <= 0.2)
+            {
+                if (shapeInfo.Value == 1)
+                    return 2.0;
+                else
+                    return 1.5;
+            }
+            else
+            {
+                return CalculateInterploateFromDB(Diameter / L, "CM");
+            }
         }
         public static double CalculateCD(ShapeInfo shapeInfo)
         {

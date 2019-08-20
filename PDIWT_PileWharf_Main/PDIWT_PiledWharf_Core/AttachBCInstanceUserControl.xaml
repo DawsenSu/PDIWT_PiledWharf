@@ -1,0 +1,68 @@
+﻿<UserControl
+    x:Class="PDIWT_PiledWharf_Core.AttachBCInstanceUserControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:loc="clr-namespace:PDIWT.Resources.Localization.MainModule;assembly=PDIWT.Resources"
+    xmlns:local="clr-namespace:PDIWT_PiledWharf_Core.Model.Tools"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pdi="clr-namespace:PDIWT.Resources.CustomUserControl;assembly=PDIWT.Resources"
+    d:DesignHeight="250"
+    d:DesignWidth="270"
+    Background="White"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Skins/MainSkin.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Margin="3">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <pdi:LabelTextBox
+            Grid.Row="0"
+            DisplayName="{x:Static loc:Resources.SoilLayerNumber}"
+            Parameter="{Binding SoilLayerNumber}" />
+        <pdi:LabelTextBox
+            Grid.Row="1"
+            DisplayName="{x:Static loc:Resources.SoilLayerName}"
+            Parameter="{Binding SoilLayerName}" />
+        <pdi:LabelTextBox
+            Grid.Row="2"
+            DisplayName="βsi"
+            Parameter="{Binding Betasi}" />
+        <pdi:LabelTextBox
+            Grid.Row="3"
+            DisplayName="ψsi"
+            Parameter="{Binding Psisi}" />
+        <pdi:LabelTextBox
+            Grid.Row="4"
+            DisplayName="qfi"
+            Parameter="{Binding Qfi}"
+            Unit="kPa" />
+        <pdi:LabelTextBox
+            Grid.Row="5"
+            DisplayName="βp"
+            Parameter="{Binding Betap}" />
+        <pdi:LabelTextBox
+            Grid.Row="6"
+            DisplayName="ψp"
+            Parameter="{Binding Psip}" />
+        <pdi:LabelTextBox
+            Grid.Row="7"
+            DisplayName="qr"
+            Parameter="{Binding Qr}"
+            Unit="kPa" />
+    </Grid>
+</UserControl>

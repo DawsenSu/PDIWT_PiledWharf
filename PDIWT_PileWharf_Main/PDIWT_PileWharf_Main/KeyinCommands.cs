@@ -25,12 +25,15 @@ namespace PDIWT_PiledWharf_Main
             var _pilePlacementTool = new PDIWT_PiledWharf_Core.Model.Tools.PilePlacementTool(Program.Addin);
             _pilePlacementTool.InstallNewInstance();
         }
-        
-
+        public static void Input_AttachBCECInstance(string unparsed)
+        {
+            var _BCECAttachTool = new PDIWT_PiledWharf_Core.Model.Tools.AttachBCInstanceTool(Program.Addin);
+            _BCECAttachTool.InstallNewInstance();
+        }
         public static void Process_CalculateBearingCapacity(string unparsed)
         {
-            Bentley.MstnPlatformNET.MessageCenter.Instance.StatusMessage = "Input Process CalcuateBearingCapacity";
-
+            //Bentley.MstnPlatformNET.MessageCenter.Instance.StatusMessage = "Input Process CalcuateBearingCapacity";
+            PDIWT_PiledWharf_Core.BearingCapacityWindow.ShowWindow(Program.Addin);
         }
         public static void Process_CalculateCurrentForce(string unparsed)
         {

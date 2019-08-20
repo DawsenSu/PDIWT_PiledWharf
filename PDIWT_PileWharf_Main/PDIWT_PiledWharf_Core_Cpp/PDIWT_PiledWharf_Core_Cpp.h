@@ -4,6 +4,9 @@
 #include <cstdlib>
 #include <cmath>
 
+namespace BDNative = Bentley::DgnPlatform;
+namespace BECN = Bentley::ECN;
+
 namespace PDIWT_PiledWharf_Core_Cpp {
 
 	// @brief ECFramework Helper 
@@ -41,14 +44,18 @@ namespace PDIWT_PiledWharf_Core_Cpp {
 	public class PileEntityCreation
 	{
 	public:
-		PileEntityCreation();
-		PileEntityCreation(PileType pileType, double pileWidth, double pileInsideDiameter, double pileConcreteCoreLength, DPoint3d topPoint, DPoint3d bottomPoint)
-			:_pileType(pileType), _pileWidth(pileWidth), _pileInsideDiameter(pileInsideDiameter), _pileConcreteCoreLength(pileConcreteCoreLength), _topPoint(topPoint), _bottomPoint(bottomPoint)
+		//PileEntityCreation();
+		PileEntityCreation(PileType pileType, bmap<PileType,WString> pileTypeMap, double pileWidth, double pileInsideDiameter, double pileConcreteCoreLength, DPoint3d topPoint, DPoint3d bottomPoint)
+			:_pileType(pileType), _pileTypeMap(pileTypeMap), _pileWidth(pileWidth), _pileInsideDiameter(pileInsideDiameter), _pileConcreteCoreLength(pileConcreteCoreLength), _topPoint(topPoint), _bottomPoint(bottomPoint)
 		{
 			InitSQLiteDb();
+			double _uorpermm = ACTIVEMODEL->GetModelInfoCP()->GetUorPerMeter() / 1000;
+			_pileWidth *= _uorpermm;
+			_pileInsideDiameter *= _uorpermm;
+			_pileConcreteCoreLength *= _uorpermm;
 		};
 		~PileEntityCreation();
-		void CreatPile();
+		BentleyStatus CreatPile();
 	private:
 		BentleyStatus CreateSquarePile(ISolidKernelEntityPtr& out);
 		BentleyStatus CreateTubePile(ISolidKernelEntityPtr& out);
@@ -67,7 +74,7 @@ namespace PDIWT_PiledWharf_Core_Cpp {
 		double _pileInsideDiameter;
 		double _pileConcreteCoreLength;
 		DPoint3d _topPoint, _bottomPoint;
-
+		bmap<PileType, WString> _pileTypeMap;
 		sqlite3 *_db;
 	};
 }

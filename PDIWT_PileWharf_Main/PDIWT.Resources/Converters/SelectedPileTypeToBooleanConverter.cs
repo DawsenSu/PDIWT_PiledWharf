@@ -43,12 +43,43 @@ namespace PDIWT.Resources.Converters
             List<string> _itemlist = new List<string> { Item1, Item2, Item3, Item4 };
             if (_itemlist.Contains(value.ToString()))
                 return Visibility.Visible;
-            return Visibility.Hidden;
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return DependencyProperty.UnsetValue;
+        }
+    }
+
+    [ValueConversion(typeof(object), typeof(Visibility))]
+    public class ReferenceToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value == null ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return DependencyProperty.UnsetValue;
+        }
+    }
+
+
+    [ValueConversion(typeof(bool?), typeof(bool))]
+    public class NullBooleanToReversedBooleanConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool? _value = (bool?)value;
+            return !(_value ?? true);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool _value = (bool)value;
+            return !_value;
         }
     }
 }

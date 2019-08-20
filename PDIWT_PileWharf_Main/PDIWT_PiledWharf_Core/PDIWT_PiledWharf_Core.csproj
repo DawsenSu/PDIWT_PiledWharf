@@ -208,16 +208,46 @@
     <Reference Include="WpfMath, Version=0.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WpfMath.0.6.0\lib\net40\WpfMath.dll</HintPath>
     </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.5.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BearingCapacityWindow.xaml.cs">
+      <DependentUpon>BearingCapacityWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="BuildUpSoilLayersWindow.xaml.cs">
+      <DependentUpon>BuildUpSoilLayersWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Common\Converters.cs" />
     <Compile Include="Common\PDIWT.Formula.cs" />
+    <Compile Include="Common\Services.cs" />
     <Compile Include="CurrentForceWindow.xaml.cs">
       <DependentUpon>CurrentForceWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Input_ImportFromFileWindow.xaml.cs">
       <DependentUpon>Input_ImportFromFileWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\Tools\AttachBCInstanceTool.cs" />
+    <Compile Include="AttachBCInstanceUserControl.xaml.cs">
+      <DependentUpon>AttachBCInstanceUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Model\Tools\LoadPileParametersTool.cs" />
+    <Compile Include="PickUpSoilLayersFromLibWindow.xaml.cs">
+      <DependentUpon>PickUpSoilLayersFromLibWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PilePlacementUserControl.xaml.cs">
       <DependentUpon>PilePlacementUserControl.xaml</DependentUpon>
     </Compile>
@@ -229,8 +259,12 @@
     <Compile Include="ReportGeneratorWindow.xaml.cs">
       <DependentUpon>ReportGeneratorWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\AttachBCInstanceViewModel.cs" />
+    <Compile Include="ViewModel\BearingCapacityViewModel.cs" />
+    <Compile Include="ViewModel\BuildUpSoilLayersViewModel.cs" />
     <Compile Include="ViewModel\CurrentForceViewModel.cs" />
     <Compile Include="ViewModel\Input_ImportFromFileViewModel.cs" />
+    <Compile Include="ViewModel\PickUpSoilLayersFromLibViewModel.cs" />
     <Compile Include="ViewModel\PilePlacementViewModel.cs" />
     <Compile Include="ViewModel\ReportGeneratorViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
@@ -239,6 +273,14 @@
     <Compile Include="WaveForceWindow.xaml.cs">
       <DependentUpon>WaveForceWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="BearingCapacityWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BuildUpSoilLayersWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="CurrentForceWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -246,6 +288,14 @@
     <Page Include="Input_ImportFromFileWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="AttachBCInstanceUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PickUpSoilLayersFromLibWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PilePlacementUserControl.xaml">
       <SubType>Designer</SubType>

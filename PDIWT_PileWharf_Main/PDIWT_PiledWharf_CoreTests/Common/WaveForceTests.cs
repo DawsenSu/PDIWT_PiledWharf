@@ -39,7 +39,8 @@ namespace PDIWT.Formulas.Tests
         [Test()]
         public void GetYitaMaxTest()
         {
-            Assert.AreEqual(2.52, WaveForce.CalculateYitaMax(_H1, _Waterdepth), 0.05);
+            double _wavelength = WaveForce.CalculateWaveLength(_T, _Waterdepth);
+            Assert.AreEqual(2.52, WaveForce.CalculateYitaMax(_H1, _Waterdepth, _wavelength,_diameter,0), 0.05);
         }
         [Test()]
         public void CalculateAlphaTest()

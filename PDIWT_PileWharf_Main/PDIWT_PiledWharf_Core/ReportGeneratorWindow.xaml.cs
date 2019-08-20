@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PDIWT_PiledWharf_Core.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,8 @@ using System.Windows.Shapes;
 
 namespace PDIWT_PiledWharf_Core
 {
+    using ViewModel;
+
     /// <summary>
     /// Interaction logic for ReportGeneratorWindow.xaml
     /// </summary>
@@ -22,9 +25,10 @@ namespace PDIWT_PiledWharf_Core
         public ReportGeneratorWindow()
         {
             InitializeComponent();
-            var _locator = new ViewModel.ViewModelLocator();
-            DataContext = _locator.ReportGenerator;
             Icon = new BitmapImage(new Uri("pack://application:,,,/PDIWT.Resources;component/Images/Icons/CalculationNote.ico", UriKind.RelativeOrAbsolute));
+            DataContext = new ReportGeneratorViewModel();
+            //var _locator = new ViewModel.ViewModelLocator();
+            //DataContext = _locator.ReportGenerator;
 
         }
 

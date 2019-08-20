@@ -134,7 +134,7 @@
             </TabItem>
             <TabItem Header="{x:Static loc:Resources.Material}" TabIndex="3">
                 <StackPanel>
-                    <GroupBox Foreground="{StaticResource GroupBoxCaptionColor}" Header="{x:Static loc:Resources.Concrete}">
+                    <GroupBox Header="{x:Static loc:Resources.Concrete}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -182,12 +182,12 @@
                             <Label
                                 Grid.Row="2"
                                 Grid.Column="0"
-                                Content="{x:Static loc:Resources.Density}" />
+                                Content="{x:Static loc:Resources.Weight}" />
                             <TextBox
                                 Grid.Row="2"
                                 Grid.Column="1"
                                 TabIndex="6">
-                                <Binding NotifyOnValidationError="True" Path="ConcreteDensity">
+                                <Binding NotifyOnValidationError="True" Path="ConcreteUnitWeight">
                                     <Binding.ValidationRules>
                                         <StaticResource ResourceKey="RealRangeValidationRule" />
                                     </Binding.ValidationRules>
@@ -200,12 +200,12 @@
                             <Label
                                 Grid.Row="3"
                                 Grid.Column="0"
-                                Content="{x:Static loc:Resources.UnderWaterDensity}" />
+                                Content="{x:Static loc:Resources.UnderWaterUnitWeight}" />
                             <TextBox
                                 Grid.Row="3"
                                 Grid.Column="1"
                                 TabIndex="7">
-                                <Binding NotifyOnValidationError="True" Path="ConcreteUnderWaterDensity">
+                                <Binding NotifyOnValidationError="True" Path="ConcreteUnderWaterUnitWeight">
                                     <Binding.ValidationRules>
                                         <StaticResource ResourceKey="RealRangeValidationRule" />
                                     </Binding.ValidationRules>
@@ -217,7 +217,7 @@
                                 Content="kN/m3" />
                         </Grid>
                     </GroupBox>
-                    <GroupBox Foreground="{StaticResource GroupBoxCaptionColor}" Header="{x:Static loc:Resources.Steel}">
+                    <GroupBox Header="{x:Static loc:Resources.Steel}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
@@ -264,12 +264,12 @@
                             <Label
                                 Grid.Row="2"
                                 Grid.Column="0"
-                                Content="{x:Static loc:Resources.Density}" />
+                                Content="{x:Static loc:Resources.Weight}" />
                             <TextBox
                                 Grid.Row="2"
                                 Grid.Column="1"
                                 TabIndex="10">
-                                <Binding NotifyOnValidationError="True" Path="SteelDensity">
+                                <Binding NotifyOnValidationError="True" Path="SteelUnitWeight">
                                     <Binding.ValidationRules>
                                         <StaticResource ResourceKey="RealRangeValidationRule" />
                                     </Binding.ValidationRules>
@@ -281,16 +281,16 @@
                                 Content="kN/m3" />
                         </Grid>
                     </GroupBox>
-                    <GroupBox Foreground="{StaticResource GroupBoxCaptionColor}" Header="{x:Static loc:Resources.Water}">
+                    <GroupBox Header="{x:Static loc:Resources.Water}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="120" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Content="{x:Static loc:Resources.Density}" />
+                            <Label Grid.Column="0" Content="{x:Static loc:Resources.Weight}" />
                             <TextBox Grid.Column="1" TabIndex="11">
-                                <Binding NotifyOnValidationError="True" Path="WaterDensity">
+                                <Binding NotifyOnValidationError="True" Path="WaterUnitWeight">
                                     <Binding.ValidationRules>
                                         <StaticResource ResourceKey="RealRangeValidationRule" />
                                     </Binding.ValidationRules>
@@ -408,72 +408,257 @@
                 </Grid>
             </TabItem>
             <TabItem Header="{x:Static loc:Resources.Wave}" TabIndex="18">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="120" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="auto" />
-                    </Grid.ColumnDefinitions>
-                    <Label
-                        Grid.Row="0"
-                        Grid.Column="0"
-                        Content="{x:Static loc:Resources.WaveHeight}" />
-                    <TextBox
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        TabIndex="19">
-                        <Binding NotifyOnValidationError="True" Path="WaveHeight">
-                            <Binding.ValidationRules>
-                                <StaticResource ResourceKey="RealRangeValidationRule" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox>
-                    <Label
-                        Grid.Row="0"
-                        Grid.Column="2"
-                        Content="m" />
-                    <Label
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Content="{x:Static loc:Resources.WaveLength}" />
-                    <TextBox
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        TabIndex="20">
-                        <Binding NotifyOnValidationError="True" Path="WaveLength">
-                            <Binding.ValidationRules>
-                                <StaticResource ResourceKey="RealRangeValidationRule" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox>
-                    <Label
-                        Grid.Row="1"
-                        Grid.Column="2"
-                        Content="m" />
-                    <Label
-                        Grid.Row="2"
-                        Grid.Column="0"
-                        Content="{x:Static loc:Resources.WavePeriod}" />
-                    <TextBox
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        TabIndex="21">
-                        <Binding NotifyOnValidationError="True" Path="WavePeriod">
-                            <Binding.ValidationRules>
-                                <StaticResource ResourceKey="RealRangeValidationRule" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox>
-                    <Label
-                        Grid.Row="2"
-                        Grid.Column="2"
-                        Content="m" />
-                </Grid>
+                <ScrollViewer Margin="1">
+                    <StackPanel>
+                        <GroupBox Header="{x:Static loc:Resources.HAT}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Content="{x:Static loc:Resources.WaveHeight}" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    TabIndex="19">
+                                    <Binding NotifyOnValidationError="True" Path="WaveHeight_HAT">
+                                        <Binding.ValidationRules>
+                                            <StaticResource ResourceKey="RealRangeValidationRule" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox>
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    Content="m" />
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Content="{x:Static loc:Resources.WavePeriod}" />
+                                <TextBox
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    TabIndex="21">
+                                    <Binding NotifyOnValidationError="True" Path="WavePeriod_HAT">
+                                        <Binding.ValidationRules>
+                                            <StaticResource ResourceKey="RealRangeValidationRule" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox>
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="2"
+                                    Content="s" />
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Header="{x:Static loc:Resources.MHW}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Content="{x:Static loc:Resources.WaveHeight}" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    TabIndex="19">
+                                    <Binding NotifyOnValidationError="True" Path="WaveHeight_MHW">
+                                        <Binding.ValidationRules>
+                                            <StaticResource ResourceKey="RealRangeValidationRule" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox>
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    Content="m" />
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Content="{x:Static loc:Resources.WavePeriod}" />
+                                <TextBox
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    TabIndex="21">
+                                    <Binding NotifyOnValidationError="True" Path="WavePeriod_MHW">
+                                        <Binding.ValidationRules>
+                                            <StaticResource ResourceKey="RealRangeValidationRule" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox>
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="2"
+                                    Content="s" />
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Header="{x:Static loc:Resources.MSL}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Content="{x:Static loc:Resources.WaveHeight}" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    TabIndex="19">
+                                    <Binding NotifyOnValidationError="True" Path="WaveHeight_MSL">
+                                        <Binding.ValidationRules>
+                                            <StaticResource ResourceKey="RealRangeValidationRule" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox>
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    Content="m" />
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Content="{x:Static loc:Resources.WavePeriod}" />
+                                <TextBox
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    TabIndex="21">
+                                    <Binding NotifyOnValidationError="True" Path="WavePeriod_MSL">
+                                        <Binding.ValidationRules>
+                                            <StaticResource ResourceKey="RealRangeValidationRule" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox>
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="2"
+                                    Content="s" />
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Header="{x:Static loc:Resources.MLW}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Content="{x:Static loc:Resources.WaveHeight}" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    TabIndex="19">
+                                    <Binding NotifyOnValidationError="True" Path="WaveHeight_MLW">
+                                        <Binding.ValidationRules>
+                                            <StaticResource ResourceKey="RealRangeValidationRule" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox>
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    Content="m" />
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Content="{x:Static loc:Resources.WavePeriod}" />
+                                <TextBox
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    TabIndex="21">
+                                    <Binding NotifyOnValidationError="True" Path="WavePeriod_MLW">
+                                        <Binding.ValidationRules>
+                                            <StaticResource ResourceKey="RealRangeValidationRule" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox>
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="2"
+                                    Content="s" />
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Header="{x:Static loc:Resources.LAT}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    Content="{x:Static loc:Resources.WaveHeight}" />
+                                <TextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    TabIndex="19">
+                                    <Binding NotifyOnValidationError="True" Path="WaveHeight_LAT">
+                                        <Binding.ValidationRules>
+                                            <StaticResource ResourceKey="RealRangeValidationRule" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox>
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="2"
+                                    Content="m" />
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    Content="{x:Static loc:Resources.WavePeriod}" />
+                                <TextBox
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    TabIndex="21">
+                                    <Binding NotifyOnValidationError="True" Path="WavePeriod_LAT">
+                                        <Binding.ValidationRules>
+                                            <StaticResource ResourceKey="RealRangeValidationRule" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox>
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="2"
+                                    Content="s" />
+                            </Grid>
+                        </GroupBox>
+                    </StackPanel>
+
+                </ScrollViewer>
+
             </TabItem>
         </TabControl>
         <StackPanel

@@ -15,54 +15,56 @@ using System.Windows.Shapes;
 using BM = Bentley.MstnPlatformNET;
 using BMWPF = Bentley.MstnPlatformNET.WPF;
 using GalaSoft.MvvmLight.Messaging;
-
 namespace PDIWT_PiledWharf_Core
 {
     using ViewModel;
     /// <summary>
-    /// Interaction logic for WaveForceWindow.xaml
+    /// Interaction logic for BearingCapacityWindow.xaml
     /// </summary>
-    public partial class WaveForceWindow : Window
+    public partial class BearingCapacityWindow : Window
     {
-        public WaveForceWindow(BM.AddIn addIn)
+        public BearingCapacityWindow(BM.AddIn addIn)
         {
             InitializeComponent();
 
             ViewModelLocator _locator = new ViewModelLocator();
-            DataContext = _locator.WaveForce;
+            DataContext = _locator.BearingCapacity;
             m_wpfhelper = new BMWPF.WPFInteropHelper(this);
-            m_wpfhelper.Attach(addIn, true, "WaveForceWindow");
-            Icon = new BitmapImage(new Uri("pack://application:,,,/PDIWT.Resources;component/Images/Icons/WaveForce.ico", UriKind.RelativeOrAbsolute));
+            m_wpfhelper.Attach(addIn, true, "BearingCapacityWidnow");
+            Icon = new BitmapImage(new Uri("pack://application:,,,/PDIWT.Resources;component/Images/Icons/BearingCapacity.ico", UriKind.RelativeOrAbsolute));
 
             _controlListNeedForChange = new List<Control>()
             {
-                Label_Shape,
-                LabelTextBox_PileDiameter,
-                LabelTextBox_HAT,
-                LabelTextBox_MHW,
-                LabelTextBox_MLW,
-                LabelTextBox_LAT,
-                LabelTextBox_WaterDensity,
-                Label_WaveHeight,
-                Label_Period
+                CheckBox_skewness,
+                LabelTextBox_PileTopElevation,
+                LabelTextBox_PileWidth,
+                LabelTextBox_PileInsideDiameter,
+                LabelTextBox_PileLength,
+                LabelTextBox_PileSkewness,
+                LabelTextBox_ConcreteWeight,
+                LabelTextBox_ConcreteUnderWaterWeight,
+                LabelTextBox_SteelWeight,
+                LabelTextBox_SteelUnderWaterWeigth,
+                Lable_PileGeoType,
+                Lable_PileWorkmanshipType,
             };
 
-            Messenger.Default.Register<NotificationMessage<bool>>(this, "WaveForceForegroundChange", ChangeControlsForeground);
+            Messenger.Default.Register<NotificationMessage<bool>>(this, "BearingCapacityForegroundChange", ChangeControlsForeground);
         }
 
-        static WaveForceWindow m_WaveForceWindowHost;
+        static BearingCapacityWindow m_BearingCapacityWindowHost;
         BMWPF.WPFInteropHelper m_wpfhelper;
 
         public static void ShowWindow(BM.AddIn addIn)
         {
-            if (m_WaveForceWindowHost != null)
+            if (m_BearingCapacityWindowHost != null)
             {
-                m_WaveForceWindowHost.Focus();
+                m_BearingCapacityWindowHost.Focus();
                 return;
             };
 
-            m_WaveForceWindowHost = new WaveForceWindow(addIn);
-            m_WaveForceWindowHost.Show();
+            m_BearingCapacityWindowHost = new BearingCapacityWindow(addIn);
+            m_BearingCapacityWindowHost.Show();
         }
         protected override void OnClosed(EventArgs e)
         {
@@ -83,16 +85,10 @@ namespace PDIWT_PiledWharf_Core
             }
             m_wpfhelper.Detach();
             m_wpfhelper.Dispose();
-            m_WaveForceWindowHost = null;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
+            m_BearingCapacityWindowHost = null;
         }
 
         List<Control> _controlListNeedForChange;
-
         private void ChangeControlsForeground(NotificationMessage<bool> notification)
         {
             bool _isLoadFromEntity = notification.Content;

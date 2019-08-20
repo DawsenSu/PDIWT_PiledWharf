@@ -40,28 +40,28 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         /// </summary>
         public SettingsViewModel()
         {
-            _pileTypes = new List<PileType>()
-            {
-                new PileType { NamePath = Resources.Round, Value = "Round" },
-                new PileType { NamePath = Resources.Square, Value = "Square" }
-            };
+            //_pileTypes = new List<PileType>()
+            //{
+            //    new PileType { NamePath = Resources.Round, Value = "Round" },
+            //    new PileType { NamePath = Resources.Square, Value = "Square" }
+            //};
 
             _structureImportanceFactor = 1.1;
             _antiearthquakeIntensity = 1.0;
             _fixedDepthFactor = 1.0;
             _antiEarthquakeAdjustmentFactor = 1.0;
 
-            _selectedPileType = _pileTypes[0].Value;
-            _pileSideLengthDiameter = 1000;
+            //_selectedPileType = _pileTypes[0].Value;
+            //_pileSideLengthDiameter = 1000;
 
             _concreteModulus = 3.2e7;
             _concretePoisson = 0.2;
-            _concreteDensity = 25;
-            _concreteUnderWaterDensity = 15;
+            _concreteUnitWeight = 25;
+            _concreteUnderWaterUnitWeight = 15;
             _steelModulus = 2e8;
             _steelPoisson = 0.2;
-            _steelDensity = 78.5;
-            _waterDensity = 10;
+            _steelUnitWeight = 78.5;
+            _waterUnitWeight = 10.25;
 
             _hat = 2;
             _mhw = 1;
@@ -69,13 +69,15 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             _mlw = -1;
             _lat = -2;
 
-            _waveHeight = 1.0;
-            _waveLength = 10;
-            _wavePeriod = 20;
+            WaveHeight_HAT = 4.2; WavePeriod_HAT = 11.20;
+            WaveHeight_MHW = 4.00; WavePeriod_MHW = 6.60;
+            WaveHeight_MSL = 3.8; WavePeriod_MSL = 6.0;
+            WaveHeight_MLW = 3.70; WavePeriod_MLW = 6.30;
+            WaveHeight_LAT = 2.90; WavePeriod_LAT = 11.20;
         }
 
         private Dictionary<string, string> _generalPropValueDicitionary = new Dictionary<string, string>();
-        private Dictionary<string, string> _geometryPropValueDictionary = new Dictionary<string, string>();
+        //private Dictionary<string, string> _geometryPropValueDictionary = new Dictionary<string, string>();
         private Dictionary<string, string> _materialPropValueDictionary = new Dictionary<string, string>();
         private Dictionary<string, string> _waterLevelPropValueDictionary = new Dictionary<string, string>();
         private Dictionary<string, string> _wavePropValueDictionary = new Dictionary<string, string>();
@@ -91,19 +93,19 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             _generalPropValueDicitionary.Add("FixedDepthFactor", _fixedDepthFactor.ToString());
             _generalPropValueDicitionary.Add("AntiEarthquakeAdjustmentFactor", _antiEarthquakeAdjustmentFactor.ToString());
 
-            _geometryPropValueDictionary.Clear();
-            _geometryPropValueDictionary.Add("PileType", _selectedPileType);
-            _geometryPropValueDictionary.Add("PileSideLengthDiameter", _pileSideLengthDiameter.ToString());
+            //_geometryPropValueDictionary.Clear();
+            //_geometryPropValueDictionary.Add("PileType", _selectedPileType);
+            //_geometryPropValueDictionary.Add("PileSideLengthDiameter", _pileSideLengthDiameter.ToString());
 
             _materialPropValueDictionary.Clear();
             _materialPropValueDictionary.Add("ConcreteModulus", _concreteModulus.ToString());
             _materialPropValueDictionary.Add("ConcretePoisson", _concretePoisson.ToString());
-            _materialPropValueDictionary.Add("ConcreteDensity", _concreteDensity.ToString());
-            _materialPropValueDictionary.Add("ConcreteUnderWaterDensity", _concreteUnderWaterDensity.ToString());
+            _materialPropValueDictionary.Add("ConcreteUnitWeight", _concreteUnitWeight.ToString());
+            _materialPropValueDictionary.Add("ConcreteUnderWaterUnitWeight", _concreteUnderWaterUnitWeight.ToString());
             _materialPropValueDictionary.Add("SteelModulus", _steelModulus.ToString());
             _materialPropValueDictionary.Add("SteelPoisson", _steelPoisson.ToString());
-            _materialPropValueDictionary.Add("SteelDensity", _steelDensity.ToString());
-            _materialPropValueDictionary.Add("WaterDensity", _waterDensity.ToString());
+            _materialPropValueDictionary.Add("SteelUnitWeight", _steelUnitWeight.ToString());
+            _materialPropValueDictionary.Add("WaterUnitWeight", _waterUnitWeight.ToString());
 
             _waterLevelPropValueDictionary.Clear();
             _waterLevelPropValueDictionary.Add("HAT", _hat.ToString());
@@ -113,31 +115,38 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             _waterLevelPropValueDictionary.Add("LAT", _lat.ToString());
 
             _wavePropValueDictionary.Clear();
-            _wavePropValueDictionary.Add("WaveHeight", _waveHeight.ToString());
-            _wavePropValueDictionary.Add("WaveLength", _waveLength.ToString());
-            _wavePropValueDictionary.Add("WavePeriod", _wavePeriod.ToString());
+            _wavePropValueDictionary.Add("WaveHeight_HAT", WaveHeight_HAT.ToString());
+            _wavePropValueDictionary.Add("WavePeriod_HAT", WavePeriod_HAT.ToString());
+            _wavePropValueDictionary.Add("WaveHeight_MHW", WaveHeight_MHW.ToString());
+            _wavePropValueDictionary.Add("WavePeriod_MHW", WavePeriod_MHW.ToString());
+            _wavePropValueDictionary.Add("WaveHeight_MSL", WaveHeight_MSL.ToString());
+            _wavePropValueDictionary.Add("WavePeriod_MSL", WavePeriod_MSL.ToString());
+            _wavePropValueDictionary.Add("WaveHeight_MLW", WaveHeight_MLW.ToString());
+            _wavePropValueDictionary.Add("WavePeriod_MLW", WavePeriod_MLW.ToString());
+            _wavePropValueDictionary.Add("WaveHeight_LAT", WaveHeight_LAT.ToString());
+            _wavePropValueDictionary.Add("WavePeriod_LAT", WavePeriod_LAT.ToString());
         }
 
-        private List<PileType> _pileTypes;
-        /// <summary>
-        /// PileType List
-        /// </summary>
-        public List<PileType> PileTypes
-        {
-            get { return _pileTypes; }
-            set { Set(ref _pileTypes, value); }
-        }
+        //private List<PileType> _pileTypes;
+        ///// <summary>
+        ///// PileType List
+        ///// </summary>
+        //public List<PileType> PileTypes
+        //{
+        //    get { return _pileTypes; }
+        //    set { Set(ref _pileTypes, value); }
+        //}
 
 
-        private string _selectedPileType;
-        /// <summary>
-        /// the pile Type that client selected
-        /// </summary>
-        public string SelectedPileType
-        {
-            get { return _selectedPileType; }
-            set { Set(ref _selectedPileType, value); }
-        }
+        //private string _selectedPileType;
+        ///// <summary>
+        ///// the pile Type that client selected
+        ///// </summary>
+        //public string SelectedPileType
+        //{
+        //    get { return _selectedPileType; }
+        //    set { Set(ref _selectedPileType, value); }
+        //}
 
 
         private double _structureImportanceFactor;
@@ -183,15 +192,15 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             set { Set(ref _antiEarthquakeAdjustmentFactor, value); }
         }
 
-        private double _pileSideLengthDiameter;
-        /// <summary>
-        /// the length of side for square pile and diameter for round pile
-        /// </summary>
-        public double PileSideLengthDiameter
-        {
-            get { return _pileSideLengthDiameter; }
-            set { Set(ref _pileSideLengthDiameter, value); }
-        }
+        //private double _pileSideLengthDiameter;
+        ///// <summary>
+        ///// the length of side for square pile and diameter for round pile
+        ///// </summary>
+        //public double PileSideLengthDiameter
+        //{
+        //    get { return _pileSideLengthDiameter; }
+        //    set { Set(ref _pileSideLengthDiameter, value); }
+        //}
 
         private double _concreteModulus;
         /// <summary>
@@ -214,25 +223,25 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
 
-        private double _concreteDensity;
+        private double _concreteUnitWeight;
         /// <summary>
         /// Concrete's Density
         /// </summary>
-        public double ConcreteDensity
+        public double ConcreteUnitWeight
         {
-            get { return _concreteDensity; }
-            set { Set(ref _concreteDensity, value); }
+            get { return _concreteUnitWeight; }
+            set { Set(ref _concreteUnitWeight, value); }
         }
 
 
-        private double _concreteUnderWaterDensity;
+        private double _concreteUnderWaterUnitWeight;
         /// <summary>
         /// Concrete's underwater density
         /// </summary>
-        public double ConcreteUnderWaterDensity
+        public double ConcreteUnderWaterUnitWeight
         {
-            get { return _concreteUnderWaterDensity; }
-            set { Set(ref _concreteUnderWaterDensity, value); }
+            get { return _concreteUnderWaterUnitWeight; }
+            set { Set(ref _concreteUnderWaterUnitWeight, value); }
         }
 
         private double _steelModulus;
@@ -257,25 +266,25 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
 
-        private double _steelDensity;
+        private double _steelUnitWeight;
         /// <summary>
         /// steel's density
         /// </summary>
-        public double SteelDensity
+        public double SteelUnitWeight
         {
-            get { return _steelDensity; }
-            set { Set(ref _steelDensity, value); }
+            get { return _steelUnitWeight; }
+            set { Set(ref _steelUnitWeight, value); }
         }
 
 
-        private double _waterDensity;
+        private double _waterUnitWeight;
         /// <summary>
         /// water density
         /// </summary>
-        public double WaterDensity
+        public double WaterUnitWeight
         {
-            get { return _waterDensity; }
-            set { Set(ref _waterDensity, value); }
+            get { return _waterUnitWeight; }
+            set { Set(ref _waterUnitWeight, value); }
         }
 
         private double _hat;
@@ -333,39 +342,104 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
 
-        private double _waveHeight;
+        private double _waveHeight_HAT;
         /// <summary>
         /// Wave Height
         /// </summary>
-        public double WaveHeight
+        public double WaveHeight_HAT
         {
-            get { return _waveHeight; }
-            set { Set(ref _waveHeight, value); }
+            get { return _waveHeight_HAT; }
+            set { Set(ref _waveHeight_HAT, value); }
         }
 
-
-        private double _waveLength;
-        /// <summary>
-        /// Wave Length
-        /// </summary>
-        public double WaveLength
-        {
-            get { return _waveLength; }
-            set { Set(ref _waveLength, value); }
-        }
-
-
-        private double _wavePeriod;
+        private double _wavePeriod_HAT;
         /// <summary>
         /// Wave Period
         /// </summary>
-        public double WavePeriod
+        public double WavePeriod_HAT
         {
-            get { return _wavePeriod; }
-            set { Set(ref _wavePeriod, value); }
+            get { return _wavePeriod_HAT; }
+            set { Set(ref _wavePeriod_HAT, value); }
         }
 
+        private double _waveHeight_MHW;
+        /// <summary>
+        /// Wave Height
+        /// </summary>
+        public double WaveHeight_MHW
+        {
+            get { return _waveHeight_MHW; }
+            set { Set(ref _waveHeight_MHW, value); }
+        }
 
+        private double _wavePeriod_MHW;
+        /// <summary>
+        /// Wave Period
+        /// </summary>
+        public double WavePeriod_MHW
+        {
+            get { return _wavePeriod_MHW; }
+            set { Set(ref _wavePeriod_MHW, value); }
+        }
+
+        private double _waveHeight_MSL;
+        /// <summary>
+        /// Wave Height
+        /// </summary>
+        public double WaveHeight_MSL
+        {
+            get { return _waveHeight_MSL; }
+            set { Set(ref _waveHeight_MSL, value); }
+        }
+
+        private double _wavePeriod_MSL;
+        /// <summary>
+        /// Wave Period
+        /// </summary>
+        public double WavePeriod_MSL
+        {
+            get { return _wavePeriod_MSL; }
+            set { Set(ref _wavePeriod_MSL, value); }
+        }
+        private double _waveHeight_MLW;
+        /// <summary>
+        /// Wave Height
+        /// </summary>
+        public double WaveHeight_MLW
+        {
+            get { return _waveHeight_MLW; }
+            set { Set(ref _waveHeight_MLW, value); }
+        }
+
+        private double _wavePeriod_MLW;
+        /// <summary>
+        /// Wave Period
+        /// </summary>
+        public double WavePeriod_MLW
+        {
+            get { return _wavePeriod_MLW; }
+            set { Set(ref _wavePeriod_MLW, value); }
+        }
+
+        private double _waveHeight_LAT;
+        /// <summary>
+        /// Wave Height
+        /// </summary>
+        public double WaveHeight_LAT
+        {
+            get { return _waveHeight_LAT; }
+            set { Set(ref _waveHeight_LAT, value); }
+        }
+
+        private double _wavePeriod_LAT;
+        /// <summary>
+        /// Wave Period
+        /// </summary>
+        public double WavePeriod_LAT
+        {
+            get { return _wavePeriod_LAT; }
+            set { Set(ref _wavePeriod_LAT, value); }
+        }
         private RelayCommand<Grid> _writeEnvParameters;
         /// <summary>
         /// Write the Environment related parameter to dgn model through EC

@@ -46,13 +46,15 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
             _points[0].ScaleInPlace(uorpermm);
             _points[1].ScaleInPlace(uorpermm);
 
-            PDIWT_PiledWharf_Core_Cpp.EntityCreation.CreatePile(_pileplaceViewModel.SelectedPileTypeToEnum(),
+            BD.StatusInt _status = PDIWT_PiledWharf_Core_Cpp.EntityCreation.CreatePile(_pileplaceViewModel.SelectedPileType,
+                                                                _pileplaceViewModel.PileTypes,
                                                                 _pileplaceViewModel.PileWidth,
                                                                 _pileplaceViewModel.PileInsideDiameter,
                                                                 _pileplaceViewModel.ConcreteCoreLength,
                                                                 _points[0],
                                                                 _points[1]);
-            _mc.StatusMessage = "Pile Created Successfully";
+            if(_status == BD.StatusInt.Success)
+                _mc.StatusMessage = "Pile Created Successfully";
 
             base.OnReinitialize();
             return true;
@@ -80,8 +82,8 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
 
         protected override void OnPostInstall()
         {
-            BD.AccuDraw.Active = true;
-            BD.AccuSnap.LocateEnabled = true;
+            //BD.AccuDraw.Active = true;
+            //BD.AccuSnap.LocateEnabled = true;
             BD.AccuSnap.SnapEnabled = true;
             base.OnPostInstall();
         }

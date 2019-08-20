@@ -1,0 +1,736 @@
+﻿<Window
+    x:Class="PDIWT_PiledWharf_Core.BearingCapacityWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
+    xmlns:com="clr-namespace:PDIWT_PiledWharf_Core.Common"
+    xmlns:con="clr-namespace:PDIWT.Resources.Converters;assembly=PDIWT.Resources"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:loc="clr-namespace:PDIWT.Resources.Localization.MainModule;assembly=PDIWT.Resources"
+    xmlns:local="clr-namespace:PDIWT_PiledWharf_Core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pdi="clr-namespace:PDIWT.Resources.CustomUserControl;assembly=PDIWT.Resources"
+    xmlns:vm="clr-namespace:PDIWT_PiledWharf_Core.ViewModel"
+    Title="{x:Static loc:Resources.BearingCapacityWindow}"
+    Width="816.5"
+    Height="470"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Skins/MainSkin.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/zh-CN.xaml" />-->
+                <ResourceDictionary>
+                    <com:PileTypesToDisplayNameConverter x:Key="BearingCapacityPileTypesConverter" />
+                    <con:ReferenceToVisibilityConverter x:Key="ReferenceToVisiblityConverter" />
+                    <!--  Convert to control the visibility of kinds of controls  -->
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid x:Name="MainGridLayout" Margin="2">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <GroupBox
+            Grid.Row="1"
+            Grid.Column="0"
+            Header="{x:Static loc:Resources.PileList}">
+            <ListBox
+                MinWidth="120"
+                ContextMenu="{DynamicResource GridAndListContextMenu}"
+                IsSynchronizedWithCurrentItem="True"
+                ItemsSource="{Binding PileInfos}"
+                SelectedItem="{Binding SelectedPile}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <cmd:EventToCommand Command="{Binding SelectionChanged}" PassEventArgsToCommand="True" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border
+                            Margin="3"
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="SteelBlue"
+                            BorderThickness="1"
+                            CornerRadius="4">
+                            <Grid Margin="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock FontWeight="Bold" Text="{Binding PileCode, Mode=OneWay}" />
+                                <TextBlock Grid.Row="1" Text="{Binding SelectedBearingCapacityPileType, Converter={StaticResource BearingCapacityPileTypesConverter}, Mode=OneWay}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <!--<ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="ContextMenu">
+                            <Setter.Value>
+                                <ContextMenu>
+                                    <MenuItem Command="{Binding DeletePile}" Header="{x:Static loc:Resources.DeletePile}">
+                                        <MenuItem.Icon>
+                                            <Image Source="pack://application:,,,/PDIWT.Resources;Component/Images/Icons/Delete.ico" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>-->
+            </ListBox>
+        </GroupBox>
+        <Grid
+            x:Name="Grid_ScreenPanel"
+            Grid.Row="1"
+            Grid.Column="1"
+            Panel.ZIndex="1"
+            Background="Wheat"
+            Opacity="0.5"
+            Visibility="{Binding SelectedPile, Mode=OneWay, Converter={StaticResource ReferenceToVisiblityConverter}}">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="40"
+                FontWeight="Bold"
+                Text="{x:Static loc:Resources.Note_PSP}" />
+        </Grid>
+        <GroupBox
+            Grid.Row="1"
+            Grid.Column="1"
+            Header="{x:Static loc:Resources.PileParameters}">
+            <TabControl>
+                <TabItem DataContext="{Binding PileInfos}" Header="{x:Static loc:Resources.InputPileParameters}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="218*" />
+                            <ColumnDefinition Width="421*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.ColumnSpan="2" Header="{x:Static loc:Resources.BasicInformation}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <pdi:LabelTextBox DisplayName="{x:Static loc:Resources.PileName}" Parameter="{Binding PileCode}" />
+                                <CheckBox
+                                    x:Name="CheckBox_skewness"
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Content="{x:Static loc:Resources.IsVerticalPile}"
+                                    IsChecked="{Binding IsVerticalPile}"
+                                    IsThreeState="False" />
+                                <StackPanel
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Stretch"
+                                    Orientation="Horizontal">
+                                    <Label
+                                        x:Name="Lable_PileWorkmanshipType"
+                                        Width="150"
+                                        Content="{x:Static loc:Resources.PileWorkmanshipType}" />
+                                    <ComboBox
+                                        Width="90"
+                                        Margin="22,1,0,1"
+                                        HorizontalContentAlignment="Stretch"
+                                        DisplayMemberPath="Value"
+                                        ItemsSource="{Binding BearingCapacityPileCategory, Mode=OneTime}"
+                                        SelectedValue="{Binding SelectedBearingCapacityPileType}"
+                                        SelectedValuePath="Key" />
+                                </StackPanel>
+                                <StackPanel
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Stretch"
+                                    Orientation="Horizontal">
+                                    <Label
+                                        x:Name="Lable_PileGeoType"
+                                        Width="150"
+                                        Content="{x:Static loc:Resources.PileGeoType}" />
+                                    <ComboBox
+                                        Width="90"
+                                        Margin="22,1,0,1"
+                                        HorizontalContentAlignment="Stretch"
+                                        DisplayMemberPath="Value"
+                                        ItemsSource="{Binding PileGeoCategory, Mode=OneTime}"
+                                        SelectedValue="{Binding SelectedPileGeoType}"
+                                        SelectedValuePath="Key" />
+                                </StackPanel>
+
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox
+                            Grid.Row="1"
+                            Grid.ColumnSpan="2"
+                            Header="{x:Static loc:Resources.GeometryInformation}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <pdi:LabelTextBox
+                                    x:Name="LabelTextBox_PileTopElevation"
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    DisplayName="{x:Static loc:Resources.PileTopElevation}"
+                                    Parameter="{Binding PileTopElevation, StringFormat={}{0:F2}}"
+                                    Unit="m" />
+                                <pdi:LabelTextBox
+                                    x:Name="LabelTextBox_PileLength"
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    DisplayName="{x:Static loc:Resources.PileLength}"
+                                    Parameter="{Binding PileLength, StringFormat={}{0:F2}}"
+                                    Unit="m" />
+                                <pdi:LabelTextBox
+                                    x:Name="LabelTextBox_PileSkewness"
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    DisplayName="{x:Static loc:Resources.PileSkewness}"
+                                    IsEnabled="{Binding IsChecked, ElementName=CheckBox_skewness, Converter={StaticResource IsCheckedToReversedIsEnableConverter}}"
+                                    Parameter="{Binding PileSkewness, StringFormat={}{0:F2}}"
+                                    Unit="m" />
+                                <pdi:LabelTextBox
+                                    x:Name="LabelTextBox_PileWidth"
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    DisplayName="{x:Static loc:Resources.PileWidth}"
+                                    Parameter="{Binding PileDiameter, StringFormat={}{0:F2}}"
+                                    Unit="m" />
+                                <pdi:LabelTextBox
+                                    x:Name="LabelTextBox_PileInsideDiameter"
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    DisplayName="{x:Static loc:Resources.PileInsideDiameter}"
+                                    Parameter="{Binding PileInsideDiameter, StringFormat={}{0:F2}}"
+                                    Unit="m"
+                                    Visibility="{Binding SelectedPileGeoType, Mode=OneWay, Converter={StaticResource TubePileStringOfListToVisibilityConverter}}" />
+                                <pdi:LabelTextBox
+                                    Grid.Row="2"
+                                    Grid.Column="1"
+                                    DisplayName="{x:Static loc:Resources.ConcreteCoreLength}"
+                                    Parameter="{Binding ConcreteCoreLength, StringFormat={}{0:F2}}"
+                                    Unit="m"
+                                    Visibility="{Binding SelectedPileGeoType, Mode=OneWay, Converter={StaticResource SteelPileStringOfListToVisibilityConverter}}" />
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox
+                            Grid.Row="2"
+                            Grid.ColumnSpan="2"
+                            Header="{x:Static loc:Resources.CalculationCoefficients}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <pdi:LabelTextBox
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    DisplayName="{x:Static loc:Resources.PartialCoefficient}"
+                                    Parameter="{Binding PartialCoeff, StringFormat={}{0:F2}}" />
+                                <pdi:LabelTextBox
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    DisplayName="{x:Static loc:Resources.CalculatedWaterLevel}"
+                                    Parameter="{Binding CalculatedWaterLevel, StringFormat={}{0:F2}}"
+                                    Unit="m" />
+                                <pdi:LabelTextBox
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    DisplayName="{x:Static loc:Resources.BlockCoefficient}"
+                                    Parameter="{Binding BlockCoeff, StringFormat={}{0:F2}}"
+                                    Visibility="{Binding SelectedBearingCapacityPileType, Converter={StaticResource TubeorSteelToVisibilityConverter}}" />
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox
+                            Grid.Row="3"
+                            Grid.ColumnSpan="2"
+                            Header="{x:Static loc:Resources.MaterialInformation}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <GroupBox Header="{x:Static loc:Resources.Concrete}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <pdi:LabelTextBox
+                                            x:Name="LabelTextBox_ConcreteWeight"
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            DisplayName="{x:Static loc:Resources.Weight}"
+                                            Parameter="{Binding ConcreteWeight, StringFormat={}{0:F2}}"
+                                            Unit="kN/m3" />
+                                        <pdi:LabelTextBox
+                                            x:Name="LabelTextBox_ConcreteUnderWaterWeight"
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            DisplayName="{x:Static loc:Resources.UnderWaterUnitWeight}"
+                                            Parameter="{Binding ConcreteUnderwaterWeight, StringFormat={}{0:F2}}"
+                                            Unit="kN/m3" />
+                                    </Grid>
+                                </GroupBox>
+                                <GroupBox
+                                    Grid.Row="1"
+                                    Header="{x:Static loc:Resources.Steel}"
+                                    Visibility="{Binding SelectedPileGeoType, Mode=OneWay, Converter={StaticResource SteelPileStringOfListToVisibilityConverter}}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <pdi:LabelTextBox
+                                            x:Name="LabelTextBox_SteelWeight"
+                                            Grid.Row="0"
+                                            Grid.Column="0"
+                                            DisplayName="{x:Static loc:Resources.Weight}"
+                                            Parameter="{Binding SteelWeight, StringFormat={}{0:F2}}"
+                                            Unit="kN/m3" />
+                                        <pdi:LabelTextBox
+                                            x:Name="LabelTextBox_SteelUnderWaterWeigth"
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            DisplayName="{x:Static loc:Resources.UnderWaterUnitWeight}"
+                                            Parameter="{Binding SteelUnderwaterWeight, StringFormat={}{0:F2}}"
+                                            Unit="kN/m3" />
+                                    </Grid>
+                                </GroupBox>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="{x:Static loc:Resources.InputSoilLayerParameters}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <!--  Data Grid for Driven Pile  -->
+                        <DataGrid
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            CanUserSortColumns="False"
+                            ColumnWidth="auto"
+                            DataContext="{Binding PileInfos}"
+                            ItemsSource="{Binding PileSoilLayersInfo}"
+                            Visibility="{Binding SelectedBearingCapacityPileType, Mode=OneWay, Converter={StaticResource DrivenToVisibilityConverter}}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding SoilLayerNumber}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <Label Content="{x:Static loc:Resources.SoilLayerNumber}" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding SoilLayerName}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <Label Content="{x:Static loc:Resources.SoilLayerName}" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding SoilLayerTopElevation, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <Label Content="{x:Static loc:Resources.LayerTopElevation}" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding SideFrictionStandardValue, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.SideFrictionStandardValue}" />-->
+                                            <Label Content="qfi(kPa)" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding SoilLayerThickness, StringFormat={}{0:F2}}">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.SoilLayerThickness}" />-->
+                                            <Label Content="li(m)" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding EndResistanceStandardValue, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.EndResistanceStandardValue}" />-->
+                                            <Label Content="qr(kPa)" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding DiscountCoeff, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.DiscountCoefficient}" />-->
+                                            <Label Content="ξi" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <!--  Data Grid for Tube or Steel Pile  -->
+                        <DataGrid
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            CanUserSortColumns="False"
+                            ColumnWidth="auto"
+                            DataContext="{Binding PileInfos}"
+                            ItemsSource="{Binding PileSoilLayersInfo}"
+                            Visibility="{Binding SelectedBearingCapacityPileType, Mode=OneWay, Converter={StaticResource TubeorSteelToVisibilityConverter}}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding SoilLayerNumber}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <Label Content="{x:Static loc:Resources.SoilLayerNumber}" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding SoilLayerName}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <Label Content="{x:Static loc:Resources.SoilLayerName}" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding SoilLayerTopElevation, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <Label Content="{x:Static loc:Resources.LayerTopElevation}" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding SideFrictionStandardValue, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.SideFrictionStandardValue}" />-->
+                                            <Label Content="qfi(kPa)" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding SoilLayerThickness, StringFormat={}{0:F2}}">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.SoilLayerThickness}" />-->
+                                            <Label Content="li(m)" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding EndResistanceStandardValue, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.EndResistanceStandardValue}" />-->
+                                            <Label Content="qr(kPa)" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding DiscountCoeff, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.DiscountCoefficient}" />-->
+                                            <Label Content="ξi" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <!--  Data Grid For Cast in Situ Pile  -->
+                        <DataGrid
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            CanUserSortColumns="False"
+                            ColumnWidth="auto"
+                            DataContext="{Binding PileInfos}"
+                            ItemsSource="{Binding PileSoilLayersInfo}"
+                            Visibility="{Binding SelectedBearingCapacityPileType, Mode=OneWay, Converter={StaticResource CastInSituToVisibilityConverter}}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding SoilLayerNumber}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <Label Content="{x:Static loc:Resources.SoilLayerNumber}" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding SoilLayerName}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <Label Content="{x:Static loc:Resources.SoilLayerName}" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding SoilLayerTopElevation, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <Label Content="{x:Static loc:Resources.LayerTopElevation}" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Psii, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.SideFrictionStandardValue}" />-->
+                                            <Label Content="ψsi" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding SideFrictionStandardValue, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.SideFrictionStandardValue}" />-->
+                                            <Label Content="qfi(kPa)" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding SoilLayerThickness, StringFormat={}{0:F2}}">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.SoilLayerThickness}" />-->
+                                            <Label Content="li(m)" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Psip, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.EndResistanceStandardValue}" />-->
+                                            <Label Content="ψp" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding EndResistanceStandardValue, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.EndResistanceStandardValue}" />-->
+                                            <Label Content="qr(kPa)" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding DiscountCoeff, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.DiscountCoefficient}" />-->
+                                            <Label Content="ξi" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <!--  Data Grid For Cast in situ grouting afterwards  -->
+                        <DataGrid
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            CanUserSortColumns="False"
+                            ColumnWidth="auto"
+                            DataContext="{Binding PileInfos}"
+                            ItemsSource="{Binding PileSoilLayersInfo}"
+                            Visibility="{Binding SelectedBearingCapacityPileType, Mode=OneWay, Converter={StaticResource CastInSituAfterGrountingToVisibilityConverter}}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding SoilLayerNumber}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <Label Content="{x:Static loc:Resources.SoilLayerNumber}" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding SoilLayerName}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <Label Content="{x:Static loc:Resources.SoilLayerName}" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding SoilLayerTopElevation, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <Label Content="{x:Static loc:Resources.LayerTopElevation}" />
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Betasi, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.SideFrictionStandardValue}" />-->
+                                            <Label Content="βsi" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Psii, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.SideFrictionStandardValue}" />-->
+                                            <Label Content="ψsi" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding SideFrictionStandardValue, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.SideFrictionStandardValue}" />-->
+                                            <Label Content="qfi(kPa)" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding SoilLayerThickness, StringFormat={}{0:F2}}">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.SoilLayerThickness}" />-->
+                                            <Label Content="li(m)" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Betap, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.EndResistanceStandardValue}" />-->
+                                            <Label Content="βp" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Psip, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.EndResistanceStandardValue}" />-->
+                                            <Label Content="ψp" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding EndResistanceStandardValue, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.EndResistanceStandardValue}" />-->
+                                            <Label Content="qr(kPa)" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding DiscountCoeff, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                    <DataGridTextColumn.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <!--<Label Content="{x:Static loc:Resources.DiscountCoefficient}" />-->
+                                            <Label Content="ξi" />
+                                        </StackPanel>
+                                    </DataGridTextColumn.Header>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button
+                            Grid.Row="1"
+                            Command="{Binding PickupSoilLayersFromLib}"
+                            Content="{x:Static loc:Resources.PickupSoilLayersFromLib}"
+                            Style="{StaticResource BasicButton}" />
+                    </Grid>
+                </TabItem>
+                <TabItem DataContext="{Binding PileInfos}" Header="{x:Static loc:Resources.CalculatedParameters}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <pdi:LabelTextBox
+                            DisplayName="{x:Static loc:Resources.PilePerimeter}"
+                            IsEnabled="False"
+                            Parameter="{Binding PilePerimeter, Mode=OneWay, StringFormat={}{0:F2}}"
+                            Unit="m" />
+                        <pdi:LabelTextBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            DisplayName="{x:Static loc:Resources.PileCrossSectionArea}"
+                            IsEnabled="False"
+                            Parameter="{Binding PileCrossSectionArea, Mode=OneWay, StringFormat={}{0:F2}}"
+                            Unit="m2" />
+                        <pdi:LabelTextBox
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            DisplayName="{x:Static loc:Resources.PileBottomElevation}"
+                            IsEnabled="False"
+                            Parameter="{Binding PileBottomElevation, Mode=OneWay, StringFormat={}{0:F2}}"
+                            Unit="m" />
+                        <pdi:LabelTextBox
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            DisplayName="{x:Static loc:Resources.PileSelfWeight}"
+                            IsEnabled="False"
+                            Parameter="{Binding PileSelfWeight, Mode=OneWay, StringFormat={}{0:F2}}"
+                            Unit="kN" />
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </GroupBox>
+
+        <GroupBox
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            DataContext="{Binding PileInfos}"
+            Header="{x:Static loc:Resources.CalculatedResults}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <pdi:LabelTextBox
+                    Grid.Column="0"
+                    DisplayName="{x:Static loc:Resources.DesignAxialBearingCapacity}"
+                    IsEnabled="False"
+                    Parameter="{Binding DesignAxialBearingCapacity, Mode=OneWay, StringFormat={}{0:F2}}"
+                    Unit="kN" />
+                <pdi:LabelTextBox
+                    Grid.Column="1"
+                    DisplayName="{x:Static loc:Resources.DesignAxialUpliftCapacity}"
+                    IsEnabled="False"
+                    Parameter="{Binding DesignAxialUpliftCapacity, Mode=OneWay, StringFormat={}{0:F2}}"
+                    Unit="kN" />
+            </Grid>
+        </GroupBox>
+        <Grid
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button
+                Grid.Column="0"
+                Command="{Binding LoadParameters}"
+                Content="{x:Static loc:Resources.LoadParameters}"
+                Style="{StaticResource BasicButton}" />
+            <Button
+                Grid.Column="1"
+                Command="{Binding BuildUpSoilLayerLib}"
+                Content="{x:Static loc:Resources.BuildUpSoilLayerLib}"
+                Style="{StaticResource BasicButton}" />
+            <Button
+                Grid.Column="3"
+                Command="{Binding Calculate}"
+                Content="{x:Static loc:Resources.Calculate}"
+                Style="{StaticResource BasicButton}" />
+            <Button
+                Grid.Column="4"
+                Command="{Binding GenerateNote}"
+                Content="{x:Static loc:Resources.GenerateCalculationNote}"
+                Style="{StaticResource BasicButton}" />
+        </Grid>
+    </Grid>
+</Window>

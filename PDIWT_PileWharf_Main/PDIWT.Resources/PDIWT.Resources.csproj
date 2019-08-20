@@ -70,7 +70,7 @@
     <EmbeddedResource Include="Localization\MainModule\Resources.zh-CN.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\Icons\BearingCapacityCalculation.ico" />
+    <Resource Include="Images\Icons\BearingCapacity.ico" />
     <Resource Include="Images\Icons\CalculationNote.ico" />
     <Resource Include="Images\Icons\Collision.ico" />
     <Resource Include="Images\Icons\DrawPile.ico" />
@@ -99,6 +99,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Icons\WaterForce.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\Delete.ico" />
+    <Resource Include="Images\Icons\New.ico" />
+    <Resource Include="Images\Icons\AttachEC.ico" />
+    <Content Include="Images\Icons\Waterway.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
