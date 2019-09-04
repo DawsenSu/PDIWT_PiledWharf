@@ -15,40 +15,37 @@ using PDIWT.Formulas;
 
 using MN = MathNet.Numerics;
 using BM = Bentley.MstnPlatformNET;
+using PDIWT_PiledWharf_Core_Cpp;
+using PDIWT.Resources;
+
 namespace PDIWT_PiledWharf_Core.ViewModel
 {
     public class CurrentForceViewModel : ViewModelBase
     {
         public CurrentForceViewModel()
         {
+
+            PileGeoTypes = PDIWT_Helper.GetEnumDescriptionDictionary<PileTypeManaged>();
+            SelectedPileType = PileTypeManaged.SqaurePile;
+#if DEBUG
             PileTopElevation = 4;
             HAT = 0;
             SoilElevation = -22.4;
             ProjectedWidth = 1.6;
-
-            //ResourceDictionary _resDic = new ResourceDictionary();
-            //_resDic.Source = new Uri("PDIWT.Resources;component/Localization/OtherModule/en-US.xaml", UriKind.Relative);
-            ShapeCategory = new List<ShapeInfo>
-                {
-                    new ShapeInfo() { Shape = Resources.SquarePile, Value =2 },
-                    new ShapeInfo() { Shape = Resources.TubePile, Value =1 },
-                    new ShapeInfo() { Shape = Resources.PHCTubePile, Value =1 },
-                    new ShapeInfo() { Shape = Resources.SteelTubePile, Value =1 }
-                };
-            SelectedShape = ShapeCategory[0];
             SquarePileAngle = 0;
             CurrentVelocity = 0.8;
             PileHorizontalCentraSpan = 6.4;
             PileVerticalCentraSpan = 6.4;
             WaterDensity = 1025;
+#endif
+            Messenger.Default.Register<NotificationMessage<PDIWT_CurrentForePileInfo>>(this,LoadParameterFromPileEntity);
+            //Change The Loaded Controls Forground
+            PropertyChanged += (s,e) => Messenger.Default.Send(new NotificationMessage<bool>(false, "ChangeControlForegroud"), "ControlForegroundChange");
 
-            UpdatedRelatedProperties(new PropertyChangedMessage<double>(0, 0, "Initial"));
-            MessengerInstance.Register<PropertyChangedMessage<double>>(this, UpdatedRelatedProperties);
-            MessengerInstance.Register<PropertyChangedMessage<ShapeInfo>>(this, UpdatedRelatedProperties);
-            Messenger.Default.Register<NotificationMessage<Model.Tools.PDIWT_CurrentForePileInfo>>(this,LoadParameterFromPileEntity);
         }
-
-
+        private bool _isCalculated = false;
+        private readonly BM.MessageCenter _mc = BM.MessageCenter.Instance;
+        //***************************** Input parameters *************************//
         /// <summary>
         /// The <see cref="PileTopElevation" /> property's name.
         /// </summary>
@@ -57,6 +54,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _pileTopElevation = 0.0;
 
         /// <summary>
+        /// Unit: m
         /// Sets and gets the PileTopElevation property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -68,7 +66,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
             set
             {
-                Set(PileTopElevationPropertyName, ref _pileTopElevation, value, true);
+                Set(PileTopElevationPropertyName, ref _pileTopElevation, value);
+                _isCalculated = false;
             }
         }
 
@@ -80,6 +79,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _hat = 0.0;
 
         /// <summary>
+        /// Unit: m
         /// Sets and gets the HAT property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -91,7 +91,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
             set
             {
-                Set(() => HAT, ref _hat, value, true);
+                Set(() => HAT, ref _hat, value);
+                _isCalculated = false;
             }
         }
 
@@ -103,6 +104,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _soilElevation = 0.0;
 
         /// <summary>
+        /// Unit: m
         /// Sets and gets the SoilElevation property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -114,7 +116,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
             set
             {
-                Set(() => SoilElevation, ref _soilElevation, value, true);
+                Set(() => SoilElevation, ref _soilElevation, value);
+                _isCalculated = false;
             }
         }
 
@@ -126,6 +129,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _projectedWidth = 0.0;
 
         /// <summary>
+        /// Unit: m
         /// Sets and gets the ProjectedWidth property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -137,53 +141,34 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
             set
             {
-                Set(() => ProjectedWidth, ref _projectedWidth, value, true);
+                Set(() => ProjectedWidth, ref _projectedWidth, value);
+                _isCalculated = false;
             }
         }
 
-        /// <summary>
-        /// The <see cref="ShapeCategory" /> property's name.
-        /// </summary>
-        public const string ShapeCategoryPropertyName = "ShapeCategory";
 
-        private List<ShapeInfo> _shapeInfos = new List<ShapeInfo>();
-
+        private Dictionary<PileTypeManaged,string> _pileGeoTypes;
         /// <summary>
-        /// Sets and gets the ShapeCategory property.
-        /// Changes to that property's value raise the PropertyChanged event. 
+        /// Pile Types dictionary
         /// </summary>
-        public List<ShapeInfo> ShapeCategory
+        public Dictionary<PileTypeManaged,string> PileGeoTypes
         {
-            get
-            {
-                return _shapeInfos;
-            }
-            set
-            {
-                Set(() => ShapeCategory, ref _shapeInfos, value);
-            }
+            get { return _pileGeoTypes; }
+            set { Set(ref _pileGeoTypes, value); }
         }
 
-        /// <summary>
-        /// The <see cref="SelectedShape" /> property's name.
-        /// </summary>
-        public const string SelectedShapePropertyName = "SelectedShape";
 
-        private ShapeInfo _selectedShape;
-
+        private PileTypeManaged _selectedPileType;
         /// <summary>
-        /// Sets and gets the SelectedShape property.
-        /// Changes to that property's value raise the PropertyChanged event. 
+        /// Selected Pile Type
         /// </summary>
-        public ShapeInfo SelectedShape
+        public PileTypeManaged SelectedPileType
         {
-            get
-            {
-                return _selectedShape;
-            }
+            get { return _selectedPileType; }
             set
             {
-                Set(() => SelectedShape, ref _selectedShape, value, true);
+                Set(ref _selectedPileType, value);
+                _isCalculated = false;
             }
         }
 
@@ -206,7 +191,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
             set
             {
-                Set(() => SquarePileAngle, ref _squarePileAngle, value,true);
+                Set(() => SquarePileAngle, ref _squarePileAngle, value);
+                _isCalculated = false;
             }
         }
 
@@ -218,6 +204,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _currentVelocity = 0.0;
 
         /// <summary>
+        /// Unit: m/s
         /// Sets and gets the CurrentVelocity property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -229,7 +216,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
             set
             {
-                Set(() => CurrentVelocity, ref _currentVelocity, value, true);
+                Set(() => CurrentVelocity, ref _currentVelocity, value);
+                _isCalculated = false;
             }
         }
 
@@ -241,6 +229,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _pileHorizontalCentraSpan = 0.0;
 
         /// <summary>
+        /// Unit: m
         /// Sets and gets the PileHorizontalCentraSpan property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -252,7 +241,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
             set
             {
-                Set(() => PileHorizontalCentraSpan, ref _pileHorizontalCentraSpan, value, true);
+                Set(() => PileHorizontalCentraSpan, ref _pileHorizontalCentraSpan, value);
+                _isCalculated = false;
             }
         }
 
@@ -264,6 +254,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _pileVerticalCentraSpan = 0.0;
 
         /// <summary>
+        /// Unit: m
         /// Sets and gets the PileVerticalCentraSpan property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -275,7 +266,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
             set
             {
-                Set(() => PileVerticalCentraSpan, ref _pileVerticalCentraSpan, value, true);
+                Set(() => PileVerticalCentraSpan, ref _pileVerticalCentraSpan, value);
+                _isCalculated = false;
             }
         }
 
@@ -287,6 +279,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _waterDensity = 0;
 
         /// <summary>
+        /// Unit: kg/m3
         /// Sets and gets the WaterDensity property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -298,10 +291,12 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
             set
             {
-                Set(() => WaterDensity, ref _waterDensity, value, true);
+                Set(() => WaterDensity, ref _waterDensity, value);
+                _isCalculated = false;
             }
         }
 
+        //***************************** calculated parameters *************************//
         /// <summary>
         /// The <see cref="PileHeight" /> property's name.
         /// </summary>
@@ -310,6 +305,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _pileHeight = 0.0;
 
         /// <summary>
+        /// Unit: m
         /// Sets and gets the PileHeight property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -319,7 +315,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             {
                 return _pileHeight;
             }
-            set
+            private set
             {
                 Set(() => PileHeight, ref _pileHeight, value);
             }
@@ -332,6 +328,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _projectedArea = 0.0;
 
         /// <summary>
+        /// Unit: m2
         /// Sets and gets the ProjectedArea property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -341,7 +338,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             {
                 return _projectedArea;
             }
-            set
+            private set
             {
                 Set(() => ProjectedArea, ref _projectedArea, value);
             }
@@ -364,7 +361,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             {
                 return _currentResistentCoeff;
             }
-            set
+            private set
             {
                 Set(() => CurrentResistentCoeff, ref _currentResistentCoeff, value);
             }
@@ -387,7 +384,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             {
                 return _shelteringCoeff;
             }
-            set
+            private set
             {
                 Set(() => ShelteringCoeff, ref _shelteringCoeff, value);
             }
@@ -409,7 +406,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             {
                 return _submergedCoeff;
             }
-            set
+            private set
             {
                 Set(() => SubmergedCoeff, ref _submergedCoeff, value);
             }
@@ -432,7 +429,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             {
                 return _waterDepthCoeff;
             }
-            set
+            private set
             {
                 Set(() => WaterDepthCoeff, ref _waterDepthCoeff, value);
             }
@@ -454,7 +451,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             {
                 return _horizontalAffectCoeff;
             }
-            set
+            private set
             {
                 Set(() => HorizontalAffectCoeff, ref _horizontalAffectCoeff, value);
             }
@@ -476,12 +473,13 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             {
                 return _incliningAffectCoeff;
             }
-            set
+            private set
             {
                 Set(() => IncliningAffectCoeff, ref _incliningAffectCoeff, value);
             }
         }
 
+        //************************* Result parameters ******************************//
         /// <summary>
         /// The <see cref="CurrentForceForFrontPile" /> property's name.
         /// </summary>
@@ -490,6 +488,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _currentForceForFrontPile = 0.0;
 
         /// <summary>
+        /// Unit: kN
         /// Sets and gets the CurrentForceForFrontPile property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -499,7 +498,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             {
                 return _currentForceForFrontPile;
             }
-            set
+            private set
             {
                 Set(() => CurrentForceForFrontPile, ref _currentForceForFrontPile, value);
             }
@@ -512,6 +511,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _currentForceForRearPile = 0.0;
 
         /// <summary>
+        /// Unit: kN
         /// Sets and gets the CurrentForceForRearPile property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -521,7 +521,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             {
                 return _currentForceForRearPile;
             }
-            set
+            private set
             {
                 Set(() => CurrentForceForRearPile, ref _currentForceForRearPile, value);
             }
@@ -535,6 +535,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _actionPointForFrontPile = 0.0;
 
         /// <summary>
+        /// Unit: m
         /// Sets and gets the ActionPointForFrontPile property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -544,7 +545,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             {
                 return _actionPointForFrontPile;
             }
-            set
+            private set
             {
                 Set(() => ActionPointForFrontPile, ref _actionPointForFrontPile, value);
             }
@@ -557,6 +558,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _actionPointForRearPile = 0.0;
 
         /// <summary>
+        /// Unit: m
         /// Sets and gets the ActionPointForRearPile property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -566,7 +568,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             {
                 return _actionPointForRearPile;
             }
-            set
+            private set
             {
                 Set(() => ActionPointForRearPile, ref _actionPointForRearPile, value);
             }
@@ -588,25 +590,34 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
         private void ExecuteLoadParameter()
         {
-            Model.Tools.LoadPileParametersTool<PDIWT_CurrentForePileInfo>.InstallNewInstance(LoadParametersToolEnablerProvider.CurrentForceInfoEnabler);
+            try
+            {
+                LoadPileParametersTool<PDIWT_CurrentForePileInfo>.InstallNewInstance(LoadParametersToolEnablerProvider.CurrentForceInfoEnabler);
+                Messenger.Default.Send(Visibility.Hidden, "ShowMainWindow");
+            }
+            catch (Exception e)
+            {
+                _mc.ShowErrorMessage("Can't load parameters from entity", e.ToString(), false);
+            }
+
         }
 
-        private void LoadParameterFromPileEntity(NotificationMessage<Model.Tools.PDIWT_CurrentForePileInfo> notification)
+        private void LoadParameterFromPileEntity(NotificationMessage<PDIWT_CurrentForePileInfo> notification)
         {
-            if (notification.Notification == PDIWT.Resources.Localization.MainModule.Resources.Error)
+            if (notification.Notification == Resources.Error)
                 BM.MessageCenter.Instance.ShowErrorMessage("Can't Load Parameter From selected element","Error",BM.MessageAlert.None);
             else
             {
                 var _pileInfo = notification.Content;
-                PileTopElevation = _pileInfo.TopElevation / 1000; // need to change mm to meter;
+                PileTopElevation = _pileInfo.TopElevation;
+                SoilElevation = _pileInfo.SoilElevation;
                 HAT = _pileInfo.HAT;
-                ProjectedWidth = _pileInfo.ProjectedWidth /1000; // need to change mm to meter;
-                SelectedShape = ShapeCategory.Where(shapeinfo => shapeinfo.Shape == _pileInfo.Shape).FirstOrDefault();
-                WaterDensity = _pileInfo.WaterDensity * 1000 / 10; // ECSchema stored in water weight
-                BM.MessageCenter.Instance.ShowInfoMessage("SUCCESS", "Load Parameter", BM.MessageAlert.None);
+                ProjectedWidth = _pileInfo.ProjectedWidth;
+                SelectedPileType = _pileInfo.PileType;
+                WaterDensity = _pileInfo.WaterDensity;
                 Messenger.Default.Send(new NotificationMessage<bool>(true, "ChangeControlForegroud"), "ControlForegroundChange");
+                _mc.ShowInfoMessage("Load parameters successfully", "", false);
             }
-
         }
 
         private RelayCommand _calculate;
@@ -619,46 +630,39 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             get
             {
                 return _calculate
-                    ?? (_calculate = new RelayCommand(ExecuteCalculate));
+                    ?? (_calculate = new RelayCommand(ExecuteCalculate, ()=> !_isCalculated));
             }
         }
 
         private void ExecuteCalculate()
         {
-            //MessageBox.Show($"Calculate {SelectedShape.Shape},{SelectedShape.Value}");
-            CurrentForceForFrontPile = CurrentResistentCoeff * WaterDensity / 1000 / 2 * Math.Pow(CurrentVelocity, 2) * ProjectedArea * 1 * SubmergedCoeff * WaterDepthCoeff * HorizontalAffectCoeff * IncliningAffectCoeff;
-            CurrentForceForRearPile = CurrentResistentCoeff * WaterDensity / 1000 / 2 * Math.Pow(CurrentVelocity, 2) * ProjectedArea * ShelteringCoeff * SubmergedCoeff * WaterDepthCoeff * HorizontalAffectCoeff * IncliningAffectCoeff;
-            ActionPointForFrontPile = PileTopElevation - HAT + PileHeight / 3;
-            ActionPointForRearPile = ActionPointForFrontPile;
-            //Change The Loaded Controls Forground
-            Messenger.Default.Send(new NotificationMessage<bool>(false, "ChangeControlForegroud"), "ControlForegroundChange");
+            try
+            {
+                PileHeight = HAT - SoilElevation;
+                ProjectedArea = PileHeight * ProjectedWidth;
+                if (SelectedPileType == PileTypeManaged.SqaurePile)
+                    CurrentResistentCoeff = 1.5;
+                else
+                    CurrentResistentCoeff = 0.73;
+                ShelteringCoeff = CurrentForce.CalculateShelteringCoeff((PileVerticalCentraSpan - ProjectedWidth) / ProjectedWidth);
+                SubmergedCoeff = 1;
+                WaterDepthCoeff = CurrentForce.CalculateWaterDepthCoeff(PileHeight - ProjectedWidth);
+                HorizontalAffectCoeff = CurrentForce.CalculatedHorizontalAffectCoeff((PileHorizontalCentraSpan - ProjectedWidth) / ProjectedWidth, SelectedPileType);
+                IncliningAffectCoeff = CurrentForce.CalculateIncliningAffectCoeff(SquarePileAngle, SelectedPileType);
 
+                //MessageBox.Show($"Calculate {SelectedShape.Shape},{SelectedShape.Value}");
+                CurrentForceForFrontPile = CurrentResistentCoeff * WaterDensity / 1000 / 2 * Math.Pow(CurrentVelocity, 2) * ProjectedArea * 1 * SubmergedCoeff * WaterDepthCoeff * HorizontalAffectCoeff * IncliningAffectCoeff;
+                CurrentForceForRearPile = CurrentResistentCoeff * WaterDensity / 1000 / 2 * Math.Pow(CurrentVelocity, 2) * ProjectedArea * ShelteringCoeff * SubmergedCoeff * WaterDepthCoeff * HorizontalAffectCoeff * IncliningAffectCoeff;
+                ActionPointForFrontPile = PileTopElevation - HAT + PileHeight / 3;
+                ActionPointForRearPile = ActionPointForFrontPile;
+                _isCalculated = true;
+                _mc.ShowInfoMessage("Calculation Successfully", "", false);
+            }
+            catch (Exception e)
+            {
+                _mc.ShowErrorMessage("Calculation failed", e.ToString(), false);
+            }
         }
-
-        private void UpdatedRelatedProperties(PropertyChangedMessage<ShapeInfo> propertyChangedMessage)
-        {
-            UpdatedRelatedProperties(new PropertyChangedMessage<double>(0,0,"Changed"));
-        }
-        private void UpdatedRelatedProperties(PropertyChangedMessage<double> propertyChangedMessage)
-        {
-            PileHeight = HAT - SoilElevation;
-            ProjectedArea = PileHeight * ProjectedWidth;
-            if (SelectedShape.Value == 1)
-                CurrentResistentCoeff = 0.73;
-            else
-                CurrentResistentCoeff = 1.5;
-            ShelteringCoeff = CurrentForce.CalculateShelteringCoeff((PileVerticalCentraSpan - ProjectedWidth) / ProjectedWidth);
-            SubmergedCoeff = 1;
-            WaterDepthCoeff = CurrentForce.CalculateWaterDepthCoeff(PileHeight - ProjectedWidth);
-            HorizontalAffectCoeff = CurrentForce.CalculatedHorizontalAffectCoeff((PileHorizontalCentraSpan - ProjectedWidth) / ProjectedWidth, SelectedShape);
-            IncliningAffectCoeff = CurrentForce.CalculateIncliningAffectCoeff(SquarePileAngle, SelectedShape);
-
-            CurrentForceForFrontPile = 0.0;
-            CurrentForceForRearPile = 0.0;
-            ActionPointForFrontPile = 0.0;
-            ActionPointForRearPile = 0.0;
-        }
-
         
 
         private RelayCommand _generateNote;
@@ -678,7 +682,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                         Messenger.Default.Send(new NotificationMessage(this, "CurrentForceViewModelInvoke"), "ViewModelForReport");
                         _reportWindow.ShowDialog();
                     },
-                    () => CurrentForceForFrontPile != 0));
+                    () => _isCalculated));
             }
         }
     }

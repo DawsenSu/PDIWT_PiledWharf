@@ -26,6 +26,7 @@
   <SubKeyinTables>
     <KeyinTable ID="PDIWT_PiledWharf_Process">
       <Keyword CommandWord="CalculateBearingCapacity"></Keyword>
+      <Keyword CommandWord="CalculatePileLengthBasedOnBC"></Keyword>
       <Keyword CommandWord="CalculateCurrentForce"></Keyword>
       <Keyword CommandWord="CalculateWaveForce"></Keyword>
       <Keyword CommandWord="DetectCollision"></Keyword>
@@ -46,6 +47,7 @@
     <KeyinHandler Keyin="PDIWT_PiledWharf Input AttachBCECInstance" Function="PDIWT_PiledWharf_Main.KeyinCommands.Input_AttachBCECInstance"/>
     <!--Process part-->
     <KeyinHandler Keyin="PDIWT_PiledWharf Process CalculateBearingCapacity" Function="PDIWT_PiledWharf_Main.KeyinCommands.Process_CalculateBearingCapacity"/>
+    <KeyinHandler Keyin="PDIWT_PiledWharf Process CalculatePileLengthBasedOnBC" Function="PDIWT_PiledWharf_Main.KeyinCommands.Process_CalculatePileLengthBasedOnBearingCapacity"/>
     <KeyinHandler Keyin="PDIWT_PiledWharf Process CalculateCurrentForce" Function="PDIWT_PiledWharf_Main.KeyinCommands.Process_CalculateCurrentForce"/>
     <KeyinHandler Keyin="PDIWT_PiledWharf Process CalculateWaveForce" Function="PDIWT_PiledWharf_Main.KeyinCommands.Process_CalculateWaveForce"/>
     <KeyinHandler Keyin="PDIWT_PiledWharf Process DetectCollision" Function="PDIWT_PiledWharf_Main.KeyinCommands.Process_DetectCollision"/>

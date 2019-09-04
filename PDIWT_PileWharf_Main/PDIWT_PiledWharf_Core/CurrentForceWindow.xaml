@@ -5,9 +5,10 @@
     xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:loc="clr-namespace:PDIWT.Resources.Localization.MainModule;assembly=PDIWT.Resources"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pdi="clr-namespace:PDIWT.Resources.CustomUserControl;assembly=PDIWT.Resources"
-    Title="{DynamicResource CurrentForceCalculation}"
+    Title="{x:Static loc:Resources.CurrentForceCalculation}"
     Width="400"
     Height="450"
     mc:Ignorable="d">
@@ -15,10 +16,10 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/Units.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/Units.xaml" />-->
                 <ResourceDictionary Source="Skins/MainSkin.xaml" />
                 <!--<ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/zh-CN.xaml" />-->
-                <ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/en-US.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/en-US.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -30,7 +31,7 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <TabControl>
-            <TabItem Header="{DynamicResource InputParameter}">
+            <TabItem Header="{x:Static loc:Resources.InputParameters}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
@@ -48,75 +49,75 @@
                     <pdi:LabelTextBox
                         x:Name="LabelTextBox_PileTopElevation"
                         Grid.Row="0"
-                        DisplayName="{DynamicResource PileTopElevation}"
-                        Parameter="{Binding PileTopElevation, UpdateSourceTrigger=LostFocus}"
-                        Unit="{DynamicResource Length}" />
+                        DisplayName="{x:Static loc:Resources.PileTopElevation}"
+                        Parameter="{Binding PileTopElevation, UpdateSourceTrigger=LostFocus, StringFormat={}{0:F2}}"
+                        Unit="m" />
                     <pdi:LabelTextBox
                         x:Name="LabelTextBox_PileHAT"
                         Grid.Row="1"
-                        DisplayName="{DynamicResource HAT}"
-                        Parameter="{Binding HAT, UpdateSourceTrigger=LostFocus}"
-                        Unit="{DynamicResource Length}" />
+                        DisplayName="{x:Static loc:Resources.HAT}"
+                        Parameter="{Binding HAT, UpdateSourceTrigger=LostFocus, StringFormat={}{0:F2}}"
+                        Unit="m" />
                     <pdi:LabelTextBox
                         x:Name="LabelTextBox_SoilElevation"
                         Grid.Row="2"
-                        DisplayName="{DynamicResource SoilElevation}"
-                        Parameter="{Binding SoilElevation, UpdateSourceTrigger=LostFocus}"
-                        Unit="{DynamicResource Length}" />
+                        DisplayName="{x:Static loc:Resources.SeabedElevation}"
+                        Parameter="{Binding SoilElevation, UpdateSourceTrigger=LostFocus, StringFormat={}{0:F2}}"
+                        Unit="m" />
                     <!--<TextBox Grid.Row="2" Text="{Binding SoilElevation}" />-->
                     <pdi:LabelTextBox
                         x:Name="LabelTextBox_ProjectedWidth"
                         Grid.Row="3"
-                        DisplayName="{DynamicResource ProjectedWidth}"
-                        Parameter="{Binding ProjectedWidth, UpdateSourceTrigger=LostFocus}"
-                        Unit="{DynamicResource Length}" />
+                        DisplayName="{x:Static loc:Resources.ProjectedWidth}"
+                        Parameter="{Binding ProjectedWidth, UpdateSourceTrigger=LostFocus, StringFormat={}{0:F2}}"
+                        Unit="m" />
                     <Grid Grid.Row="4">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="150" />
                         </Grid.ColumnDefinitions>
-                        <Label x:Name="Label_Shape" Content="{DynamicResource Shape}" />
+                        <Label x:Name="Label_Shape" Content="{x:Static loc:Resources.PileType}" />
                         <ComboBox
                             Grid.Column="1"
-                            DisplayMemberPath="Shape"
-                            ItemsSource="{Binding ShapeCategory, Mode=OneTime}"
-                            SelectedItem="{Binding SelectedShape}"
-                            SelectedValuePath="Value" />
+                            DisplayMemberPath="Value"
+                            ItemsSource="{Binding PileGeoTypes, Mode=OneTime}"
+                            SelectedValue="{Binding SelectedPileType}"
+                            SelectedValuePath="Key" />
                     </Grid>
                     <pdi:LabelTextBox
                         x:Name="LabelTextBox_SquarePileAngle"
                         Grid.Row="5"
-                        DisplayName="{DynamicResource Angle}"
-                        IsEnabled="{Binding SelectedShape.Value, Converter={StaticResource SquarePileShapeValueOfListToBooleanConverter}}"
+                        DisplayName="{x:Static loc:Resources.Angle}"
+                        IsEnabled="{Binding SelectedPileType, Converter={StaticResource SquarePileToBooleanConverter}}"
                         Parameter="{Binding SquarePileAngle, UpdateSourceTrigger=LostFocus}"
-                        Unit="{DynamicResource AnglePoint}" />
+                        Unit="°" />
                     <pdi:LabelTextBox
                         x:Name="LabelTextBox_CurrentVelocity"
                         Grid.Row="6"
-                        DisplayName="{DynamicResource CurrentVelocity}"
+                        DisplayName="{x:Static loc:Resources.CurrentVelocity}"
                         Parameter="{Binding CurrentVelocity, UpdateSourceTrigger=LostFocus}"
-                        Unit="{DynamicResource Velocity}" />
+                        Unit="m/s" />
                     <pdi:LabelTextBox
                         x:Name="LabelTextBox_PileHorizontalCentraSpan"
                         Grid.Row="7"
-                        DisplayName="{DynamicResource HorizontalPileCentraSpan}"
+                        DisplayName="{x:Static loc:Resources.HorizontalPileCentraSpan}"
                         Parameter="{Binding PileHorizontalCentraSpan, UpdateSourceTrigger=LostFocus}"
-                        Unit="{DynamicResource Length}" />
+                        Unit="m" />
                     <pdi:LabelTextBox
                         x:Name="LabelTextBox_PileVerticalCentraSpan"
                         Grid.Row="8"
-                        DisplayName="{DynamicResource VerticalPileCentraSpan}"
+                        DisplayName="{x:Static loc:Resources.VerticalPileCentraSpan}"
                         Parameter="{Binding PileVerticalCentraSpan, UpdateSourceTrigger=LostFocus}"
-                        Unit="{DynamicResource Length}" />
+                        Unit="m" />
                     <pdi:LabelTextBox
                         x:Name="LabelTextBox_WaterDensity"
                         Grid.Row="9"
-                        DisplayName="{DynamicResource WaterDensity}"
+                        DisplayName="{x:Static loc:Resources.WaterDensity}"
                         Parameter="{Binding WaterDensity, UpdateSourceTrigger=LostFocus}"
-                        Unit="{DynamicResource Density}" />
+                        Unit="kN/m3" />
                 </Grid>
             </TabItem>
-            <TabItem Header="{DynamicResource CalculatedParameter}">
+            <TabItem Header="{x:Static loc:Resources.CalculatedParameters}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
@@ -136,7 +137,7 @@
                     <Label
                         Grid.Row="0"
                         Grid.Column="0"
-                        Content="{DynamicResource Height}" />
+                        Content="{x:Static loc:Resources.Height}" />
                     <Label
                         Grid.Row="0"
                         Grid.Column="1"
@@ -146,11 +147,11 @@
                     <Label
                         Grid.Row="0"
                         Grid.Column="2"
-                        Content="{DynamicResource Length}" />
+                        Content="m" />
                     <Label
                         Grid.Row="1"
                         Grid.Column="0"
-                        Content="{DynamicResource ProjectedArea}" />
+                        Content="{x:Static loc:Resources.ProjectedArea}" />
                     <Label
                         Grid.Row="1"
                         Grid.Column="1"
@@ -160,11 +161,11 @@
                     <Label
                         Grid.Row="1"
                         Grid.Column="2"
-                        Content="{DynamicResource AreaPerLength}" />
+                        Content="m2/m" />
                     <Label
                         Grid.Row="2"
                         Grid.Column="0"
-                        Content="{DynamicResource CurrentResistentCoeff}" />
+                        Content="{x:Static loc:Resources.CurrentResistentCoeff}" />
                     <Label
                         Grid.Row="2"
                         Grid.Column="1"
@@ -174,7 +175,7 @@
                     <Label
                         Grid.Row="3"
                         Grid.Column="0"
-                        Content="{DynamicResource ShelteringCoeff}" />
+                        Content="{x:Static loc:Resources.ShelteringCoeff}" />
                     <Label
                         Grid.Row="3"
                         Grid.Column="1"
@@ -184,7 +185,7 @@
                     <Label
                         Grid.Row="4"
                         Grid.Column="0"
-                        Content="{DynamicResource SubmergedCoeff}" />
+                        Content="{x:Static loc:Resources.SubmergedCoeff}" />
                     <Label
                         Grid.Row="4"
                         Grid.Column="1"
@@ -194,7 +195,7 @@
                     <Label
                         Grid.Row="5"
                         Grid.Column="0"
-                        Content="{DynamicResource WaterDepthCoeff}" />
+                        Content="{x:Static loc:Resources.WaterDepthCoeff}" />
                     <Label
                         Grid.Row="5"
                         Grid.Column="1"
@@ -204,7 +205,7 @@
                     <Label
                         Grid.Row="6"
                         Grid.Column="0"
-                        Content="{DynamicResource HorizontalAffectCoeff}" />
+                        Content="{x:Static loc:Resources.HorizontalAffectCoeff}" />
                     <Label
                         Grid.Row="6"
                         Grid.Column="1"
@@ -214,7 +215,7 @@
                     <Label
                         Grid.Row="7"
                         Grid.Column="0"
-                        Content="{DynamicResource IncliningAffectCoeff}" />
+                        Content="{x:Static loc:Resources.IncliningAffectCoeff}" />
                     <Label
                         Grid.Row="7"
                         Grid.Column="1"
@@ -224,7 +225,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <GroupBox Grid.Row="2" Header="{DynamicResource CalculatedResult}">
+        <GroupBox Grid.Row="2" Header="{x:Static loc:Resources.CalculatedResults}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
@@ -240,15 +241,15 @@
                 <Label
                     Grid.Row="0"
                     Grid.Column="1"
-                    Content="{DynamicResource FrontRow}" />
+                    Content="{x:Static loc:Resources.FrontRow}" />
                 <Label
                     Grid.Row="0"
                     Grid.Column="2"
-                    Content="{DynamicResource RearRow}" />
+                    Content="{x:Static loc:Resources.RearRow}" />
                 <Label
                     Grid.Row="1"
                     Grid.Column="0"
-                    Content="{DynamicResource CurrentForceStandardValue}" />
+                    Content="{x:Static loc:Resources.CurrentForceStandardValue}" />
                 <Label
                     Grid.Row="1"
                     Grid.Column="1"
@@ -264,7 +265,7 @@
                 <Label
                     Grid.Row="2"
                     Grid.Column="0"
-                    Content="{DynamicResource ActionPoint}" />
+                    Content="{x:Static loc:Resources.ActionPoint}" />
                 <Label
                     Grid.Row="2"
                     Grid.Column="1"
@@ -280,11 +281,11 @@
                 <Label
                     Grid.Row="1"
                     Grid.Column="3"
-                    Content="{DynamicResource Force}" />
+                    Content="kN" />
                 <Label
                     Grid.Row="2"
                     Grid.Column="3"
-                    Content="{DynamicResource Length}" />
+                    Content="m" />
             </Grid>
         </GroupBox>
         <Grid Grid.Row="3">
@@ -297,17 +298,17 @@
             <Button
                 Grid.Column="0"
                 Command="{Binding LoadParameter}"
-                Content="{DynamicResource LoadParameter}"
+                Content="{x:Static loc:Resources.LoadFromModel}"
                 Style="{StaticResource BasicButton}" />
             <Button
                 Grid.Column="2"
                 Command="{Binding Calculate}"
-                Content="{DynamicResource Calculate}"
+                Content="{x:Static loc:Resources.Calculate}"
                 Style="{StaticResource BasicButton}" />
             <Button
                 Grid.Column="3"
                 Command="{Binding GenerateNote}"
-                Content="{DynamicResource GenerateNote}"
+                Content="{x:Static loc:Resources.GenerateCalculationNote}"
                 Style="{StaticResource BasicButton}" />
             <!--<Button
                 Grid.Column="3"

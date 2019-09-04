@@ -17,6 +17,7 @@ using System.Globalization;
 
 namespace PDIWT_PiledWharf_Core.ViewModel
 {
+    using Model;
     public class PickUpSoilLayersFromLibViewModel : ViewModelBase
     {
 
@@ -73,11 +74,11 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
         private void ExecuteConfirm()
         {
-            // Bearing Capacity ViewModel Register it.
-            Messenger.Default.Send(
-                new NotificationMessage<ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>>(SelectedSoilLayerInfos, "Confirm"), "SelectedSoilLayers");
+            //// Bearing Capacity ViewModel Register it.
+            //Messenger.Default.Send(
+            //    new NotificationMessage<ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>>(SelectedSoilLayerInfos, "Confirm"), "SelectedSoilLayers");
             //It's own view Register it.
-            Messenger.Default.Send(new NotificationMessage("close the Window"), "PickUpSoilLayersFromLibWindow");
+            Messenger.Default.Send(new NotificationMessage(PDIWT.Resources.Localization.MainModule.Resources.OK), "PickUpSoilLayersFromLibButtonClick");
         }
 
         private RelayCommand _cancel;
@@ -93,16 +94,16 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                     ?? (_cancel = new RelayCommand(
                     () =>
                     {
-                        Messenger.Default.Send(new NotificationMessage("close the Window"), "PickUpSoilLayersFromLibWindow");
+                        Messenger.Default.Send(new NotificationMessage(PDIWT.Resources.Localization.MainModule.Resources.Cancel), "PickUpSoilLayersFromLibButtonClick");
                     }));
             }
         }
 
-        public void SortLibAndPickedList()
-        {
-            SelectedItemsFromLib = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>(SelectedItemsFromLib.OrderBy(e => e.SoilLayerNumber));
-            SelectedSoilLayerInfos = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>(SelectedSoilLayerInfos.OrderBy(e => e.SoilLayerNumber));
-        }
+        //public void SortLibAndPickedList()
+        //{
+        //    SelectedItemsFromLib = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>(SelectedItemsFromLib.OrderBy(e => e.SoilLayerNumber));
+        //    SelectedSoilLayerInfos = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>(SelectedSoilLayerInfos.OrderBy(e => e.SoilLayerNumber));
+        //}
     }
 
 }

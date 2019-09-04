@@ -9,6 +9,7 @@
     Title="{x:Static loc:Resources.PickupSoilLayersFromLib}"
     Width="500"
     Height="450"
+    WindowStyle="ToolWindow"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
@@ -89,11 +90,13 @@
                 Grid.Column="1"
                 Command="{Binding Confirm}"
                 Content="{x:Static loc:Resources.OK}"
+                IsDefault="True"
                 Style="{StaticResource BasicButton}" />
             <Button
                 Grid.Column="2"
                 Command="{Binding Cancel}"
                 Content="{x:Static loc:Resources.Cancel}"
+                IsCancel="True"
                 Style="{StaticResource BasicButton}" />
         </Grid>
     </Grid>

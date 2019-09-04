@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using PDIWT_PiledWharf_Core.ViewModel;
 
 using GalaSoft.MvvmLight.Messaging;
+using GalaSoft.MvvmLight.Ioc;
 
 using BM = Bentley.MstnPlatformNET;
 using BMWPF = Bentley.MstnPlatformNET.WPF;
@@ -36,6 +37,9 @@ namespace PDIWT_PiledWharf_Core
             m_wpfhelper = new BMWPF.WPFInteropHelper(this);
             m_wpfhelper.Attach(addIn, true, "Input_ImportFromFileWindow");
             Icon = new BitmapImage(new Uri("pack://application:,,,/PDIWT.Resources;component/Images/Icons/ImportFromFiles.ico", UriKind.RelativeOrAbsolute));
+            if (!SimpleIoc.Default.IsRegistered<BM.AddIn>())
+                SimpleIoc.Default.Register<BM.AddIn>(() => addIn);
+            Messenger.Default.Register<Visibility>(this, "ImportWindowVisibility", v => Visibility = v);
         }
 
         ~Input_ImportFromFileWindow()

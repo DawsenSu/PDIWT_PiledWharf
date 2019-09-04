@@ -61,11 +61,29 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Action Point.
+        /// </summary>
+        public static string ActionPoint {
+            get {
+                return ResourceManager.GetString("ActionPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add.
         /// </summary>
         public static string Add {
             get {
                 return ResourceManager.GetString("Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Angle.
+        /// </summary>
+        public static string Angle {
+            get {
+                return ResourceManager.GetString("Angle", resourceCulture);
             }
         }
         
@@ -97,6 +115,42 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cast In-Situ Grounting Pile.
+        /// </summary>
+        public static string BCPileType_CastInSituAfterGrountingPile {
+            get {
+                return ResourceManager.GetString("BCPileType_CastInSituAfterGrountingPile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cast In-Situ Pile.
+        /// </summary>
+        public static string BCPileType_CastInSituPile {
+            get {
+                return ResourceManager.GetString("BCPileType_CastInSituPile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Driven Pile With Sealed End.
+        /// </summary>
+        public static string BCPileType_DrivenPileWithSealedEnd {
+            get {
+                return ResourceManager.GetString("BCPileType_DrivenPileWithSealedEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tube Pile or Steel Pile.
+        /// </summary>
+        public static string BCPileType_TubePileOrSteelPile {
+            get {
+                return ResourceManager.GetString("BCPileType_TubePileOrSteelPile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bearing Capacity Window.
         /// </summary>
         public static string BearingCapacityWindow {
@@ -111,6 +165,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         public static string BlockCoefficient {
             get {
                 return ResourceManager.GetString("BlockCoefficient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bottom Elevation.
+        /// </summary>
+        public static string BottomElevation {
+            get {
+                return ResourceManager.GetString("BottomElevation", resourceCulture);
             }
         }
         
@@ -196,24 +259,6 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cast In-Situ Grounting Pile.
-        /// </summary>
-        public static string CastInSituAfterGrountingPile {
-            get {
-                return ResourceManager.GetString("CastInSituAfterGrountingPile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Cast In-Situ Pile.
-        /// </summary>
-        public static string CastInSituPile {
-            get {
-                return ResourceManager.GetString("CastInSituPile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Check Date.
         /// </summary>
         public static string CheckDate {
@@ -268,20 +313,47 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Construction Design.
-        /// </summary>
-        public static string ConstructionDesign {
-            get {
-                return ResourceManager.GetString("ConstructionDesign", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Create Pile.
         /// </summary>
         public static string CreatePile {
             get {
                 return ResourceManager.GetString("CreatePile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Force Calculation.
+        /// </summary>
+        public static string CurrentForceCalculation {
+            get {
+                return ResourceManager.GetString("CurrentForceCalculation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Force Standard Value.
+        /// </summary>
+        public static string CurrentForceStandardValue {
+            get {
+                return ResourceManager.GetString("CurrentForceStandardValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Resistent Coeff.
+        /// </summary>
+        public static string CurrentResistentCoeff {
+            get {
+                return ResourceManager.GetString("CurrentResistentCoeff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Velocity.
+        /// </summary>
+        public static string CurrentVelocity {
+            get {
+                return ResourceManager.GetString("CurrentVelocity", resourceCulture);
             }
         }
         
@@ -349,6 +421,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Design Water Level.
+        /// </summary>
+        public static string DesignWaterLevel {
+            get {
+                return ResourceManager.GetString("DesignWaterLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Discount Coefficient.
         /// </summary>
         public static string DiscountCoefficient {
@@ -358,11 +439,11 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Driven Pile With Sealed End.
+        ///   Looks up a localized string similar to Draw.
         /// </summary>
-        public static string DrivenPileWithSealedEnd {
+        public static string Draw {
             get {
-                return ResourceManager.GetString("DrivenPileWithSealedEnd", resourceCulture);
+                return ResourceManager.GetString("Draw", resourceCulture);
             }
         }
         
@@ -403,20 +484,29 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Feasibility Study.
-        /// </summary>
-        public static string FeasibilityStudy {
-            get {
-                return ResourceManager.GetString("FeasibilityStudy", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Fixed Depth Factorη.
         /// </summary>
         public static string FixedDepthFactor {
             get {
                 return ResourceManager.GetString("FixedDepthFactor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Force Coeffs.
+        /// </summary>
+        public static string ForceCoeffs {
+            get {
+                return ResourceManager.GetString("ForceCoeffs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  Front Row.
+        /// </summary>
+        public static string FrontRow {
+            get {
+                return ResourceManager.GetString("FrontRow", resourceCulture);
             }
         }
         
@@ -466,11 +556,47 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gravitational Acceleration.
+        /// </summary>
+        public static string GravitationalAcceleration {
+            get {
+                return ResourceManager.GetString("GravitationalAcceleration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to HAT.
         /// </summary>
         public static string HAT {
             get {
                 return ResourceManager.GetString("HAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Height.
+        /// </summary>
+        public static string Height {
+            get {
+                return ResourceManager.GetString("Height", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Horizontal Affect Coeff.
+        /// </summary>
+        public static string HorizontalAffectCoeff {
+            get {
+                return ResourceManager.GetString("HorizontalAffectCoeff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Horizontal Pile Centra Span.
+        /// </summary>
+        public static string HorizontalPileCentraSpan {
+            get {
+                return ResourceManager.GetString("HorizontalPileCentraSpan", resourceCulture);
             }
         }
         
@@ -489,6 +615,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         public static string ImportFromFile {
             get {
                 return ResourceManager.GetString("ImportFromFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inclining Affect Coeff.
+        /// </summary>
+        public static string IncliningAffectCoeff {
+            get {
+                return ResourceManager.GetString("IncliningAffectCoeff", resourceCulture);
             }
         }
         
@@ -574,6 +709,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Load From Model.
+        /// </summary>
+        public static string LoadFromModel {
+            get {
+                return ResourceManager.GetString("LoadFromModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Load Parameters.
         /// </summary>
         public static string LoadParameters {
@@ -642,6 +786,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         public static string Note_EEIL {
             get {
                 return ResourceManager.GetString("Note_EEIL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1) For driven pile: 1.45~1.55; 2) For cast in-situ pile: 1.55~1.65.
+        /// </summary>
+        public static string Note_PartialCoeff {
+            get {
+                return ResourceManager.GetString("Note_PartialCoeff", resourceCulture);
             }
         }
         
@@ -745,11 +898,29 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pile Centra Span.
+        /// </summary>
+        public static string PileCentraSpan {
+            get {
+                return ResourceManager.GetString("PileCentraSpan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pile Cross Section Area.
         /// </summary>
         public static string PileCrossSectionArea {
             get {
                 return ResourceManager.GetString("PileCrossSectionArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pile Diameter.
+        /// </summary>
+        public static string PileDiameter {
+            get {
+                return ResourceManager.GetString("PileDiameter", resourceCulture);
             }
         }
         
@@ -777,6 +948,24 @@ namespace PDIWT.Resources.Localization.MainModule {
         public static string PileLength {
             get {
                 return ResourceManager.GetString("PileLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pile Length Calculation Window.
+        /// </summary>
+        public static string PileLengthCalWindow {
+            get {
+                return ResourceManager.GetString("PileLengthCalWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pile length Modulus.
+        /// </summary>
+        public static string PileLengthModulus {
+            get {
+                return ResourceManager.GetString("PileLengthModulus", resourceCulture);
             }
         }
         
@@ -988,20 +1177,56 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Construction Design.
+        /// </summary>
+        public static string PP_ConstructionDesign {
+            get {
+                return ResourceManager.GetString("PP_ConstructionDesign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feasibility Study.
+        /// </summary>
+        public static string PP_FeasibilityStudy {
+            get {
+                return ResourceManager.GetString("PP_FeasibilityStudy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Preliminary Design.
         /// </summary>
-        public static string PreliminaryDesign {
+        public static string PP_PreliminaryDesign {
             get {
-                return ResourceManager.GetString("PreliminaryDesign", resourceCulture);
+                return ResourceManager.GetString("PP_PreliminaryDesign", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Preliminary Feasibility Study.
         /// </summary>
-        public static string PreliminaryFeasibilityStudy {
+        public static string PP_PreliminaryFeasibilityStudy {
             get {
-                return ResourceManager.GetString("PreliminaryFeasibilityStudy", resourceCulture);
+                return ResourceManager.GetString("PP_PreliminaryFeasibilityStudy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Projected Area.
+        /// </summary>
+        public static string ProjectedArea {
+            get {
+                return ResourceManager.GetString("ProjectedArea", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Projected Width.
+        /// </summary>
+        public static string ProjectedWidth {
+            get {
+                return ResourceManager.GetString("ProjectedWidth", resourceCulture);
             }
         }
         
@@ -1020,6 +1245,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         public static string ProjectPhase {
             get {
                 return ResourceManager.GetString("ProjectPhase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rear Row.
+        /// </summary>
+        public static string RearRow {
+            get {
+                return ResourceManager.GetString("RearRow", resourceCulture);
             }
         }
         
@@ -1069,11 +1303,38 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sea Bed Elevation.
+        /// </summary>
+        public static string SeabedElevation {
+            get {
+                return ResourceManager.GetString("SeabedElevation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Setttings.
         /// </summary>
         public static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sheltering Coeff.
+        /// </summary>
+        public static string ShelteringCoeff {
+            get {
+                return ResourceManager.GetString("ShelteringCoeff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Curve.
+        /// </summary>
+        public static string ShowPileLengthBCCurve {
+            get {
+                return ResourceManager.GetString("ShowPileLengthBCCurve", resourceCulture);
             }
         }
         
@@ -1204,6 +1465,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Submerged Coeff.
+        /// </summary>
+        public static string SubmergedCoeff {
+            get {
+                return ResourceManager.GetString("SubmergedCoeff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Success.
         /// </summary>
         public static string Success {
@@ -1222,20 +1492,20 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Top Elevation.
+        /// </summary>
+        public static string TopElevation {
+            get {
+                return ResourceManager.GetString("TopElevation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Round Pile.
         /// </summary>
         public static string TubePile {
             get {
                 return ResourceManager.GetString("TubePile", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Tube Pile or Steel Pile.
-        /// </summary>
-        public static string TubePileOrSteelPile {
-            get {
-                return ResourceManager.GetString("TubePileOrSteelPile", resourceCulture);
             }
         }
         
@@ -1249,11 +1519,47 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Velocity Force Coefficient(CD).
+        /// </summary>
+        public static string VelocityForceCoeffCD {
+            get {
+                return ResourceManager.GetString("VelocityForceCoeffCD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Velocity Force Coefficient(CM).
+        /// </summary>
+        public static string VelocityForceCoeffCM {
+            get {
+                return ResourceManager.GetString("VelocityForceCoeffCM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vertical Pile Centra Span.
+        /// </summary>
+        public static string VerticalPileCentraSpan {
+            get {
+                return ResourceManager.GetString("VerticalPileCentraSpan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Water.
         /// </summary>
         public static string Water {
             get {
                 return ResourceManager.GetString("Water", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Water Density.
+        /// </summary>
+        public static string WaterDensity {
+            get {
+                return ResourceManager.GetString("WaterDensity", resourceCulture);
             }
         }
         
@@ -1267,6 +1573,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Water Depth Coeff.
+        /// </summary>
+        public static string WaterDepthCoeff {
+            get {
+                return ResourceManager.GetString("WaterDepthCoeff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to WaterLevel.
         /// </summary>
         public static string WaterLevel {
@@ -1276,11 +1591,29 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Water Weight.
+        /// </summary>
+        public static string WaterWeight {
+            get {
+                return ResourceManager.GetString("WaterWeight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wave.
         /// </summary>
         public static string Wave {
             get {
                 return ResourceManager.GetString("Wave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wave Action Force for Pile and Pier Structure.
+        /// </summary>
+        public static string WaveForceWindowTitle {
+            get {
+                return ResourceManager.GetString("WaveForceWindowTitle", resourceCulture);
             }
         }
         
@@ -1303,6 +1636,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Wave Parameters.
+        /// </summary>
+        public static string WaveParameters {
+            get {
+                return ResourceManager.GetString("WaveParameters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wave Period(Tp).
         /// </summary>
         public static string WavePeriod {
@@ -1317,6 +1659,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         public static string Weight {
             get {
                 return ResourceManager.GetString("Weight", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wharf Elevation.
+        /// </summary>
+        public static string WharfElevation {
+            get {
+                return ResourceManager.GetString("WharfElevation", resourceCulture);
             }
         }
         

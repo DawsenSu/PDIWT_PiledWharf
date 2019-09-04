@@ -21,6 +21,8 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
     using BMW = Bentley.MstnPlatformNET.WPF;
     using BG = Bentley.GeometryNET;
     using System.Collections.ObjectModel;
+    using System.Windows;
+    using PDIWT_PiledWharf_Core_Cpp;
 
     public class LoadPileParametersTool<TResult> : BD.DgnElementSetTool where TResult : new()
     {
@@ -88,6 +90,12 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
             base.OnCleanup();
         }
 
+        protected override void ExitTool()
+        {
+            Messenger.Default.Send(Visibility.Visible,"ShowMainWindow");
+            base.ExitTool();
+        }
+
         protected override void OnPostInstall()
         {
             _mc.StatusCommand = "Pick up one Pile in the view";
@@ -102,7 +110,7 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
 
 
         BM.MessageCenter _mc = BM.MessageCenter.Instance;
-        ObtainInfoFromPileAndEnviroment<TResult> _obtainMethod;
+        readonly ObtainInfoFromPileAndEnviroment<TResult> _obtainMethod;
 
         //private BD.StatusInt BuildUpPileInfo(BDE.CellHeaderElement pile, out PDIWT_CurrentForePileInfo pileInfo)
         //{
@@ -304,49 +312,65 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
         {
             pileInfo = new PDIWT_CurrentForePileInfo();
 
-            var _activeModelRef = BM.Session.Instance.GetActiveDgnModelRef();
-
-            string _environmentECSchemaName = "PDIWT";
-            string _materialECClassName = "PileMaterialSettings";
-            Dictionary<string, object> _materialProps;
-            List<string> _requireMaterialPropNameList = new List<string>()
-            {
-                "WaterUnitWeight"
-            };
-            if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_environmentECSchemaName, _materialECClassName, _requireMaterialPropNameList, _activeModelRef, out _materialProps))
+            var _activeModel = BM.Session.Instance.GetActiveDgnModel();
+            double _uorpermeter = _activeModel.GetModelInfo().UorPerMeter;
+            Settings _settings = Settings.ObtainFromModel(_activeModel);
+            PileBase _pile = PileBase.ObtainFromPileCell(pile);
+            SoilLayerCollection _soilLayers = SoilLayerCollection.ObtainFromModel(_activeModel);
+            PileSoilLayersIntersectionGetter _psIntersectionGetter = new PileSoilLayersIntersectionGetter(_pile, _soilLayers);
+            if (PileSoilLayersInsectionStatus.Success != _psIntersectionGetter.GetInterSectionInfo(out ObservableCollection<IntersectionInfo> _intersectionInfos))
                 return BD.StatusInt.Error;
-            pileInfo.WaterDensity = double.Parse(_materialProps["WaterUnitWeight"].ToString());
 
-            string _waterLevelECClassName = "WaterLevelSettings";
-            Dictionary<string, object> _waterLevelProps;
-            List<string> _requireWaterLevelPropNameList = new List<string>()
-            {
-                "HAT"
-            };
-            if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_environmentECSchemaName, _waterLevelECClassName, _requireWaterLevelPropNameList, _activeModelRef, out _waterLevelProps))
-                return BD.StatusInt.Error;
-            pileInfo.HAT = double.Parse(_waterLevelProps["HAT"].ToString());
+            pileInfo.TopElevation = _pile.TopJoint.Point.Z / _uorpermeter;
+            pileInfo.HAT = _settings.HAT;
+            pileInfo.SoilElevation = _intersectionInfos.First().GetTopPoint().Z / _uorpermeter;
+            pileInfo.ProjectedWidth = _pile.Diameter / _uorpermeter;
+            pileInfo.PileType = _pile.GeoType;
+            pileInfo.WaterDensity = _settings.WaterUnitWeight * 100;
 
-            string _ifcECSchemaName = "IfcPort";
-            string _ifcPileECClassName = "IfcPile";
+            //var _activeModelRef = BM.Session.Instance.GetActiveDgnModelRef();
 
-            Dictionary<string, object> _pileProps;
-            List<string> _requirePilePropNameList = new List<string>()
-            {
-                "TopElevation",
-                "Type",
-                "CrossSectionWidth",
-                "OutsideDiameter"
-            };
-            if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_ifcECSchemaName, _ifcPileECClassName, _requirePilePropNameList, pile, out _pileProps))
-                return BD.StatusInt.Error;
-            pileInfo.TopElevation = double.Parse(_pileProps["TopElevation"].ToString());
-            pileInfo.Shape = _pileProps["Type"].ToString();
-            //pileInfo.ProjectedWidth = double.Parse(_pileProps["CrossSectionWidth"].ToString());
-            if (pileInfo.Shape == Resources.SquarePile)
-                pileInfo.ProjectedWidth = double.Parse(_pileProps["CrossSectionWidth"].ToString());
-            else
-                pileInfo.ProjectedWidth = double.Parse(_pileProps["OutsideDiameter"].ToString());
+            //string _environmentECSchemaName = "PDIWT";
+            //string _materialECClassName = "PileMaterialSettings";
+            //Dictionary<string, object> _materialProps;
+            //List<string> _requireMaterialPropNameList = new List<string>()
+            //{
+            //    "WaterUnitWeight"
+            //};
+            //if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_environmentECSchemaName, _materialECClassName, _requireMaterialPropNameList, _activeModelRef, out _materialProps))
+            //    return BD.StatusInt.Error;
+            //pileInfo.WaterDensity = double.Parse(_materialProps["WaterUnitWeight"].ToString());
+
+            //string _waterLevelECClassName = "WaterLevelSettings";
+            //Dictionary<string, object> _waterLevelProps;
+            //List<string> _requireWaterLevelPropNameList = new List<string>()
+            //{
+            //    "HAT"
+            //};
+            //if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_environmentECSchemaName, _waterLevelECClassName, _requireWaterLevelPropNameList, _activeModelRef, out _waterLevelProps))
+            //    return BD.StatusInt.Error;
+            //pileInfo.HAT = double.Parse(_waterLevelProps["HAT"].ToString());
+
+            //string _ifcECSchemaName = "IfcPort";
+            //string _ifcPileECClassName = "IfcPile";
+
+            //Dictionary<string, object> _pileProps;
+            //List<string> _requirePilePropNameList = new List<string>()
+            //{
+            //    "TopElevation",
+            //    "Type",
+            //    "CrossSectionWidth",
+            //    "OutsideDiameter"
+            //};
+            //if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_ifcECSchemaName, _ifcPileECClassName, _requirePilePropNameList, pile, out _pileProps))
+            //    return BD.StatusInt.Error;
+            //pileInfo.TopElevation = double.Parse(_pileProps["TopElevation"].ToString());
+            //pileInfo.Shape = _pileProps["Type"].ToString();
+            ////pileInfo.ProjectedWidth = double.Parse(_pileProps["CrossSectionWidth"].ToString());
+            //if (pileInfo.Shape == Resources.SquarePile)
+            //    pileInfo.ProjectedWidth = double.Parse(_pileProps["CrossSectionWidth"].ToString());
+            //else
+            //    pileInfo.ProjectedWidth = double.Parse(_pileProps["OutsideDiameter"].ToString());
 
             return BD.StatusInt.Success;
         }
@@ -354,244 +378,326 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
         public static BD.StatusInt WaveForceInfoEnabler(BDE.CellHeaderElement pile, out PDIWT_WaveForcePileInfo pileInfo)
         {
             pileInfo = new PDIWT_WaveForcePileInfo();
-            var _activeModelRef = BM.Session.Instance.GetActiveDgnModelRef();
 
-            string _environmentECSchemaName = "PDIWT";
-            string _materialECClassName = "PileMaterialSettings";
-            Dictionary<string, object> _materialProps;
-            List<string> _requireMaterialPropNameList = new List<string>()
+
+            var _activeModel = BM.Session.Instance.GetActiveDgnModel();
+            double _uorpermeter = _activeModel.GetModelInfo().UorPerMeter;
+            Settings _settings = Settings.ObtainFromModel(_activeModel);
+            PileBase _pile = PileBase.ObtainFromPileCell(pile);
+            SoilLayerCollection _soilLayers = SoilLayerCollection.ObtainFromModel(_activeModel);
+            PileSoilLayersIntersectionGetter _psIntersectionGetter = new PileSoilLayersIntersectionGetter(_pile, _soilLayers);
+            if (PileSoilLayersInsectionStatus.Success != _psIntersectionGetter.GetInterSectionInfo(out ObservableCollection<IntersectionInfo> _intersectionInfos))
+                return BD.StatusInt.Error;
+
+            pileInfo.PileType = _pile.GeoType;
+            pileInfo.PileDiameter = _pile.Diameter / _uorpermeter;
+            pileInfo.HAT = _settings.HAT;
+            pileInfo.MHW = _settings.MHW;
+            pileInfo.MLW = _settings.MLW;
+            pileInfo.LAT = _settings.LAT;
+            pileInfo.WaterWeight = _settings.WaterUnitWeight;
+            pileInfo.WaveHeight = new List<double>()
             {
-                "WaterUnitWeight"
+                _settings.WaveHeight_HAT,_settings.WaveHeight_MHW,_settings.WaveHeight_MLW,_settings.WaveHeight_LAT
             };
-            if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_environmentECSchemaName, _materialECClassName, _requireMaterialPropNameList, _activeModelRef, out _materialProps))
-                return BD.StatusInt.Error;
-            pileInfo.WaterDensity = double.Parse(_materialProps["WaterUnitWeight"].ToString());
-
-            string _waterLevelECClassName = "WaterLevelSettings";
-            Dictionary<string, object> _waterLevelProps;
-            List<string> _requiredWaterLevelPropNamtList = new List<string>() { "HAT", "MHW", "MLW", "LAT" };
-            if (BD.StatusInt.Error ==
-                ECSChemaReader.ReadECInstanceProperties(_environmentECSchemaName, _waterLevelECClassName, _requiredWaterLevelPropNamtList, _activeModelRef, out _waterLevelProps))
-                return BD.StatusInt.Error;
-            pileInfo.HAT = double.Parse(_waterLevelProps["HAT"].ToString());
-            pileInfo.MHW = double.Parse(_waterLevelProps["MHW"].ToString());
-            pileInfo.MLW = double.Parse(_waterLevelProps["MLW"].ToString());
-            pileInfo.LAT = double.Parse(_waterLevelProps["LAT"].ToString());
-
-            string _waveECClassName = "WaveSettings";
-            Dictionary<string, object> _waveProps;
-            List<string> _requiredWavePropNameList = new List<string>();
-            foreach (var _waterLevel in _requiredWaterLevelPropNamtList)
+            pileInfo.WavePeriod = new List<double>()
             {
-                _requiredWavePropNameList.Add($"WaveHeight_{_waterLevel}");
-                _requiredWavePropNameList.Add($"WavePeriod_{_waterLevel}");
-            }
-            if (BD.StatusInt.Error ==
-                ECSChemaReader.ReadECInstanceProperties(_environmentECSchemaName, _waveECClassName, _requiredWavePropNameList, _activeModelRef, out _waveProps))
-                return BD.StatusInt.Error;
-            foreach (var _prop in _waveProps)
-            {
-                if (_prop.Key.StartsWith("WaveHeight"))
-                    pileInfo.WaveHeight.Add(double.Parse(_prop.Value.ToString()));
-                else
-                    pileInfo.WavePeriod.Add(double.Parse(_prop.Value.ToString()));
-            }
-
-            string _ifcECSchemaName = "IfcPort";
-            string _ifcPileECClassName = "IfcPile";
-            Dictionary<string, object> _pileProps;
-            List<string> _requirePilePropNameList = new List<string>()
-            {
-                "Type",
-                "CrossSectionWidth",
-                "OutsideDiameter"
+                _settings.WavePeriod_HAT,_settings.WavePeriod_MHW,_settings.WavePeriod_MLW,_settings.WavePeriod_LAT
             };
-            if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_ifcECSchemaName, _ifcPileECClassName, _requirePilePropNameList, pile, out _pileProps))
-                return BD.StatusInt.Error;
-            pileInfo.Shape = _pileProps["Type"].ToString();
-            if (pileInfo.Shape == Resources.SquarePile)
-                pileInfo.PileDiameter = double.Parse(_pileProps["CrossSectionWidth"].ToString());
-            else
-                pileInfo.PileDiameter = double.Parse(_pileProps["OutsideDiameter"].ToString());
+            //var _activeModelRef = BM.Session.Instance.GetActiveDgnModelRef();
+
+            //string _environmentECSchemaName = "PDIWT";
+            //string _materialECClassName = "PileMaterialSettings";
+            //Dictionary<string, object> _materialProps;
+            //List<string> _requireMaterialPropNameList = new List<string>()
+            //{
+            //    "WaterUnitWeight"
+            //};
+            //if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_environmentECSchemaName, _materialECClassName, _requireMaterialPropNameList, _activeModelRef, out _materialProps))
+            //    return BD.StatusInt.Error;
+            //pileInfo.WaterDensity = double.Parse(_materialProps["WaterUnitWeight"].ToString());
+
+            //string _waterLevelECClassName = "WaterLevelSettings";
+            //Dictionary<string, object> _waterLevelProps;
+            //List<string> _requiredWaterLevelPropNamtList = new List<string>() { "HAT", "MHW", "MLW", "LAT" };
+            //if (BD.StatusInt.Error ==
+            //    ECSChemaReader.ReadECInstanceProperties(_environmentECSchemaName, _waterLevelECClassName, _requiredWaterLevelPropNamtList, _activeModelRef, out _waterLevelProps))
+            //    return BD.StatusInt.Error;
+            //pileInfo.HAT = double.Parse(_waterLevelProps["HAT"].ToString());
+            //pileInfo.MHW = double.Parse(_waterLevelProps["MHW"].ToString());
+            //pileInfo.MLW = double.Parse(_waterLevelProps["MLW"].ToString());
+            //pileInfo.LAT = double.Parse(_waterLevelProps["LAT"].ToString());
+
+            //string _waveECClassName = "WaveSettings";
+            //Dictionary<string, object> _waveProps;
+            //List<string> _requiredWavePropNameList = new List<string>();
+            //foreach (var _waterLevel in _requiredWaterLevelPropNamtList)
+            //{
+            //    _requiredWavePropNameList.Add($"WaveHeight_{_waterLevel}");
+            //    _requiredWavePropNameList.Add($"WavePeriod_{_waterLevel}");
+            //}
+            //if (BD.StatusInt.Error ==
+            //    ECSChemaReader.ReadECInstanceProperties(_environmentECSchemaName, _waveECClassName, _requiredWavePropNameList, _activeModelRef, out _waveProps))
+            //    return BD.StatusInt.Error;
+            //foreach (var _prop in _waveProps)
+            //{
+            //    if (_prop.Key.StartsWith("WaveHeight"))
+            //        pileInfo.WaveHeight.Add(double.Parse(_prop.Value.ToString()));
+            //    else
+            //        pileInfo.WavePeriod.Add(double.Parse(_prop.Value.ToString()));
+            //}
+
+            //string _ifcECSchemaName = "IfcPort";
+            //string _ifcPileECClassName = "IfcPile";
+            //Dictionary<string, object> _pileProps;
+            //List<string> _requirePilePropNameList = new List<string>()
+            //{
+            //    "Type",
+            //    "CrossSectionWidth",
+            //    "OutsideDiameter"
+            //};
+            //if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_ifcECSchemaName, _ifcPileECClassName, _requirePilePropNameList, pile, out _pileProps))
+            //    return BD.StatusInt.Error;
+            //pileInfo.Shape = _pileProps["Type"].ToString();
+            //if (pileInfo.Shape == Resources.SquarePile)
+            //    pileInfo.PileDiameter = double.Parse(_pileProps["CrossSectionWidth"].ToString());
+            //else
+            //    pileInfo.PileDiameter = double.Parse(_pileProps["OutsideDiameter"].ToString());
 
             return BD.StatusInt.Success;
         }
 
         public static BD.StatusInt AxialBearingCapacityPileInfoEnabler(BDE.CellHeaderElement pile, out PDIWT_BearingCapacity_PileInfo pileInfo)
         {
-            pileInfo = new PDIWT_BearingCapacity_PileInfo();            
+            //pileInfo = new PDIWT_BearingCapacity_PileInfo();            
 
+            //var _activeModel = BM.Session.Instance.GetActiveDgnModel();
+            //double _uorpermeter = _activeModel.GetModelInfo().UorPerMeter;
+            //var _mc = BM.MessageCenter.Instance;
+
+            //BDE.LineElement _axisLine = pile.GetChildren().Where(_line => _line is BDE.LineElement).First() as BDE.LineElement;
+            //BG.DPoint3d _lineStartPoint, _lineEndPoint;
+            //if (!_axisLine.AsCurvePathEdit().GetCurveVector().GetStartEnd(out _lineStartPoint, out _lineEndPoint))
+            //{
+            //    _mc.ShowErrorMessage("The Pile doesn't contain axis line Elements", "", BM.MessageAlert.Balloon);
+            //    return BD.StatusInt.Error;
+            //}
+            ////Swap start and end point if necessary, start point => top point, end point => bottom point;
+            //if(_lineEndPoint.Z > _lineStartPoint.Z)
+            //{
+            //    BG.DPoint3d _temp = _lineEndPoint;
+            //    _lineEndPoint = _lineStartPoint;
+            //    _lineStartPoint = _temp;
+            //}
+            //BG.DRay3d _axisRay = new BG.DRay3d(_lineStartPoint, _lineEndPoint);
+
+            ////Pile Material and Pile Self Related Parameters
+            //string _environmentECSchemaName = "PDIWT";
+            //string _materialECClassName = "PileMaterialSettings";
+            //Dictionary<string, object> _materialProps;
+            //List<string> _requireMaterialPropNameList = new List<string>()
+            //{
+            //    "ConcreteUnitWeight",
+            //    "ConcreteUnderWaterUnitWeight",
+            //    "SteelUnitWeight",
+            //    "WaterUnitWeight"
+            //};
+            //if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_environmentECSchemaName, _materialECClassName, _requireMaterialPropNameList, _activeModel, out _materialProps))
+            //    return BD.StatusInt.Error;
+            //pileInfo.ConcreteWeight = double.Parse(_materialProps["ConcreteUnitWeight"].ToString());
+            //pileInfo.ConcreteUnderwaterWeight = double.Parse(_materialProps["ConcreteUnderWaterUnitWeight"].ToString());
+            //pileInfo.SteelWeight = double.Parse(_materialProps["SteelUnitWeight"].ToString());
+            //pileInfo.SteelUnderwaterWeight = double.Parse(_materialProps["SteelUnitWeight"].ToString()) - double.Parse(_materialProps["WaterUnitWeight"].ToString());
+
+            //string _ifcECSchemaName = "IfcPort";
+            //string _ifcPileECClassName = "IfcPile";
+            //Dictionary<string, object> _pileProps;
+            //List<string> _requirePilePropNameList = new List<string>()
+            //{
+            //    "Code",
+            //    "Type",
+            //    "CrossSectionWidth",
+            //    "OutsideDiameter",
+            //    "InnerDiameter",
+            //    "Length"
+            //};
+            //if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_ifcECSchemaName, _ifcPileECClassName, _requirePilePropNameList, pile, out _pileProps))
+            //    return BD.StatusInt.Error;
+            //pileInfo.SelectedPileGeoType = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<PDIWT_PiledWharf_Core_Cpp.PileTypeManaged>()
+            //                                                           .Where(e => e.Value == _pileProps["Type"].ToString())
+            //                                                           .First().Key;
+            //switch (pileInfo.SelectedPileGeoType)
+            //{
+            //    case PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.SqaurePile:
+            //        pileInfo.PileDiameter = double.Parse(_pileProps["CrossSectionWidth"].ToString()) / 1000;
+            //        break;
+            //    case PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.TubePile:
+            //        pileInfo.PileDiameter = double.Parse(_pileProps["OutsideDiameter"].ToString()) / 1000;
+            //        break;
+            //    case PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.PHCTubePile:
+            //        pileInfo.PileDiameter = double.Parse(_pileProps["OutsideDiameter"].ToString()) / 1000;
+            //        pileInfo.PileInsideDiameter = double.Parse(_pileProps["InnerDiameter"].ToString()) / 1000;
+            //        break;
+            //    case PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.SteelTubePile:
+            //        pileInfo.PileDiameter = double.Parse(_pileProps["OutsideDiameter"].ToString()) / 1000;
+            //        pileInfo.PileInsideDiameter = double.Parse(_pileProps["InnerDiameter"].ToString()) / 1000;
+            //        break;
+            //    default:
+            //        break;
+            //}
+
+            //pileInfo.PileLength = double.Parse(_pileProps["Length"].ToString()) / 1000;
+            //pileInfo.PileCode = _pileProps["Code"].ToString();
+
+            //BG.DVector3d _pileAxisVector = new BG.DVector3d(_lineStartPoint, _lineEndPoint);
+            //if(_pileAxisVector.IsParallelOrOppositeTo(BG.DVector3d.UnitZ))
+            //{
+            //    pileInfo.IsVerticalPile = true;
+            //    pileInfo.PileSkewness = double.NaN;
+            //}
+            //else
+            //{
+            //    pileInfo.IsVerticalPile = false;
+            //    pileInfo.PileSkewness = Math.Abs(_pileAxisVector.Z / Math.Sqrt(_pileAxisVector.X * _pileAxisVector.X + _pileAxisVector.Y * _pileAxisVector.Y));
+            //}
+            //pileInfo.PileTopElevation = _lineStartPoint.Z / _uorpermeter;
+
+            //List<BDE.MeshHeaderElement> _meshHeaderElements = new List<BDE.MeshHeaderElement>();
+            //BD.ScanCriteria _sc = new BD.ScanCriteria();
+            //_sc.SetModelRef(_activeModel);
+            //_sc.SetModelSections(BD.DgnModelSections.GraphicElements);
+            //BD.BitMask _meshBitMask = new BD.BitMask(false);
+            //_meshBitMask.Capacity = 400;
+            //_meshBitMask.ClearAll();
+            //_meshBitMask.SetBit(104,true);
+            //_sc.SetElementTypeTest(_meshBitMask);
+            //_sc.Scan((_element, _model) =>
+            //{
+            //    _meshHeaderElements.Add((BDE.MeshHeaderElement)_element);
+            //    return BD.StatusInt.Success;
+            //});
+            //if(_meshHeaderElements.Count == 0)
+            //{
+            //    _mc.ShowErrorMessage("The active Model doesn't contain any mesh elements", "", BM.MessageAlert.Balloon);
+            //    return BD.StatusInt.Error;
+            //}
+
+            //ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo> _soilLayers = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>();
+            //foreach (var _mesh in _meshHeaderElements)
+            //{
+            //    BG.PolyfaceVisitor _polyfaceVisitor = BG.PolyfaceVisitor.Attach(_mesh.AsMeshEdit().GetMeshData(), true);
+            //    BG.DPoint3d _factPoint;
+            //    double _fractionInAxis;
+            //    //List<BG.DPoint3d> _interSectionPoints = new List<BG.DPoint3d>();
+            //    List<Tuple<double, BG.DPoint3d>> _insectionPointInfos = new List<Tuple<double, BG.DPoint3d>>();
+            //    while (_polyfaceVisitor.AdvanceToFacetBySearchRay(_axisRay, 0, out _factPoint, out _fractionInAxis))
+            //    {
+            //        _insectionPointInfos.Add(new Tuple<double, BG.DPoint3d>(_fractionInAxis, _factPoint));
+            //        //if (_fractionInAxis >= 0 & _fractionInAxis <= 1)
+            //        //    _interSectionPoints.Add(_factPoint);
+            //    }
+            //    _insectionPointInfos = _insectionPointInfos.Distinct().ToList();
+
+            //    if (_insectionPointInfos.Count == 0 || _insectionPointInfos.Count == 1)
+            //        continue;
+            //    else
+            //    {
+            //        _insectionPointInfos = _insectionPointInfos.GetRange(0, 2);
+
+            //        if (_insectionPointInfos[0].Item1 < 0 || _insectionPointInfos[1].Item1 < 0)
+            //            continue;
+
+            //        _insectionPointInfos = _insectionPointInfos.OrderByDescending(info => info.Item2.Z).ToList(); // make sure the [1] is at bottom
+
+            //        if (_insectionPointInfos[0].Item1 <= 1 && _insectionPointInfos[1].Item1 <= 1)
+            //        {
+            //            var _soilInfo = new PDIWT_BearingCapacity_SoilLayerInfo()
+            //            {
+            //                SoilLayerName = "None",
+            //                SoilLayerNumber = "UnKonw",
+            //                SoilLayerTopElevation = _insectionPointInfos[0].Item2.Z / _uorpermeter,
+            //                SoilLayerBottomElevation = _insectionPointInfos[1].Item2.Z / _uorpermeter,
+            //                SoilLayerThickness = (new BG.DSegment3d(_insectionPointInfos[0].Item2, _insectionPointInfos[1].Item2)).Length / _uorpermeter
+            //            };
+            //            GetSoilLayerInfo(_soilInfo, _mesh);
+            //            _soilLayers.Add(_soilInfo);
+            //        }
+            //        else if ((_insectionPointInfos[0].Item1 - 1) * (_insectionPointInfos[1].Item1 - 1) < 0)
+            //        {
+            //            var _soilInfo = new PDIWT_BearingCapacity_SoilLayerInfo()
+            //            {
+            //                SoilLayerName = "None",
+            //                SoilLayerNumber = "UnKonw",
+            //                SoilLayerTopElevation = _insectionPointInfos[0].Item2.Z / _uorpermeter,
+            //                SoilLayerBottomElevation = _lineEndPoint.Z / _uorpermeter,
+            //                SoilLayerThickness = (new BG.DSegment3d(_insectionPointInfos[0].Item2, _lineEndPoint)).Length / _uorpermeter
+            //            };
+            //            GetSoilLayerInfo(_soilInfo, _mesh);
+            //            _soilLayers.Add(_soilInfo);
+            //        }
+            //    }
+            //    //else
+            //    //{
+            //    //    _mc.ShowInfoMessage("The pile has more than two intersection point with soil layer", "", false);
+            //    //}
+            //}
+            
+            //if(_soilLayers.Count == 0)
+            //{
+            //    _mc.ShowInfoMessage("There is no intersection between selected pile and existing soil layer",$"The pile axis is {_lineStartPoint} to {_lineEndPoint}", false);
+            //    return BD.StatusInt.Error;
+            //}
+
+            //_soilLayers = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>(_soilLayers.OrderByDescending(_layer => _layer.SoilLayerTopElevation));
+            //pileInfo.PileSoilLayersInfo = _soilLayers;
+
+
+
+            pileInfo = new PDIWT_BearingCapacity_PileInfo();
             var _activeModel = BM.Session.Instance.GetActiveDgnModel();
             double _uorpermeter = _activeModel.GetModelInfo().UorPerMeter;
-            var _mc = BM.MessageCenter.Instance;
-
-            BDE.LineElement _axisLine = pile.GetChildren().Where(_line => _line is BDE.LineElement).First() as BDE.LineElement;
-            BG.DPoint3d _lineStartPoint, _lineEndPoint;
-            if (!_axisLine.AsCurvePathEdit().GetCurveVector().GetStartEnd(out _lineStartPoint, out _lineEndPoint))
-            {
-                _mc.ShowErrorMessage("The Pile doesn't contain axis line Elements", "", BM.MessageAlert.Balloon);
+            Settings _settings = Settings.ObtainFromModel(_activeModel);
+            PileBase _pile = PileBase.ObtainFromPileCell(pile);
+            SoilLayerCollection _soilLayers = SoilLayerCollection.ObtainFromModel(_activeModel);
+            PileSoilLayersIntersectionGetter _psIntersectionGetter = new PileSoilLayersIntersectionGetter(_pile, _soilLayers);
+            if (PileSoilLayersInsectionStatus.Success != _psIntersectionGetter.GetInterSectionInfo(out ObservableCollection<IntersectionInfo> _intersectionInfos))
                 return BD.StatusInt.Error;
-            }
-            //Swap start and end point if necessary, start point => top point, end point => bottom point;
-            if(_lineEndPoint.Z > _lineStartPoint.Z)
-            {
-                BG.DPoint3d _temp = _lineEndPoint;
-                _lineEndPoint = _lineStartPoint;
-                _lineStartPoint = _temp;
-            }
-            BG.DRay3d _axisRay = new BG.DRay3d(_lineStartPoint, _lineEndPoint);
 
-            //Pile Material and Pile Self Related Parameters
-            string _environmentECSchemaName = "PDIWT";
-            string _materialECClassName = "PileMaterialSettings";
-            Dictionary<string, object> _materialProps;
-            List<string> _requireMaterialPropNameList = new List<string>()
-            {
-                "ConcreteUnitWeight",
-                "ConcreteUnderWaterUnitWeight",
-                "SteelUnitWeight",
-                "WaterUnitWeight"
-            };
-            if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_environmentECSchemaName, _materialECClassName, _requireMaterialPropNameList, _activeModel, out _materialProps))
-                return BD.StatusInt.Error;
-            pileInfo.ConcreteWeight = double.Parse(_materialProps["ConcreteUnitWeight"].ToString());
-            pileInfo.ConcreteUnderwaterWeight = double.Parse(_materialProps["ConcreteUnderWaterUnitWeight"].ToString());
-            pileInfo.SteelWeight = double.Parse(_materialProps["SteelUnitWeight"].ToString());
-            pileInfo.SteelUnderwaterWeight = double.Parse(_materialProps["SteelUnitWeight"].ToString()) - double.Parse(_materialProps["WaterUnitWeight"].ToString());
+            //Assign all properties 
+            pileInfo.ConcreteWeight = _settings.ConcreteUnitWeight;
+            pileInfo.ConcreteUnderwaterWeight = _settings.ConcreteUnderWaterUnitWeight;
+            pileInfo.SteelWeight = _settings.SteelUnitWeight;
+            pileInfo.SteelUnderwaterWeight = _settings.SteelUnitWeight - _settings.WaterUnitWeight;
 
-            string _ifcECSchemaName = "IfcPort";
-            string _ifcPileECClassName = "IfcPile";
-            Dictionary<string, object> _pileProps;
-            List<string> _requirePilePropNameList = new List<string>()
-            {
-                "Code",
-                "Type",
-                "CrossSectionWidth",
-                "OutsideDiameter",
-                "InnerDiameter",
-                "Length"
-            };
-            if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_ifcECSchemaName, _ifcPileECClassName, _requirePilePropNameList, pile, out _pileProps))
-                return BD.StatusInt.Error;
-            pileInfo.SelectedPileGeoType = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<PDIWT_PiledWharf_Core_Cpp.PileTypeManaged>()
-                                                                       .Where(e => e.Value == _pileProps["Type"].ToString())
-                                                                       .First().Key;
-            switch (pileInfo.SelectedPileGeoType)
-            {
-                case PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.SqaurePile:
-                    pileInfo.PileDiameter = double.Parse(_pileProps["CrossSectionWidth"].ToString()) / 1000;
-                    break;
-                case PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.TubePile:
-                    pileInfo.PileDiameter = double.Parse(_pileProps["OutsideDiameter"].ToString()) / 1000;
-                    break;
-                case PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.PHCTubePile:
-                    pileInfo.PileDiameter = double.Parse(_pileProps["OutsideDiameter"].ToString()) / 1000;
-                    pileInfo.PileInsideDiameter = double.Parse(_pileProps["InnerDiameter"].ToString()) / 1000;
-                    break;
-                case PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.SteelTubePile:
-                    pileInfo.PileDiameter = double.Parse(_pileProps["OutsideDiameter"].ToString()) / 1000;
-                    pileInfo.PileInsideDiameter = double.Parse(_pileProps["InnerDiameter"].ToString()) / 1000;
-                    break;
-                default:
-                    break;
-            }
+            pileInfo.PileCode = _pile.Name;
+            pileInfo.IsVerticalPile = _pile.IsVertical;
+            pileInfo.SelectedPileGeoType = _pile.GeoType;
+            pileInfo.PileTopElevation = _pile.TopJoint.Point.Z / _uorpermeter;
+            pileInfo.PileLength = _pile.GetLength() / _uorpermeter;
+            pileInfo.PileSkewness = _pile.GetSkewness();
+            pileInfo.PileDiameter = _pile.Diameter / _uorpermeter;
+            pileInfo.PileInsideDiameter = _pile.InnerDiameter / _uorpermeter;
+            pileInfo.ConcreteCoreLength = _pile.ConcreteCoreLength / _uorpermeter;
 
-            pileInfo.PileLength = double.Parse(_pileProps["Length"].ToString()) / 1000;
-            pileInfo.PileCode = _pileProps["Code"].ToString();
-
-            BG.DVector3d _pileAxisVector = new BG.DVector3d(_lineStartPoint, _lineEndPoint);
-            if(_pileAxisVector.IsParallelOrOppositeTo(BG.DVector3d.UnitZ))
+            foreach (var _intersect in _intersectionInfos)
             {
-                pileInfo.IsVerticalPile = true;
-                pileInfo.PileSkewness = double.NaN;
-            }
-            else
-            {
-                pileInfo.IsVerticalPile = false;
-                pileInfo.PileSkewness = Math.Abs(_pileAxisVector.Z / Math.Sqrt(_pileAxisVector.X * _pileAxisVector.X + _pileAxisVector.Y * _pileAxisVector.Y));
-            }
-            pileInfo.PileTopElevation = _lineStartPoint.Z / _uorpermeter;
-
-            List<BDE.MeshHeaderElement> _meshHeaderElements = new List<BDE.MeshHeaderElement>();
-            BD.ScanCriteria _sc = new BD.ScanCriteria();
-            _sc.SetModelRef(_activeModel);
-            _sc.SetModelSections(BD.DgnModelSections.GraphicElements);
-            BD.BitMask _meshBitMask = new BD.BitMask(false);
-            _meshBitMask.Capacity = 400;
-            _meshBitMask.ClearAll();
-            _meshBitMask.SetBit(104,true);
-            _sc.SetElementTypeTest(_meshBitMask);
-            _sc.Scan((_element, _model) =>
-            {
-                _meshHeaderElements.Add((BDE.MeshHeaderElement)_element);
-                return BD.StatusInt.Success;
-            });
-            if(_meshHeaderElements.Count == 0)
-            {
-                _mc.ShowErrorMessage("The active Model doesn't contain any mesh elements", "", BM.MessageAlert.Balloon);
-                return BD.StatusInt.Error;
-            }
-
-            ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo> _soilLayers = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>();
-            foreach (var _mesh in _meshHeaderElements)
-            {
-                BG.PolyfaceVisitor _polyfaceVisitor = BG.PolyfaceVisitor.Attach(_mesh.AsMeshEdit().GetMeshData(), true);
-                BG.DPoint3d _factPoint;
-                double _fractionInAxis;
-                List<BG.DPoint3d> _interSectionPoints = new List<BG.DPoint3d>();
-                while(_polyfaceVisitor.AdvanceToFacetBySearchRay(_axisRay, 1e-2, out _factPoint, out _fractionInAxis))
+                PDIWT_BearingCapacity_SoilLayerInfo _soilLayerInfo = new PDIWT_BearingCapacity_SoilLayerInfo()
                 {
-                    if (_fractionInAxis >= 0 & _fractionInAxis <= 1)
-                        _interSectionPoints.Add(_factPoint);
-                }
-                _interSectionPoints = _interSectionPoints.Distinct().ToList();
-                if (_interSectionPoints.Count == 0)
-                    continue;
-                else if(_interSectionPoints.Count == 1) // another point is considered to be bottom point of pile
-                {
-                    //! There could be potential problem about this logical.
-                    //! Sometimes it can't locate the mesh.
-                    var _soilInfo = new PDIWT_BearingCapacity_SoilLayerInfo()
-                    {
-                        SoilLayerName = "None",
-                        SoilLayerNumber = "UnKonw",
-                        SoilLayerTopElevation = _interSectionPoints[0].Z / _uorpermeter,
-                        SoilLayerBottomElevation = _lineEndPoint.Z / _uorpermeter,
-                        SoilLayerThickness = (new BG.DSegment3d(_interSectionPoints[0], _lineEndPoint)).Length / _uorpermeter
-                    };
-                    GetSoilLayerInfo(_soilInfo, _mesh);
-                    _soilLayers.Add(_soilInfo);
-
-
-                }
-                else if(_interSectionPoints.Count == 2)
-                {
-                    _interSectionPoints.OrderByDescending(_point => _point.Z);
-                    var _soilInfo = new PDIWT_BearingCapacity_SoilLayerInfo()
-                    {
-                        SoilLayerName = "None",
-                        SoilLayerNumber = "UnKonw",
-                        SoilLayerTopElevation = _interSectionPoints[0].Z / _uorpermeter,
-                        SoilLayerBottomElevation = _interSectionPoints[1].Z / _uorpermeter,
-                        SoilLayerThickness = (new BG.DSegment3d(_interSectionPoints[0], _interSectionPoints[1])).Length / _uorpermeter
-                    };
-                    GetSoilLayerInfo(_soilInfo, _mesh);
-                    _soilLayers.Add(_soilInfo);
-                }
-                else
-                {
-                    _mc.ShowInfoMessage("The pile has more than two intersection point with soil layer", "", false);
-                }
+                    SoilLayerNumber = _intersect.SoilLayer.SoilLayerNumber,
+                    SoilLayerName = _intersect.SoilLayer.SoilLayerName,
+                    SoilLayerTopElevation = _intersect.GetTopPoint().Z / _uorpermeter,
+                    SoilLayerBottomElevation = _intersect.GetBottomPoint().Z / _uorpermeter,
+                    Betasi = _intersect.SoilLayer.Betasi,
+                    Psii = _intersect.SoilLayer.Psii,
+                    SideFrictionStandardValue = _intersect.SoilLayer.SideFrictionStandardValue,
+                    SoilLayerThickness = _intersect.GetPileLengthInSoilLayer() / _uorpermeter,
+                    Betap = _intersect.SoilLayer.Betap,
+                    Psip = _intersect.SoilLayer.Psip,
+                    EndResistanceStandardValue = _intersect.SoilLayer.EndResistanceStandardValue,
+                    DiscountCoeff = _intersect.SoilLayer.DiscountCoeff
+                };
+                pileInfo.PileSoilLayersInfo.Add(_soilLayerInfo);
             }
-            
-            if(_soilLayers.Count == 0)
-            {
-                _mc.ShowInfoMessage("There is no intersection between selected pile and existing soil layer",$"The pile axis is {_lineStartPoint} to {_lineEndPoint}", false);
-                return BD.StatusInt.Error;
-            }
-
-            _soilLayers = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>(_soilLayers.OrderByDescending(_layer => _layer.SoilLayerTopElevation));
-            pileInfo.PileSoilLayersInfo = _soilLayers;
 
             return BD.StatusInt.Success;
         }
@@ -600,34 +706,34 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
         /// </summary>
         /// <param name="soilInfo">The soil info to get</param>
         /// <param name="mesh">the ecisntance attached element</param>
-        private static void GetSoilLayerInfo(PDIWT_BearingCapacity_SoilLayerInfo soilInfo, BDE.MeshHeaderElement mesh)
-        {
-            string _environmentECSchemaName = "PDIWT";
-            string _materialECClassName = "BearingCapacitySoilLayerInfo";
-            Dictionary<string, object> _soilProps;
-            List<string> _requireMaterialPropNameList = new List<string>()
-            {
-                "LayerNumber",
-                "LayerName",
-                "Betasi",
-                "Psisi",
-                "qfi",
-                "Betap",
-                "Psip",
-                "qr"
-            };
-            if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_environmentECSchemaName, _materialECClassName, _requireMaterialPropNameList,
-                mesh, out _soilProps) || _soilProps.Values.Contains(null))
-                return;
-            soilInfo.SoilLayerNumber = _soilProps["LayerNumber"].ToString();
-            soilInfo.SoilLayerName = _soilProps["LayerName"].ToString();
-            soilInfo.Betasi = double.Parse(_soilProps["Betasi"].ToString());
-            soilInfo.Psii = double.Parse(_soilProps["Psisi"].ToString());
-            soilInfo.SideFrictionStandardValue = double.Parse(_soilProps["qfi"].ToString());
-            soilInfo.Betap = double.Parse(_soilProps["Betap"].ToString());
-            soilInfo.Psip = double.Parse(_soilProps["Psip"].ToString());
-            soilInfo.EndResistanceStandardValue = double.Parse(_soilProps["qr"].ToString());
-        }
+        //private static void GetSoilLayerInfo(PDIWT_BearingCapacity_SoilLayerInfo soilInfo, BDE.MeshHeaderElement mesh)
+        //{
+        //    string _environmentECSchemaName = "PDIWT";
+        //    string _materialECClassName = "BearingCapacitySoilLayerInfo";
+        //    Dictionary<string, object> _soilProps;
+        //    List<string> _requireMaterialPropNameList = new List<string>()
+        //    {
+        //        "LayerNumber",
+        //        "LayerName",
+        //        "Betasi",
+        //        "Psisi",
+        //        "qfi",
+        //        "Betap",
+        //        "Psip",
+        //        "qr"
+        //    };
+        //    if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_environmentECSchemaName, _materialECClassName, _requireMaterialPropNameList,
+        //        mesh, out _soilProps) || _soilProps.Values.Contains(null))
+        //        return;
+        //    soilInfo.SoilLayerNumber = _soilProps["LayerNumber"].ToString();
+        //    soilInfo.SoilLayerName = _soilProps["LayerName"].ToString();
+        //    soilInfo.Betasi = double.Parse(_soilProps["Betasi"].ToString());
+        //    soilInfo.Psii = double.Parse(_soilProps["Psisi"].ToString());
+        //    soilInfo.SideFrictionStandardValue = double.Parse(_soilProps["qfi"].ToString());
+        //    soilInfo.Betap = double.Parse(_soilProps["Betap"].ToString());
+        //    soilInfo.Psip = double.Parse(_soilProps["Psip"].ToString());
+        //    soilInfo.EndResistanceStandardValue = double.Parse(_soilProps["qr"].ToString());
+        //}
 
     }
 
@@ -639,19 +745,19 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
         public double HAT { get; set; }
         public double SoilElevation { get; set; }
         public double ProjectedWidth { get; set; }
-        public string Shape { get; set; }
+        public PileTypeManaged PileType { get; set; }
         public double WaterDensity { get; set; }
     }
 
     public class PDIWT_WaveForcePileInfo
     {
-        public string Shape { get; set; }
+        public PileTypeManaged PileType { get; set; }
         public double PileDiameter { get; set; }
         public double HAT { get; set; }
         public double MHW { get; set; }
         public double MLW { get; set; }
         public double LAT { get; set; }
-        public double WaterDensity { get; set; }
+        public double WaterWeight { get; set; }
         public List<double> WaveHeight { get; set; } = new List<double>();
         public List<double> WavePeriod { get; set; } = new List<double>();
     }

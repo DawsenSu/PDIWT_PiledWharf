@@ -7,7 +7,7 @@
     xmlns:local="clr-namespace:PDIWT_PiledWharf_Core.Model.Tools"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pdi="clr-namespace:PDIWT.Resources.CustomUserControl;assembly=PDIWT.Resources"
-    d:DesignHeight="250"
+    d:DesignHeight="200"
     d:DesignWidth="270"
     Background="White"
     mc:Ignorable="d">

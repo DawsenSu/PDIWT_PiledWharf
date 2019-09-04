@@ -139,7 +139,8 @@ namespace PDIWT_PiledWharf_Core.Model
             _docBuilder.Writeln($"极端高水位: {_vm.HAT}m");
             _docBuilder.Writeln($"基桩泥面高程: {_vm.SoilElevation}m");
             _docBuilder.Writeln($"基桩投影宽度b: {_vm.ProjectedWidth}m");
-            _docBuilder.Writeln($"形状: {_vm.SelectedShape.Shape}");
+            Dictionary<PDIWT_PiledWharf_Core_Cpp.PileTypeManaged, string> _pileTypes = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<PDIWT_PiledWharf_Core_Cpp.PileTypeManaged>();
+            _docBuilder.Writeln($"形状: {_pileTypes[_vm.SelectedPileType]}");
             _docBuilder.Writeln($"水流速: V = {_vm.CurrentVelocity}m/s");
             _docBuilder.Writeln($"横向桩中心间距: B = {_vm.PileHorizontalCentraSpan}m");
             _docBuilder.Writeln($"纵向桩中心间距: L = {_vm.PileVerticalCentraSpan}m");
@@ -203,7 +204,8 @@ namespace PDIWT_PiledWharf_Core.Model
             SetToHeading2(_db.ParagraphFormat);
             _db.Writeln("几何属性");
             SetToMainBody(_db.ParagraphFormat);
-            _db.Writeln($"柱体界面形状：{_vm.SelectedShape.Shape}");
+            Dictionary<PDIWT_PiledWharf_Core_Cpp.PileTypeManaged, string> _dict = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<PDIWT_PiledWharf_Core_Cpp.PileTypeManaged>();
+            _db.Writeln($"柱体界面形状：{_dict[ _vm.SelectedPileType]}");
             _db.Writeln($"柱体的直径(边长)：D(a)={_vm.PileDiameter.ToString("F2")}m");
             _db.Writeln($"柱体的中心距：l={_vm.PileDiameter.ToString("F2")}m");
 
@@ -502,8 +504,8 @@ namespace PDIWT_PiledWharf_Core.Model
             _db.Writeln("1)、波浪力的最大速度分力计算");
             _db.Writeln("沿整个柱体高度断面相同，则在计算整个柱体的最大速度分力时，已知：");
             _db.Writeln(string.Format("z1=0m， z2=d+ηmax={0:F2}m", _inputparams.WaterDepth + _calparams.YitaMax));
-            _db.Writeln(string.Format("CD={0:F2}， CM={1:F2}", WaveForce.CalculateCD(_vm.SelectedShape),
-                                                             WaveForce.CalculateCM(_vm.PileDiameter, _inputparams.WaveLength, _vm.SelectedShape)));
+            _db.Writeln(string.Format("CD={0:F2}， CM={1:F2}", WaveForce.CalculateCD(_vm.SelectedPileType),
+                                                             WaveForce.CalculateCM(_vm.PileDiameter, _inputparams.WaveLength, _vm.SelectedPileType)));
 
             _db.Writeln("系数K1与K3的计算公式如下：");
             _db.InsertImage(GenerateFormulaPic(_K1Formula)); _db.Writeln();
@@ -514,8 +516,8 @@ namespace PDIWT_PiledWharf_Core.Model
             _db.Writeln("2)、波浪力的最大惯性分力计算");
             _db.Writeln("沿整个柱体高度断面相同，则在计算整个柱体的最大速度分力时,已知：");
             _db.Writeln(string.Format("z1=0m， z2=d+ηmax-H/2={0:F2}m", _inputparams.WaterDepth + _calparams.YitaMax - _inputparams.H1 / 2));
-            _db.Writeln(string.Format("CD={0:F2}， CM={1:F2}", WaveForce.CalculateCD(_vm.SelectedShape),
-                                                             WaveForce.CalculateCM(_vm.PileDiameter, _inputparams.WaveLength, _vm.SelectedShape)));
+            _db.Writeln(string.Format("CD={0:F2}， CM={1:F2}", WaveForce.CalculateCD(_vm.SelectedPileType),
+                                                             WaveForce.CalculateCM(_vm.PileDiameter, _inputparams.WaveLength, _vm.SelectedPileType)));
             _db.Writeln("系数K2与K4的计算公式如下：");
             _db.InsertImage(GenerateFormulaPic(_K2Formula)); _db.Writeln();
             _db.InsertImage(GenerateFormulaPic(_K4Formula)); _db.Writeln();
@@ -929,10 +931,10 @@ namespace PDIWT_PiledWharf_Core.Model
 
         private static readonly Dictionary<PDIWT_ProjectPhase, string> _nameDict = new Dictionary<PDIWT_ProjectPhase, string>
         {
-            { PDIWT_ProjectPhase.Preliminary_Feasibility_Study, Resources.PreliminaryFeasibilityStudy},
-            {PDIWT_ProjectPhase.Feasibility_Study, Resources.FeasibilityStudy },
-            {PDIWT_ProjectPhase.PreliminaryDesign,Resources.PreliminaryDesign },
-            {PDIWT_ProjectPhase.Construction_Design, Resources.ConstructionDesign }
+            {PDIWT_ProjectPhase.Preliminary_Feasibility_Study, Resources.PP_PreliminaryFeasibilityStudy},
+            {PDIWT_ProjectPhase.Feasibility_Study, Resources.PP_FeasibilityStudy },
+            {PDIWT_ProjectPhase.PreliminaryDesign,Resources.PP_PreliminaryDesign },
+            {PDIWT_ProjectPhase.Construction_Design, Resources.PP_ConstructionDesign }
         };
 
         public static string GetProjectPhaseString(PDIWT_ProjectPhase pDIWT_ProjectPhase)
@@ -945,15 +947,4 @@ namespace PDIWT_PiledWharf_Core.Model
         }
     }
 
-    public enum PDIWT_ProjectPhase
-    {
-        [Description("PreliminaryFeasibilityStudy")]
-        Preliminary_Feasibility_Study,
-        [Description("FeasibilityStudy")]
-        Feasibility_Study,
-        [Description("PreliminaryDesign")]
-        PreliminaryDesign,
-        [Description("ConstructionDesign")]
-        Construction_Design
-    }
 }

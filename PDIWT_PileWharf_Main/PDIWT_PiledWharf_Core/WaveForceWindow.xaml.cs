@@ -48,6 +48,8 @@ namespace PDIWT_PiledWharf_Core
             };
 
             Messenger.Default.Register<NotificationMessage<bool>>(this, "WaveForceForegroundChange", ChangeControlsForeground);
+
+            Closed += (s, e) => Messenger.Default.Unregister(this);
         }
 
         static WaveForceWindow m_WaveForceWindowHost;

@@ -82,4 +82,20 @@ namespace PDIWT.Resources.Converters
             return !_value;
         }
     }
+
+    [ValueConversion(typeof(bool), typeof(Visibility))]
+    public class BoolenToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool _b = (bool)value;
+            return _b ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            Visibility _v = (Visibility)value;
+            return _v == Visibility.Visible ? true : false;
+        }
+    }
 }

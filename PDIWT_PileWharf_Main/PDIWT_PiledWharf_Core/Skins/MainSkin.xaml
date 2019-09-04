@@ -89,7 +89,14 @@
         Item2="{x:Static loc:Resources.SteelTubePile}" />
     <converter:StringOfListToBooleanConverter x:Key="SteelPileStringOfListToBooleanConverter" Item1="{x:Static loc:Resources.SteelTubePile}" />
 
-    <converter:StringOfListToBooleanConverter x:Key="SquarePileShapeValueOfListToBooleanConverter" Item1="2" />
+    <!--<converter:StringOfListToBooleanConverter x:Key="SquarePileShapeValueOfListToBooleanConverter" Item1="2" />-->
+
+    <com:PileTypeToBooleanConverter
+        x:Key="TubePileToBooleanConverter"
+        Item1="{x:Static loc:Resources.PHCTubePile}"
+        Item2="{x:Static loc:Resources.SteelTubePile}" />
+    <com:PileTypeToBooleanConverter x:Key="SteelPileToBooleanConverter" Item1="{x:Static loc:Resources.SteelTubePile}" />
+    <com:PileTypeToBooleanConverter x:Key="SquarePileToBooleanConverter" Item1="{x:Static loc:Resources.SquarePile}" />
 
     <com:PileTypeToVisibilityConverter x:Key="RoundPileStringOfListToVisibilityConverter" Item1="{x:Static loc:Resources.TubePile}" />
     <com:PileTypeToVisibilityConverter
@@ -101,8 +108,11 @@
 
     <converter:NullBooleanToReversedBooleanConverter x:Key="IsCheckedToReversedIsEnableConverter" />
 
-    <com:PileWorkmanshipTypeToVisibilityConverter x:Key="CastInSituAfterGrountingToVisibilityConverter" Item1="{x:Static loc:Resources.CastInSituAfterGrountingPile}" />
-    <com:PileWorkmanshipTypeToVisibilityConverter x:Key="CastInSituToVisibilityConverter" Item1="{x:Static loc:Resources.CastInSituPile}" />
-    <com:PileWorkmanshipTypeToVisibilityConverter x:Key="TubeorSteelToVisibilityConverter" Item1="{x:Static loc:Resources.TubePileOrSteelPile}" />
-    <com:PileWorkmanshipTypeToVisibilityConverter x:Key="DrivenToVisibilityConverter" Item1="{x:Static loc:Resources.DrivenPileWithSealedEnd}" />
+    <com:PileWorkmanshipTypeToVisibilityConverter x:Key="CastInSituAfterGrountingToVisibilityConverter" Item1="{x:Static loc:Resources.BCPileType_CastInSituAfterGrountingPile}" />
+    <com:PileWorkmanshipTypeToVisibilityConverter x:Key="CastInSituToVisibilityConverter" Item1="{x:Static loc:Resources.BCPileType_CastInSituPile}" />
+    <com:PileWorkmanshipTypeToVisibilityConverter x:Key="TubeorSteelToVisibilityConverter" Item1="{x:Static loc:Resources.BCPileType_TubePileOrSteelPile}" />
+    <com:PileWorkmanshipTypeToVisibilityConverter x:Key="DrivenToVisibilityConverter" Item1="{x:Static loc:Resources.BCPileType_DrivenPileWithSealedEnd}" />
+
+    <com:RowToIndexConveter x:Key="RowToIndexConv" />
+    <com:DesignWaterLevelConverter x:Key="DesignWaterLevelConverter" />
 </ResourceDictionary>

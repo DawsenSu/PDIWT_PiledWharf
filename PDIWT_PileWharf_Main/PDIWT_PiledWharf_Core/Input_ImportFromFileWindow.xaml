@@ -8,9 +8,10 @@
     xmlns:local="clr-namespace:PDIWT_PiledWharf_Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
-    Title="{x:Static loc:Resources.Import}"
+    Title="{x:Static loc:Resources.Draw}"
     Width="400"
-    Height="500"
+    Height="220"
+    Visibility="Visible"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
@@ -23,7 +24,7 @@
     <Grid x:Name="MainGridLayout">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <!--<RowDefinition Height="*" />-->
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <GroupBox Foreground="{StaticResource GroupBoxCaptionColor}" Header="{x:Static loc:Resources.PileBasicInformation}">
@@ -58,75 +59,59 @@
                         Grid.Row="0"
                         Grid.Column="1"
                         DisplayMemberPath="Value"
-                        ItemsSource="{Binding PileTypes, Mode=OneTime}"
-                        SelectedValue="{Binding SelectedPileType}"
+                        ItemsSource="{Binding PileGeoTypes, Mode=OneTime}"
+                        SelectedValue="{Binding SelectedPileGeoType}"
                         SelectedValuePath="Key" />
                     <Label
                         Grid.Row="1"
                         Grid.Column="0"
                         Content="{x:Static loc:Resources.PileWidth}" />
-                    <TextBox Grid.Row="1" Grid.Column="1">
-                        <Binding NotifyOnValidationError="True" Path="PileWidth">
-                            <Binding.ValidationRules>
-                                <StaticResource ResourceKey="RealRangeValidationRule" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox>
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Text="{Binding PileWidth}" />
                     <Label
                         Grid.Row="1"
                         Grid.Column="2"
-                        Content="mm" />
+                        Content="m" />
                     <Label
                         Grid.Row="2"
                         Grid.Column="0"
-                        Content="{x:Static loc:Resources.PileInsideDiameter}"
-                        Visibility="{Binding SelectedPileType, Converter={StaticResource TubePileStringOfListToVisibilityConverter}, Mode=OneWay}" />
+                        Content="{x:Static loc:Resources.PileInsideDiameter}" />
                     <TextBox
                         Grid.Row="2"
                         Grid.Column="1"
-                        Visibility="{Binding SelectedPileType, Converter={StaticResource TubePileStringOfListToVisibilityConverter}, Mode=OneWay}">
-                        <Binding NotifyOnValidationError="True" Path="PileInsideDiameter">
-                            <Binding.ValidationRules>
-                                <StaticResource ResourceKey="RealRangeValidationRule" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox>
+                        IsEnabled="{Binding SelectedPileGeoType, Converter={StaticResource TubePileToBooleanConverter}, Mode=OneWay}"
+                        Text="{Binding PileInsideDiameter}" />
                     <Label
                         Grid.Row="2"
                         Grid.Column="2"
-                        Content="mm"
-                        Visibility="{Binding SelectedPileType, Converter={StaticResource TubePileStringOfListToVisibilityConverter}, Mode=OneWay}" />
+                        Content="m" />
                     <Label
                         Grid.Row="3"
                         Grid.Column="0"
-                        Content="{x:Static loc:Resources.ConcreteCoreLength}"
-                        Visibility="{Binding SelectedPileType, Converter={StaticResource SteelPileStringOfListToVisibilityConverter}, Mode=OneWay}" />
+                        Content="{x:Static loc:Resources.ConcreteCoreLength}" />
                     <TextBox
                         Grid.Row="3"
                         Grid.Column="1"
-                        Visibility="{Binding SelectedPileType, Converter={StaticResource SteelPileStringOfListToVisibilityConverter}, Mode=OneWay}">
-                        <Binding NotifyOnValidationError="True" Path="ConcreteCoreLength">
-                            <Binding.ValidationRules>
-                                <StaticResource ResourceKey="RealRangeValidationRule" />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox>
+                        IsEnabled="{Binding SelectedPileGeoType, Mode=OneWay, Converter={StaticResource SteelPileToBooleanConverter}}"
+                        Text="{Binding ConcreteCoreLength}" />
                     <Label
                         Grid.Row="3"
                         Grid.Column="2"
-                        Content="mm"
-                        Visibility="{Binding SelectedPileType, Converter={StaticResource SteelPileStringOfListToVisibilityConverter}, Mode=OneWay}" />
+                        Content="m" />
                     <Label
                         Grid.Row="4"
                         Grid.Column="0"
-                        Content="{x:Static loc:Resources.PileTipSealType}"
-                        Visibility="{Binding SelectedPileType, Converter={StaticResource SteelPileStringOfListToVisibilityConverter}, Mode=OneWay}" />
+                        Content="{x:Static loc:Resources.PileTipSealType}" />
                     <ComboBox
                         Grid.Row="4"
                         Grid.Column="1"
-                        ItemsSource="{Binding PileTipSealTypes, Mode=OneTime}"
-                        SelectedItem="{Binding SelectedPileTipType}"
-                        Visibility="{Binding SelectedPileType, Converter={StaticResource SteelPileStringOfListToVisibilityConverter}, Mode=OneWay}" />
+                        DisplayMemberPath="Value"
+                        IsEnabled="{Binding SelectedPileGeoType, Mode=OneWay, Converter={StaticResource SteelPileToBooleanConverter}}"
+                        ItemsSource="{Binding PileTipTypes, Mode=OneTime}"
+                        SelectedValue="{Binding SelectedPileTipType}"
+                        SelectedValuePath="Key" />
                 </Grid>
                 <Label
                     Grid.Row="0"
@@ -138,11 +123,11 @@
                     Width="100"
                     Height="100"
                     Margin="1">
-                    <TextBlock
+                    <!--<TextBlock
                         Canvas.Left="0"
                         Canvas.Top="-3"
                         FontSize="10"
-                        Text="{Binding SelectedPileType}" />
+                        Text="{Binding SelectedPileType}" />-->
                     <Rectangle
                         Canvas.Left="10"
                         Canvas.Top="10"
@@ -152,7 +137,7 @@
                         Opacity="80"
                         Stroke="Black"
                         StrokeThickness="2"
-                        Visibility="{Binding SelectedPileType, Converter={StaticResource SquarePileStringOfListToVisibilityConverter}, Mode=OneWay}" />
+                        Visibility="{Binding SelectedPileGeoType, Converter={StaticResource SquarePileStringOfListToVisibilityConverter}, Mode=OneWay}" />
                     <Ellipse
                         Canvas.Left="10"
                         Canvas.Top="10"
@@ -161,7 +146,7 @@
                         Fill="#FFAAAAB0"
                         Stroke="Black"
                         StrokeThickness="2"
-                        Visibility="{Binding SelectedPileType, Converter={StaticResource RoundPileStringOfListToVisibilityConverter}, Mode=OneWay}" />
+                        Visibility="{Binding SelectedPileGeoType, Converter={StaticResource RoundPileStringOfListToVisibilityConverter}, Mode=OneWay}" />
                     <Path
                         Canvas.Left="10"
                         Canvas.Top="10"
@@ -169,7 +154,7 @@
                         Height="80"
                         Fill="#FFAAAAB0"
                         Stroke="Black"
-                        Visibility="{Binding SelectedPileType, Converter={StaticResource TubePileStringOfListToVisibilityConverter}, Mode=OneWay}">
+                        Visibility="{Binding SelectedPileGeoType, Converter={StaticResource TubePileStringOfListToVisibilityConverter}, Mode=OneWay}">
                         <Path.Data>
                             <CombinedGeometry GeometryCombineMode="Exclude">
                                 <CombinedGeometry.Geometry1>
@@ -190,7 +175,7 @@
                 </Canvas>
             </Grid>
         </GroupBox>
-        <GroupBox
+        <!--<GroupBox
             Grid.Row="1"
             Foreground="{StaticResource GroupBoxCaptionColor}"
             Header="{x:Static loc:Resources.PileSpatialInformation}">
@@ -256,7 +241,8 @@
                         </StackPanel>
                     </Grid>
                 </Grid>
-                <DataGrid
+
+        <DataGrid
                     x:Name="PileDataGrid"
                     Grid.Row="1"
                     AutoGenerateColumns="False"
@@ -270,21 +256,32 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
-        </GroupBox>
-        <StackPanel
-            Grid.Row="2"
-            HorizontalAlignment="Right"
-            Orientation="Horizontal">
+        </GroupBox>-->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
             <Button
-                Command="{Binding CreatePiles}"
-                CommandParameter="{Binding ElementName=MainGridLayout}"
-                Content="{x:Static loc:Resources.OK}"
+                Grid.Column="0"
+                Width="100"
+                Command="{Binding Draw}"
+                Content="{x:Static loc:Resources.Draw}"
                 Style="{StaticResource BasicButton}" />
             <Button
+                Grid.Column="1"
+                Width="100"
+                Command="{Binding Import}"
+                Content="{x:Static loc:Resources.ImportFromFile}"
+                Style="{StaticResource BasicButton}" />
+            <Button
+                Grid.Column="2"
+                Width="100"
                 Click="Button_Click"
                 Content="{x:Static loc:Resources.Cancel}"
                 Style="{StaticResource BasicButton}" />
-        </StackPanel>
+        </Grid>
     </Grid>
 
 </Window>

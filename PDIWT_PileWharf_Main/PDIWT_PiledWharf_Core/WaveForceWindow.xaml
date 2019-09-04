@@ -7,17 +7,17 @@
     xmlns:local="clr-namespace:PDIWT_PiledWharf_Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pdi="clr-namespace:PDIWT.Resources.CustomUserControl;assembly=PDIWT.Resources"
-    Title="WaveForceWindow"
+    Title="{x:Static loc:Resources.WaveForceWindowTitle}"
     Width="800"
     Height="591.333"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/Units.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/PDIWTl.Resources;Component/Localization/OtherModule/Units.xaml" />-->
                 <ResourceDictionary Source="Skins/MainSkin.xaml" />
                 <!--<ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/zh-CN.xaml" />-->
-                <ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/en-US.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/en-US.xaml" />-->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -28,7 +28,7 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <TabControl Grid.Row="0">
-            <TabItem Margin="-2,0,-2,-2" Header="{DynamicResource InputParameter}">
+            <TabItem Margin="-2,0,-2,-2" Header="{x:Static loc:Resources.InputParameters}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -43,82 +43,82 @@
                         Grid.Row="0"
                         Grid.Column="0"
                         Margin="2"
-                        Header="{DynamicResource PileParameters}">
+                        Header="{x:Static loc:Resources.PileParameters}">
                         <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="150" />
                                 </Grid.ColumnDefinitions>
-                                <Label x:Name="Label_Shape" Content="{DynamicResource Shape}" />
+                                <Label x:Name="Label_Shape" Content="{x:Static loc:Resources.PileType}" />
                                 <ComboBox
                                     x:Name="Combo_pileshape"
                                     Grid.Column="1"
-                                    DisplayMemberPath="Shape"
-                                    ItemsSource="{Binding ShapeCategory, Mode=OneTime}"
-                                    SelectedItem="{Binding SelectedShape}"
-                                    SelectedValuePath="Value" />
+                                    DisplayMemberPath="Value"
+                                    ItemsSource="{Binding PileGeoTypes, Mode=OneTime}"
+                                    SelectedValue="{Binding SelectedPileType}"
+                                    SelectedValuePath="Key" />
                             </Grid>
                             <pdi:LabelTextBox
                                 x:Name="LabelTextBox_PileDiameter"
-                                DisplayName="{DynamicResource PileDiameter}"
+                                DisplayName="{x:Static loc:Resources.PileDiameter}"
                                 Parameter="{Binding PileDiameter}"
-                                Unit="{DynamicResource Length}" />
+                                Unit="m" />
                             <pdi:LabelTextBox
-                                DisplayName="{DynamicResource PileCentraSpan}"
+                                DisplayName="{x:Static loc:Resources.PileCentraSpan}"
                                 Parameter="{Binding PileCentraSpan}"
-                                Unit="{DynamicResource Length}" />
+                                Unit="m" />
                         </StackPanel>
                     </GroupBox>
                     <GroupBox
                         Grid.Row="0"
                         Grid.Column="1"
                         Margin="2"
-                        Header="{DynamicResource WharfElevations}">
+                        Header="{x:Static loc:Resources.WharfElevation}">
                         <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
                             <pdi:LabelTextBox
-                                DisplayName="{DynamicResource TopElevation}"
+                                DisplayName="{x:Static loc:Resources.TopElevation}"
                                 Parameter="{Binding TopElevation}"
-                                Unit="{DynamicResource Length}" />
+                                Unit="m" />
                             <pdi:LabelTextBox
-                                DisplayName="{DynamicResource BottomElevation}"
+                                DisplayName="{x:Static loc:Resources.BottomElevation}"
                                 Parameter="{Binding BottomElevation}"
-                                Unit="{DynamicResource Length}" />
+                                Unit="m" />
                         </StackPanel>
                     </GroupBox>
                     <GroupBox
                         Grid.Row="1"
                         Grid.Column="0"
                         Margin="2"
-                        Header="{DynamicResource DesignWaterLevel}">
+                        Header="{x:Static loc:Resources.DesignWaterLevel}">
                         <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
                             <pdi:LabelTextBox
                                 x:Name="LabelTextBox_HAT"
-                                DisplayName="{DynamicResource HAT}"
+                                DisplayName="{x:Static loc:Resources.HAT}"
                                 Parameter="{Binding HAT}"
-                                Unit="{DynamicResource Length}" />
+                                Unit="m" />
                             <pdi:LabelTextBox
                                 x:Name="LabelTextBox_MHW"
-                                DisplayName="{DynamicResource MHW}"
+                                DisplayName="{x:Static loc:Resources.MHW}"
                                 Parameter="{Binding MHW}"
-                                Unit="{DynamicResource Length}" />
+                                Unit="m" />
                             <pdi:LabelTextBox
                                 x:Name="LabelTextBox_MLW"
-                                DisplayName="{DynamicResource MLW}"
+                                DisplayName="{x:Static loc:Resources.MLW}"
                                 Parameter="{Binding MLW}"
-                                Unit="{DynamicResource Length}" />
+                                Unit="m" />
                             <pdi:LabelTextBox
                                 x:Name="LabelTextBox_LAT"
-                                DisplayName="{DynamicResource LAT}"
+                                DisplayName="{x:Static loc:Resources.LAT}"
                                 Parameter="{Binding LAT}"
-                                Unit="{DynamicResource Length}" />
+                                Unit="m" />
                         </StackPanel>
                     </GroupBox>
                     <GroupBox
                         Grid.Row="1"
                         Grid.Column="1"
                         Margin="2"
-                        Header="{DynamicResource ForceCoeffs}">
+                        Header="{x:Static loc:Resources.ForceCoeffs}">
                         <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
                             <!--<pdi:LabelTextBox DisplayName="{DynamicResource VelocityForceCoeffCD}" Parameter="{Binding VelocityForceCoeffCD}" />
                             <pdi:LabelTextBox
@@ -127,13 +127,13 @@
                                 Parameter="{Binding VelocityForceCoeffCM}" />-->
                             <pdi:LabelTextBox
                                 x:Name="LabelTextBox_WaterDensity"
-                                DisplayName="{DynamicResource WaterWeight}"
+                                DisplayName="{x:Static loc:Resources.WaterWeight}"
                                 Parameter="{Binding WaterWeight}"
-                                Unit="{DynamicResource Weight}" />
+                                Unit="kN/m3" />
                             <pdi:LabelTextBox
-                                DisplayName="{DynamicResource GravitationalAcceleration}"
+                                DisplayName="{x:Static loc:Resources.GravitationalAcceleration}"
                                 Parameter="{Binding GravitationalAcceleration}"
-                                Unit="{DynamicResource Acceleration}" />
+                                Unit="m/s2" />
                         </StackPanel>
                     </GroupBox>
                     <DataGrid
@@ -148,9 +148,9 @@
                         ColumnWidth="*"
                         ItemsSource="{Binding DesignInputParameters}">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding DesignWaterLevel}" IsReadOnly="True">
+                            <DataGridTextColumn Binding="{Binding DesignWaterLevel, Converter={StaticResource DesignWaterLevelConverter}}" IsReadOnly="True">
                                 <DataGridTextColumn.Header>
-                                    <TextBlock Text="{DynamicResource DesignWaterLevel}" />
+                                    <TextBlock Text="{x:Static loc:Resources.DesignWaterLevel}" />
                                 </DataGridTextColumn.Header>
                             </DataGridTextColumn>
                             <DataGridTextColumn Binding="{Binding H1}">
@@ -166,19 +166,19 @@
                             </DataGridTextColumn>
                             <DataGridTextColumn Binding="{Binding WaterDepth, Mode=OneWay, StringFormat={}{0:F2}}" IsReadOnly="True">
                                 <DataGridTextColumn.Header>
-                                    <TextBlock Text="{DynamicResource WaterDepth}" />
+                                    <TextBlock Text="{x:Static loc:Resources.WaterDepth}" />
                                 </DataGridTextColumn.Header>
                             </DataGridTextColumn>
                             <DataGridTextColumn Binding="{Binding WaveLength, Mode=OneWay, StringFormat={}{0:F2}}" IsReadOnly="True">
                                 <DataGridTextColumn.Header>
-                                    <TextBlock Text="{DynamicResource WaveLength}" />
+                                    <TextBlock Text="{x:Static loc:Resources.WaveLength}" />
                                 </DataGridTextColumn.Header>
                             </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </TabItem>
-            <TabItem Header="{DynamicResource CalculatedParameter}">
+            <TabItem Header="{x:Static loc:Resources.CalculatedParameters}">
                 <DataGrid
                     Margin="3"
                     AutoGenerateColumns="False"
@@ -193,9 +193,9 @@
                     ItemsSource="{Binding CalculatedParameters}"
                     RowHeight="50">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding DesignWaterLevel}" Foreground="Red">
+                        <DataGridTextColumn Binding="{Binding DesignWaterLevel, Converter={StaticResource DesignWaterLevelConverter}}" Foreground="Red">
                             <DataGridTextColumn.Header>
-                                <TextBlock Text="{DynamicResource DesignWaterLevel}" />
+                                <TextBlock Text="{x:Static loc:Resources.DesignWaterLevel}" />
                             </DataGridTextColumn.Header>
                         </DataGridTextColumn>
                         <DataGridTextColumn
@@ -278,7 +278,7 @@
         <GroupBox
             Grid.Row="1"
             Margin="2"
-            Header="{DynamicResource CalculatedResult}">
+            Header="{x:Static loc:Resources.CalculatedResults}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -313,7 +313,7 @@
                 <Label
                     Grid.Row="1"
                     Grid.Column="0"
-                    Content="{DynamicResource HAT}" />
+                    Content="{x:Static loc:Resources.HAT}" />
                 <TextBox
                     Grid.Row="1"
                     Grid.Column="1"
@@ -337,7 +337,7 @@
                 <Label
                     Grid.Row="2"
                     Grid.Column="0"
-                    Content="{DynamicResource MHW}" />
+                    Content="{x:Static loc:Resources.MHW}" />
                 <TextBox
                     Grid.Row="2"
                     Grid.Column="1"
@@ -361,7 +361,7 @@
                 <Label
                     Grid.Row="3"
                     Grid.Column="0"
-                    Content="{DynamicResource MLW}" />
+                    Content="{x:Static loc:Resources.MLW}" />
                 <TextBox
                     Grid.Row="3"
                     Grid.Column="1"
@@ -385,7 +385,7 @@
                 <Label
                     Grid.Row="4"
                     Grid.Column="0"
-                    Content="{DynamicResource LAT}" />
+                    Content="{x:Static loc:Resources.LAT}" />
                 <TextBox
                     Grid.Row="4"
                     Grid.Column="1"
@@ -419,17 +419,17 @@
             <Button
                 Grid.Column="0"
                 Command="{Binding LoadParameters}"
-                Content="{DynamicResource LoadParameter}"
+                Content="{x:Static loc:Resources.LoadFromModel}"
                 Style="{StaticResource BasicButton}" />
             <Button
                 Grid.Column="2"
                 Command="{Binding Calculate}"
-                Content="{DynamicResource Calculate}"
+                Content="{x:Static loc:Resources.Calculate}"
                 Style="{StaticResource BasicButton}" />
             <Button
                 Grid.Column="3"
                 Command="{Binding GenerateNote}"
-                Content="{DynamicResource GenerateNote}"
+                Content="{x:Static loc:Resources.GenerateCalculationNote}"
                 Style="{StaticResource BasicButton}" />
         </Grid>
     </Grid>

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BG = Bentley.GeometryNET;
 
 namespace PDIWT.Formulas.Tests
 {
@@ -113,5 +114,17 @@ namespace PDIWT.Formulas.Tests
             Assert.AreEqual(465.552, WaveForce.CalculatePu(10.25, _H1, _diameter, 0, _wavelength, _Waterdepth, f2, f0, omgat),1);
             Assert.AreEqual(840.08, WaveForce.CalculateMu(10.25, _H1, _diameter, 0, _wavelength, _Waterdepth, f3, f1, omgat),1);
         }
+
+        [Test]
+        public void TestVector()
+        {
+            BG.DVector3d _dVector3d = BG.DVector3d.FromXYZ(0, 0, -1);
+            BG.DVector3d _pileVector3d = BG.DVector3d.FromXYZ(1, 0, 0);
+            BG.Angle _angle = _pileVector3d.AngleTo(_dVector3d);
+            BG.Angle _singedangle = _pileVector3d.SignedAngleTo(_dVector3d, BG.DVector3d.FromXYZ(1, -1, 0));
+            Assert.AreEqual(90, _angle.Degrees);
+            Assert.AreEqual(-90, _singedangle.Degrees);
+        }
+
     }
 }

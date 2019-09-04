@@ -104,6 +104,9 @@
     <Resource Include="Images\Icons\Delete.ico" />
     <Resource Include="Images\Icons\New.ico" />
     <Resource Include="Images\Icons\AttachEC.ico" />
+    <Resource Include="Images\Icons\Check.ico" />
+    <Resource Include="Images\Icons\PileLength.ico" />
+    <Resource Include="Images\Icons\Linechart.ico" />
     <Content Include="Images\Icons\Waterway.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

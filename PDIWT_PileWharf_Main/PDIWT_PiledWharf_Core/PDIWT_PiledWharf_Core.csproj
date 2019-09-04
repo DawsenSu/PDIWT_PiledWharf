@@ -112,7 +112,7 @@
     </Reference>
     <Reference Include="Bentley.Interop.MicroStationDGN">
       <HintPath>..\..\MicrostationAssemblies\Bentley.Interop.MicroStationDGN.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="Bentley.MicroStation">
       <HintPath>..\..\MicrostationAssemblies\Bentley.MicroStation.dll</HintPath>
@@ -162,6 +162,12 @@
     </Reference>
     <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.3.0.19032, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.3.0.0\lib\net45\GalaSoft.MvvmLight.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="LiveCharts, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiveCharts.0.9.7\lib\net45\LiveCharts.dll</HintPath>
+    </Reference>
+    <Reference Include="LiveCharts.Wpf, Version=0.9.7.0, Culture=neutral, PublicKeyToken=0bc1f845d1ebb8df, processorArchitecture=MSIL">
+      <HintPath>..\packages\LiveCharts.Wpf.0.9.7\lib\net45\LiveCharts.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="MathNet.Numerics, Version=4.8.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MathNet.Numerics.4.8.1\lib\net461\MathNet.Numerics.dll</HintPath>
@@ -232,6 +238,8 @@
       <DependentUpon>BuildUpSoilLayersWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\Converters.cs" />
+    <Compile Include="Common\ExcelFileReader.cs" />
+    <Compile Include="Common\Marshal.cs" />
     <Compile Include="Common\PDIWT.Formula.cs" />
     <Compile Include="Common\Services.cs" />
     <Compile Include="CurrentForceWindow.xaml.cs">
@@ -240,19 +248,37 @@
     <Compile Include="Input_ImportFromFileWindow.xaml.cs">
       <DependentUpon>Input_ImportFromFileWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Model\IPile.cs" />
+    <Compile Include="Model\PDIWT_Eums.cs" />
+    <Compile Include="Model\PDIWT_Joint.cs" />
+    <Compile Include="Model\PDIWT_Pile.cs" />
+    <Compile Include="Model\PDIWT_PileFrame.cs" />
+    <Compile Include="Model\PDIWT_Settings.cs" />
+    <Compile Include="Model\PDIWT_SoilLayerCollection.cs" />
+    <Compile Include="Model\PDIWT_Wharf.cs" />
+    <Compile Include="Model\PDWIT_PileSoilLayerIntersectionInfo.cs" />
+    <Compile Include="Model\PDIWT_BearingCapacity_PileInfo.cs" />
+    <Compile Include="Model\PDIWT_SoilLayer.cs" />
+    <Compile Include="Model\SoilLayerInfo.cs" />
     <Compile Include="Model\Tools\AttachBCInstanceTool.cs" />
     <Compile Include="AttachBCInstanceUserControl.xaml.cs">
       <DependentUpon>AttachBCInstanceUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Tools\LoadPileParametersTool.cs" />
+    <Compile Include="Model\VirtualPile.cs" />
     <Compile Include="PickUpSoilLayersFromLibWindow.xaml.cs">
       <DependentUpon>PickUpSoilLayersFromLibWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PileLengthCalculatorWindow.xaml.cs">
+      <DependentUpon>PileLengthCalculatorWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PileLengthCurveWindow.xaml.cs">
+      <DependentUpon>PileLengthCurveWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="PilePlacementUserControl.xaml.cs">
       <DependentUpon>PilePlacementUserControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\HasErrorHelper.cs" />
-    <Compile Include="Model\PileType.cs" />
     <Compile Include="Model\PileWharfStaadGenerator.cs" />
     <Compile Include="Model\Tools\PilePlacementTool.cs" />
     <Compile Include="Model\WordReportGenerator.cs" />
@@ -265,6 +291,8 @@
     <Compile Include="ViewModel\CurrentForceViewModel.cs" />
     <Compile Include="ViewModel\Input_ImportFromFileViewModel.cs" />
     <Compile Include="ViewModel\PickUpSoilLayersFromLibViewModel.cs" />
+    <Compile Include="ViewModel\PileLengthCalculatorViewModel.cs" />
+    <Compile Include="ViewModel\PileLengthCurveViewModel.cs" />
     <Compile Include="ViewModel\PilePlacementViewModel.cs" />
     <Compile Include="ViewModel\ReportGeneratorViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
@@ -294,6 +322,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PickUpSoilLayersFromLibWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PileLengthCalculatorWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PileLengthCurveWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -331,6 +367,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Z_Piled_WharfCD.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

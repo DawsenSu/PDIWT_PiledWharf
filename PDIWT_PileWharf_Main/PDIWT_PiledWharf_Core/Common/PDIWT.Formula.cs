@@ -11,6 +11,8 @@ using System.Data.SQLite;
 using PDIWT_PiledWharf_Core.ViewModel;
 
 using BD = Bentley.DgnPlatformNET;
+
+using PDIWT_PiledWharf_Core_Cpp;
 namespace PDIWT.Formulas
 {
     /// <summary>
@@ -18,20 +20,20 @@ namespace PDIWT.Formulas
     /// </summary>
     public static class AxialBearingCapacity
     {
-        public static double CalculatePilePrimeter(ShapeInfo shape, double daimeter)
+        public static double CalculatePilePrimeter(PileTypeManaged pileType, double daimeter)
         {
-            if (shape.Value == 1)
-                return Math.PI * daimeter;
-            else
+            if (PileTypeManaged.SqaurePile == pileType)
                 return 4 * daimeter;
+            else
+                return Math.PI * daimeter;
         }
 
-        public static double CalculatePileEndOutsideArea(ShapeInfo shape, double outerdiameter)
+        public static double CalculatePileEndOutsideArea(PileTypeManaged pileType, double outerdiameter)
         {
-            if (shape.Value == 1)
-                return Math.PI * Math.Pow(outerdiameter, 2) / 4;
-            else
+            if (PileTypeManaged.SqaurePile == pileType)
                 return Math.Pow(outerdiameter, 2);
+            else
+                return Math.PI * Math.Pow(outerdiameter, 2) / 4;
         }
 
         public static double CalculatePileSelfWeight(
@@ -196,7 +198,7 @@ namespace PDIWT.Formulas
         /// <param name="A"></param>
         /// <param name="yita">When it comes to clause 4.2.8.1 yita set to 1 as default</param>
         /// <returns></returns>
-        public static double DrivenPileBearingCapacity(
+        public static double CalculateDrivenPileBearingCapacity(
             double gammar,
             List<double> qfi,
             List<double> li,
@@ -277,20 +279,20 @@ namespace PDIWT.Formulas
             return _result;
         }
 
-        public static double CalculatedHorizontalAffectCoeff(double B_D, ShapeInfo shape)
+        public static double CalculatedHorizontalAffectCoeff(double B_D, PileTypeManaged pileGeoType)
         {
             double _result = 0;
-            if (shape.Value == 1)
+            if (pileGeoType == PileTypeManaged.SqaurePile)
             {
-                double[] _b_d = { 3, 7, 10, 15 };
-                double[] _m2 = { 1.83, 1.25, 1.15, 1 };
+                double[] _b_d = { 4, 6, 8, 10, 12 };
+                double[] _m2 = { 1.21, 1.08, 1.06, 1.03, 1 };
                 var _linearSolver = LinearSpline.InterpolateSorted(_b_d, _m2);
                 _result = _linearSolver.Interpolate(B_D);
             }
             else
             {
-                double[] _b_d = { 4, 6, 8, 10, 12 };
-                double[] _m2 = { 1.21, 1.08, 1.06, 1.03, 1 };
+                double[] _b_d = { 3, 7, 10, 15 };
+                double[] _m2 = { 1.83, 1.25, 1.15, 1 };
                 var _linearSolver = LinearSpline.InterpolateSorted(_b_d, _m2);
                 _result = _linearSolver.Interpolate(B_D);
             }
@@ -300,10 +302,10 @@ namespace PDIWT.Formulas
             return _result;
         }
 
-        public static double CalculateIncliningAffectCoeff(double alpha, ShapeInfo shape)
+        public static double CalculateIncliningAffectCoeff(double alpha, PileTypeManaged pileGeoType)
         {
             double _result = 1;
-            if (shape.Value == 2)
+            if (pileGeoType == PileTypeManaged.SqaurePile)
             {
                 double[] _alpha = { 0, 10, 20, 30, 45 };
                 double[] _m3 = { 1, 0.67, 0.67, 0.71, 0.75 };
@@ -728,26 +730,26 @@ namespace PDIWT.Formulas
                 _result = 1;
             return _result;
         }
-        public static double CalculateCM(double Diameter, double L,ShapeInfo shapeInfo)
+        public static double CalculateCM(double Diameter, double L,PileTypeManaged pileType)
         {
             if(Diameter / L <= 0.2)
             {
-                if (shapeInfo.Value == 1)
-                    return 2.0;
-                else
+                if (pileType == PileTypeManaged.SqaurePile)
                     return 1.5;
+                else
+                    return 2.0;
             }
             else
             {
                 return CalculateInterploateFromDB(Diameter / L, "CM");
             }
         }
-        public static double CalculateCD(ShapeInfo shapeInfo)
+        public static double CalculateCD(PileTypeManaged pileType)
         {
-            if (shapeInfo.Value == 1)
-                return 1.2;
-            else
+            if (pileType == PileTypeManaged.SqaurePile)
                 return 2.0;
+            else
+                return 1.2;
         }
     }
 }

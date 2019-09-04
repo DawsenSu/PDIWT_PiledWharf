@@ -48,7 +48,10 @@
             Grid.Column="0"
             Content="{x:Static loc:Resources.PileWidth}" />
         <TextBox Grid.Row="1" Grid.Column="1">
-            <Binding NotifyOnValidationError="True" Path="PileWidth">
+            <Binding
+                NotifyOnValidationError="True"
+                Path="PileWidth"
+                UpdateSourceTrigger="PropertyChanged">
                 <Binding.ValidationRules>
                     <StaticResource ResourceKey="RealRangeValidationRule" />
                 </Binding.ValidationRules>
@@ -66,7 +69,7 @@
         <TextBox
             Grid.Row="2"
             Grid.Column="1"
-            Visibility="{Binding SelectedPileType, Converter={StaticResource TubePileStringOfListToVisibilityConverter}, Mode=OneWay}">
+            Visibility="{Binding SelectedPileType, Converter={StaticResource TubePileStringOfListToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
             <Binding NotifyOnValidationError="True" Path="PileInsideDiameter">
                 <Binding.ValidationRules>
                     <StaticResource ResourceKey="RealRangeValidationRule" />
@@ -85,7 +88,7 @@
         <TextBox
             Grid.Row="3"
             Grid.Column="1"
-            Visibility="{Binding SelectedPileType, Converter={StaticResource SteelPileStringOfListToVisibilityConverter}, Mode=OneWay}">
+            Visibility="{Binding SelectedPileType, Converter={StaticResource SteelPileStringOfListToVisibilityConverter}, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
             <Binding NotifyOnValidationError="True" Path="ConcreteCoreLength">
                 <Binding.ValidationRules>
                     <StaticResource ResourceKey="RealRangeValidationRule" />

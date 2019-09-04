@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using PDIWT_PiledWharf_Core;
 namespace PDIWT_PiledWharf_Main
 {
     public class KeyinCommands
@@ -22,8 +23,8 @@ namespace PDIWT_PiledWharf_Main
         }
         public static void Input_PilePlacement(string unparsed)
         {
-            var _pilePlacementTool = new PDIWT_PiledWharf_Core.Model.Tools.PilePlacementTool(Program.Addin);
-            _pilePlacementTool.InstallNewInstance();
+            //var _pilePlacementTool = new PDIWT_PiledWharf_Core.Model.Tools.PilePlacementTool(Program.Addin);
+            //_pilePlacementTool.InstallNewInstance();
         }
         public static void Input_AttachBCECInstance(string unparsed)
         {
@@ -35,9 +36,15 @@ namespace PDIWT_PiledWharf_Main
             //Bentley.MstnPlatformNET.MessageCenter.Instance.StatusMessage = "Input Process CalcuateBearingCapacity";
             PDIWT_PiledWharf_Core.BearingCapacityWindow.ShowWindow(Program.Addin);
         }
+
+        public static void Process_CalculatePileLengthBasedOnBearingCapacity(string unparsed)
+        {
+            PileLengthCalculatorWindow.ShowWindow(Program.Addin);
+        }
+
         public static void Process_CalculateCurrentForce(string unparsed)
         {
-            PDIWT_PiledWharf_Core.CurrentForceWindow.ShowWindow(Program.Addin);
+            CurrentForceWindow.ShowWindow(Program.Addin);
         }
 
         public static void Process_CalculateWaveForce(string unparsed)

@@ -11,6 +11,7 @@
     Title="{x:Static loc:Resources.BuildUpSoilLayerLib}"
     Width="800"
     Height="450"
+    WindowStyle="ToolWindow"
     mc:Ignorable="d">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
@@ -143,14 +144,21 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Button
+                Grid.Column="0"
+                Command="{Binding LoadFromModel}"
+                Content="{x:Static loc:Resources.LoadFromModel}"
+                Style="{StaticResource BasicButton}" />
+            <Button
                 Grid.Column="2"
                 Command="{Binding Confirm}"
                 Content="{x:Static loc:Resources.OK}"
+                IsDefault="True"
                 Style="{StaticResource BasicButton}" />
             <Button
                 Grid.Column="3"
                 Command="{Binding Cancel}"
                 Content="{x:Static loc:Resources.Cancel}"
+                IsCancel="True"
                 Style="{StaticResource BasicButton}" />
         </Grid>
     </Grid>

@@ -14,7 +14,8 @@
     xmlns:vm="clr-namespace:PDIWT_PiledWharf_Core.ViewModel"
     Title="{x:Static loc:Resources.BearingCapacityWindow}"
     Width="816.5"
-    Height="470"
+    Height="530"
+    Visibility="Visible"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
@@ -24,6 +25,7 @@
                 <ResourceDictionary>
                     <com:PileTypesToDisplayNameConverter x:Key="BearingCapacityPileTypesConverter" />
                     <con:ReferenceToVisibilityConverter x:Key="ReferenceToVisiblityConverter" />
+                    <con:BoolenToVisibilityConverter x:Key="IsCalculatedToCheckPicConverter" />
                     <!--  Convert to control the visibility of kinds of controls  -->
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
@@ -31,8 +33,8 @@
     </Window.Resources>
     <Grid x:Name="MainGridLayout" Margin="2">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -41,11 +43,12 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <GroupBox
-            Grid.Row="1"
+            Grid.Row="0"
+            Grid.RowSpan="2"
             Grid.Column="0"
             Header="{x:Static loc:Resources.PileList}">
             <ListBox
-                MinWidth="120"
+                Width="200"
                 ContextMenu="{DynamicResource GridAndListContextMenu}"
                 IsSynchronizedWithCurrentItem="True"
                 ItemsSource="{Binding PileInfos}"
@@ -68,8 +71,22 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
                                 <TextBlock FontWeight="Bold" Text="{Binding PileCode, Mode=OneWay}" />
-                                <TextBlock Grid.Row="1" Text="{Binding SelectedBearingCapacityPileType, Converter={StaticResource BearingCapacityPileTypesConverter}, Mode=OneWay}" />
+                                <Image
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Height="8"
+                                    Source="pack://application:,,,/PDIWT.Resources;Component/Images/Icons/Check.ico"
+                                    Visibility="{Binding IsCalculated, Mode=OneWay, Converter={StaticResource IsCalculatedToCheckPicConverter}}" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    Text="{Binding SelectedBearingCapacityPileType, Converter={StaticResource BearingCapacityPileTypesConverter}, Mode=OneWay}" />
+
                             </Grid>
                         </Border>
                     </DataTemplate>
@@ -93,7 +110,8 @@
         </GroupBox>
         <Grid
             x:Name="Grid_ScreenPanel"
-            Grid.Row="1"
+            Grid.Row="0"
+            Grid.RowSpan="2"
             Grid.Column="1"
             Panel.ZIndex="1"
             Background="Wheat"
@@ -107,7 +125,7 @@
                 Text="{x:Static loc:Resources.Note_PSP}" />
         </Grid>
         <GroupBox
-            Grid.Row="1"
+            Grid.Row="0"
             Grid.Column="1"
             Header="{x:Static loc:Resources.PileParameters}">
             <TabControl>
@@ -215,8 +233,7 @@
                                     Grid.Column="0"
                                     DisplayName="{x:Static loc:Resources.PileSkewness}"
                                     IsEnabled="{Binding IsChecked, ElementName=CheckBox_skewness, Converter={StaticResource IsCheckedToReversedIsEnableConverter}}"
-                                    Parameter="{Binding PileSkewness, StringFormat={}{0:F2}}"
-                                    Unit="m" />
+                                    Parameter="{Binding PileSkewness, StringFormat={}{0:F2}}" />
                                 <pdi:LabelTextBox
                                     x:Name="LabelTextBox_PileWidth"
                                     Grid.Row="1"
@@ -258,7 +275,8 @@
                                     Grid.Row="0"
                                     Grid.Column="0"
                                     DisplayName="{x:Static loc:Resources.PartialCoefficient}"
-                                    Parameter="{Binding PartialCoeff, StringFormat={}{0:F2}}" />
+                                    Parameter="{Binding PartialCoeff, StringFormat={}{0:F2}}"
+                                    ToolTip="{x:Static loc:Resources.Note_PartialCoeff}" />
                                 <pdi:LabelTextBox
                                     Grid.Row="0"
                                     Grid.Column="1"
@@ -675,10 +693,9 @@
                 </TabItem>
             </TabControl>
         </GroupBox>
-
         <GroupBox
-            Grid.Row="2"
-            Grid.ColumnSpan="2"
+            Grid.Row="1"
+            Grid.Column="1"
             DataContext="{Binding PileInfos}"
             Header="{x:Static loc:Resources.CalculatedResults}">
             <Grid>
@@ -701,7 +718,7 @@
             </Grid>
         </GroupBox>
         <Grid
-            Grid.Row="3"
+            Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
@@ -713,8 +730,8 @@
             </Grid.ColumnDefinitions>
             <Button
                 Grid.Column="0"
-                Command="{Binding LoadParameters}"
-                Content="{x:Static loc:Resources.LoadParameters}"
+                Command="{Binding LoadFromModel}"
+                Content="{x:Static loc:Resources.LoadFromModel}"
                 Style="{StaticResource BasicButton}" />
             <Button
                 Grid.Column="1"

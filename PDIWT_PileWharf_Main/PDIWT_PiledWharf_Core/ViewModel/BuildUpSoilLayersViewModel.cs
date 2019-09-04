@@ -16,14 +16,18 @@ using System.Windows.Data;
 using System.Globalization;
 using System.Windows.Controls;
 using System.Collections.Specialized;
+
+using BDE = Bentley.DgnPlatformNET.Elements;
+using BD = Bentley.DgnPlatformNET;
+
 namespace PDIWT_PiledWharf_Core.ViewModel
 {
+    using Model;
     public class BuildUpSoilLayersViewModel : ViewModelBase
     {
         public BuildUpSoilLayersViewModel()
         {
             SoilLayerInfos = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>();
-
         }
 
         /// <summary>
@@ -106,10 +110,10 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         {
             SoilLayerInfos = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>(SoilLayerInfos.OrderBy(e => e.SoilLayerNumber));
             // Bearing Capacity ViewModel Register it.
-            Messenger.Default.Send(
-                new NotificationMessage<ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>>(SoilLayerInfos, "Confirm"), "BuildupSoilLayerLib");
+            //Messenger.Default.Send(
+            //    new NotificationMessage<ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>>(SoilLayerInfos, "Confirm"), "BuildupSoilLayerLib");
             //It's own view Register it.
-            Messenger.Default.Send(new NotificationMessage("close the Window"), "BuildUpWindowConfirmClicked");
+            Messenger.Default.Send(new NotificationMessage(PDIWT.Resources.Localization.MainModule.Resources.OK), "BuildUpWindowButtonClicked");
         }
 
         private RelayCommand _cancel;
@@ -125,7 +129,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                     ?? (_cancel = new RelayCommand(
                     () =>
                     {
-                        Messenger.Default.Send(new NotificationMessage("close the Window"), "BuildUpWindowConfirmClicked");
+                        Messenger.Default.Send(new NotificationMessage(PDIWT.Resources.Localization.MainModule.Resources.Cancel), "BuildUpWindowButtonClicked");
                     },
                     () => _isReadyForAction));
             }
@@ -205,6 +209,76 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                     },
                     () => SelectedSoilLayer != null));
             }
+        }
+
+        private RelayCommand _loadFromModel;
+
+        /// <summary>
+        /// Gets the LoadFromModel.
+        /// </summary>
+        public RelayCommand LoadFromModel
+        {
+            get
+            {
+                return _loadFromModel
+                    ?? (_loadFromModel = new RelayCommand(ExecuteLoadFromModel));
+            }
+        }
+
+        private void ExecuteLoadFromModel()
+        {
+            var _mc = Bentley.MstnPlatformNET.MessageCenter.Instance;
+            try
+            {
+                SoilLayerCollection _soilLayer = SoilLayerCollection.ObtainFromModel(Bentley.MstnPlatformNET.Session.Instance.GetActiveDgnModel());
+
+                SoilLayerInfos.Clear();
+                foreach (var _layer in _soilLayer)
+                {
+                    var _soilLayerInfo = new PDIWT_BearingCapacity_SoilLayerInfo()
+                    {
+                        SoilLayerNumber = _layer.SoilLayerNumber,
+                        SoilLayerName = _layer.SoilLayerName,
+                        Betasi = _layer.Betasi,
+                        Psii = _layer.Psii,
+                        SideFrictionStandardValue = _layer.SideFrictionStandardValue,
+                        Betap = _layer.Betap,
+                        Psip = _layer.Psip,
+                        EndResistanceStandardValue = _layer.EndResistanceStandardValue
+                    };
+                    SoilLayerInfos.Add(_soilLayerInfo);
+                }
+                _mc.ShowMessage(Bentley.MstnPlatformNET.MessageType.Info, "Load successfully from model", "", Bentley.MstnPlatformNET.MessageAlert.None);
+            }
+            catch (Exception e)
+            {
+                _mc.ShowErrorMessage("Can't load soil layers information from model", e.ToString(), false);
+            }
+
+            //List<Tuple<BDE.MeshHeaderElement, Dictionary<string, object>>> _tuples = new List<Tuple<BDE.MeshHeaderElement, Dictionary<string, object>>>();
+            //if (BD.StatusInt.Success == PDIWT_SoilLayerInfoReader.ObtainSoilLayerInfoFromModel(out _tuples))
+            //{
+            //    SoilLayerInfos.Clear();
+            //    foreach (var _item in _tuples)
+            //    {
+            //        var _soilLayerInfo = new PDIWT_BearingCapacity_SoilLayerInfo();
+            //        _soilLayerInfo.SoilLayerNumber = _item.Item2["LayerNumber"].ToString();
+            //        _soilLayerInfo.SoilLayerName = _item.Item2["LayerName"].ToString();
+            //        _soilLayerInfo.Betasi = double.Parse(_item.Item2["Betasi"].ToString());
+            //        _soilLayerInfo.Psii = double.Parse(_item.Item2["Psisi"].ToString());
+            //        _soilLayerInfo.SideFrictionStandardValue = double.Parse(_item.Item2["qfi"].ToString());
+            //        _soilLayerInfo.Betap = double.Parse(_item.Item2["Betap"].ToString());
+            //        _soilLayerInfo.Psip = double.Parse(_item.Item2["Psip"].ToString());
+            //        _soilLayerInfo.EndResistanceStandardValue = double.Parse(_item.Item2["qr"].ToString());
+            //        SoilLayerInfos.Add(_soilLayerInfo);
+            //    }
+            //    //SoilLayerInfos = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>(SoilLayerInfos.OrderByDescending(layer => layer.SoilLayerNumber));
+            //    _mc.ShowMessage(Bentley.MstnPlatformNET.MessageType.Info, "Load successfully from model", "", Bentley.MstnPlatformNET.MessageAlert.None);
+            //}
+            //else
+            //{
+                
+            //}
         }
     }
 }

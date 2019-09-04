@@ -16,6 +16,8 @@ using System.Collections.ObjectModel;
 using BD = Bentley.DgnPlatformNET;
 using BM = Bentley.MstnPlatformNET;
 using System.Windows;
+using PDIWT_PiledWharf_Core_Cpp;
+
 namespace PDIWT_PiledWharf_Core.ViewModel
 {
     using Model.Tools;
@@ -26,17 +28,19 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         {
 
             // Register Broadcast message 
-            Messenger.Default.Register<PropertyChangedMessage<ShapeInfo>>(this, SelectedShapeChanged);
             Messenger.Default.Register<NotificationMessage<PDIWT_WaveForcePileInfo>>(this, LoadParametersFromPileEntity);
             //Init Data
-            ShapeCategory = new List<ShapeInfo>
-                {
-                    new ShapeInfo() { Shape = Resources.SquarePile, Value =2 },
-                    new ShapeInfo() { Shape = Resources.TubePile, Value =1 },
-                    new ShapeInfo() { Shape = Resources.PHCTubePile, Value =1 },
-                    new ShapeInfo() { Shape = Resources.SteelTubePile, Value =1 }
-                };
-            SelectedShape = ShapeCategory[0];
+            //ShapeCategory = new List<ShapeInfo>
+            //    {
+            //        new ShapeInfo() { Shape = Resources.SquarePile, Value =2 },
+            //        new ShapeInfo() { Shape = Resources.TubePile, Value =1 },
+            //        new ShapeInfo() { Shape = Resources.PHCTubePile, Value =1 },
+            //        new ShapeInfo() { Shape = Resources.SteelTubePile, Value =1 }
+            //    };
+            //SelectedShape = ShapeCategory[0];
+            PileGeoTypes = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<PileTypeManaged>();
+            SelectedPileType = PileTypeManaged.SqaurePile;
+
             PileDiameter = 11.5;
             PileCentraSpan = 26;
             TopElevation = 10;
@@ -47,6 +51,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             LAT = -0.83;
             WaterWeight = 10.25;
             GravitationalAcceleration = 9.8;
+
             DesignInputParameters = new ObservableCollection<PDIWT_WaveForce_DesignInputParamters>
             {
                 new PDIWT_WaveForce_DesignInputParamters(){DesignWaterLevel = DesignWaterLevelCondition.HAT, H1=4.2,H13=3.1,T=11.2},
@@ -69,128 +74,179 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                 new PDIWT_WaveForce_Results(){DesignWaterLevel = DesignWaterLevelCondition.LAT},
             };
 
-
-        }
-
-
-
-        private List<ShapeInfo> _shapeCategory;
-        /// <summary>
-        /// Property Description
-        /// </summary>
-        public List<ShapeInfo> ShapeCategory
-        {
-            get { return _shapeCategory; }
-            set { Set(ref _shapeCategory, value); }
-        }
-
-        private ShapeInfo _selectedShape;
-        /// <summary>
-        /// Property Description
-        /// </summary>
-        public ShapeInfo SelectedShape
-        {
-            get { return _selectedShape; }
-            set { Set(ref _selectedShape, value,true); }
-        }
-        
-        private void SelectedShapeChanged(PropertyChangedMessage<ShapeInfo> shapePropertyChanged)
-        {
-            if(shapePropertyChanged.PropertyName == "SelectedShape" )
+            // change the controls foreground color
+            PropertyChanged += (s, e) =>
             {
-                if (shapePropertyChanged.NewValue.Value == 1)
-                {
-                    VelocityForceCoeffCD = 1.2;
-                    VelocityForceCoeffCM = 2.0;
-                }
-                else
-                {
-                    VelocityForceCoeffCD = 2.0;
-                    VelocityForceCoeffCM = 2.2;
-                }
+                Messenger.Default.Send(new NotificationMessage<bool>(false, "Changed!"), "WaveForceForegroundChange");
+                _isCalculated = false;
+            };
+        }
+
+        private bool _isCalculated = false;
+        private readonly BM.MessageCenter _mc = BM.MessageCenter.Instance;
+
+        //********************* Input parameters *****************//
+        private Dictionary<PileTypeManaged, string> _pileGeoTypes;
+        /// <summary>
+        /// Geo Type
+        /// </summary>
+        public Dictionary<PileTypeManaged, string> PileGeoTypes
+        {
+            get { return _pileGeoTypes; }
+            set { Set(ref _pileGeoTypes, value); }
+        }
+
+        private PileTypeManaged _selectedPileType;
+        /// <summary>
+        /// selected pile Type
+        /// </summary>
+        public PileTypeManaged SelectedPileType
+        {
+            get { return _selectedPileType; }
+            set
+            {
+                Set(ref _selectedPileType, value);
             }
         }
+
+        //private List<ShapeInfo> _shapeCategory;
+        ///// <summary>
+        ///// Property Description
+        ///// </summary>
+        //public List<ShapeInfo> ShapeCategory
+        //{
+        //    get { return _shapeCategory; }
+        //    set { Set(ref _shapeCategory, value); }
+        //}
+
+        //private ShapeInfo _selectedShape;
+        ///// <summary>
+        ///// Property Description
+        ///// </summary>
+        //public ShapeInfo SelectedShape
+        //{
+        //    get { return _selectedShape; }
+        //    set { Set(ref _selectedShape, value,true); }
+        //}
+
 
 
         private double _pileDiameter;
         /// <summary>
+        /// unit: m
         /// Property Description
         /// </summary>
         public double PileDiameter
         {
             get { return _pileDiameter; }
-            set { Set(ref _pileDiameter, value); }
+            set
+            {
+                if (value < 0)
+                    Set(ref _pileDiameter, 0);
+                else
+                    Set(ref _pileDiameter, value);
+            }
         }
 
         private double _pileCentraSpan;
         /// <summary>
-        /// Property Description
+        /// unit: m
         /// </summary>
         public double PileCentraSpan
         {
             get { return _pileCentraSpan; }
-            set { Set(ref _pileCentraSpan, value); }
+            set
+            {
+                if (value < 0)
+                    Set(ref _pileCentraSpan, 0);
+                else
+                    Set(ref _pileCentraSpan, value);
+            }
         }
 
         private double _topElevation;
         /// <summary>
-        /// Property Description
+        /// unit:m 
         /// </summary>
         public double TopElevation
         {
             get { return _topElevation; }
-            set { Set(ref _topElevation, value); }
+            set
+            {
+                if (value < 0)
+                    Set(ref _topElevation, 0);
+                else
+                    Set(ref _topElevation, value);
+            }
         }
 
         private double _bottomElevation;
         /// <summary>
-        /// Property Description
+        /// unit: m
         /// </summary>
         public double BottomElevation
         {
             get { return _bottomElevation; }
-            set { Set(ref _bottomElevation, value); }
+            set
+            {
+                if (value < 0)
+                    Set(ref _bottomElevation, value);
+                else
+                    Set(ref _bottomElevation, value);
+            }
         }
 
 
         private double _hat;
         /// <summary>
-        /// Property Description
+        /// unit: m
         /// </summary>
         public double HAT
         {
             get { return _hat; }
-            set { Set(ref _hat, value); }
+            set
+            {
+                Set(ref _hat, value);
+            }
         }
 
         private double _mhw;
         /// <summary>
-        /// Property Description
+        /// unit: m
         /// </summary>
         public double MHW
         {
             get { return _mhw; }
-            set { Set(ref _mhw, value); }
+            set
+            {
+                Set(ref _mhw, value);
+            }
         }
 
         private double _mlw;
         /// <summary>
-        /// Property Description
+        /// unit: m
         /// </summary>
         public double MLW
         {
             get { return _mlw; }
-            set { Set(ref _mlw, value); }
+            set
+            {
+                Set(ref _mlw, value);
+            }
         }
 
         private double _lat;
         /// <summary>
-        /// Property Description
+        /// unit: m
         /// </summary>
         public double LAT
         {
             get { return _lat; }
-            set { Set(ref _lat, value); }
+            set
+            {
+                Set(ref _lat, value);
+            }
         }
 
         private double _velocityForceCoeffCD;
@@ -200,7 +256,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         public double VelocityForceCoeffCD
         {
             get { return _velocityForceCoeffCD; }
-            set { Set(ref _velocityForceCoeffCD, value); }
+            private set { Set(ref _velocityForceCoeffCD, value); }
         }
 
         private double _velocityForceCoeffCM;
@@ -210,17 +266,23 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         public double VelocityForceCoeffCM
         {
             get { return _velocityForceCoeffCM; }
-            set { Set(ref _velocityForceCoeffCM, value); }
+            private set { Set(ref _velocityForceCoeffCM, value); }
         }
 
         private double _waterWeight;
         /// <summary>
-        /// Property Description
+        /// unit : kN/m3
         /// </summary>
         public double WaterWeight
         {
             get { return _waterWeight; }
-            set { Set(ref _waterWeight, value); }
+            set
+            {
+                if (value < 0)
+                    Set(ref _waterWeight, 0);
+                else
+                    Set(ref _waterWeight, value);
+            }
         }
 
         private double _gravitationalAcceleration;
@@ -230,7 +292,13 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         public double GravitationalAcceleration
         {
             get { return _gravitationalAcceleration; }
-            set { Set(ref _gravitationalAcceleration, value); }
+            set
+            {
+                if (value < 0)
+                    Set(ref _gravitationalAcceleration, 0);
+                else
+                    Set(ref _gravitationalAcceleration, value);
+            }
         }
 
         private ObservableCollection<PDIWT_WaveForce_DesignInputParamters> _designInputParameters;
@@ -240,7 +308,18 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         public ObservableCollection<PDIWT_WaveForce_DesignInputParamters> DesignInputParameters
         {
             get { return _designInputParameters; }
-            set { Set(ref _designInputParameters, value); }
+            set
+            {
+                Set(ref _designInputParameters, value);
+                foreach (var _input in _designInputParameters)
+                {
+                    _input.PropertyChanged += (s, e) =>
+                    {
+                        Messenger.Default.Send(new NotificationMessage<bool>(false, "Changed!"), "WaveForceForegroundChange");
+                        _isCalculated = false;
+                    };
+                }
+            }
         }
 
         private ObservableCollection<PDIWT_WaveForce_CalculatedParameters> _calculatedParamters;
@@ -250,7 +329,18 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         public ObservableCollection<PDIWT_WaveForce_CalculatedParameters> CalculatedParameters
         {
             get { return _calculatedParamters; }
-            set { Set(ref _calculatedParamters, value); }
+            private set
+            {
+                Set(ref _calculatedParamters, value);
+                foreach (var _calculate in _calculatedParamters)
+                {
+                    _calculate.PropertyChanged += (s, e) =>
+                    {
+                        Messenger.Default.Send(new NotificationMessage<bool>(false, "Changed!"), "WaveForceForegroundChange");
+                        _isCalculated = false;
+                    };
+                }
+            }
         }
 
         private ObservableCollection<PDIWT_WaveForce_Results> _results;
@@ -260,7 +350,18 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         public ObservableCollection<PDIWT_WaveForce_Results> Results
         {
             get { return _results; }
-            set { Set(ref _results, value); }
+            private set
+            {
+                Set(ref _results, value);
+                foreach (var _result in _results)
+                {
+                    _result.PropertyChanged += (s, e) =>
+                    {
+                        Messenger.Default.Send(new NotificationMessage<bool>(false, "Changed!"), "WaveForceForegroundChange");
+                        _isCalculated = false;
+                    };
+                }
+            }
         }
 
         private RelayCommand _loadParameters;
@@ -282,45 +383,38 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             try
             {
                 LoadPileParametersTool<PDIWT_WaveForcePileInfo>.InstallNewInstance(LoadParametersToolEnablerProvider.WaveForceInfoEnabler);
+                Messenger.Default.Send(Visibility.Hidden, "ShowMainWindow");
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.ToString());
+                _mc.ShowErrorMessage("Load parameters failed!", e.ToString(), false);
             }
         }
 
         private void LoadParametersFromPileEntity(NotificationMessage<PDIWT_WaveForcePileInfo> notification)
         {
-            try
+            if (notification.Notification == Resources.Error)
+                BM.MessageCenter.Instance.ShowErrorMessage("Can't Load Parameter From selected element", "Error", BM.MessageAlert.None);
+            else
             {
-                if (notification.Notification == Resources.Error)
-                    BM.MessageCenter.Instance.ShowErrorMessage("Can't Load Parameter From selected element", "Error", BM.MessageAlert.None);
-                else
+                var _pileInfo = notification.Content;
+
+                PileDiameter = _pileInfo.PileDiameter;
+                HAT = _pileInfo.HAT;
+                MHW = _pileInfo.MHW;
+                MLW = _pileInfo.MLW;
+                LAT = _pileInfo.LAT;
+
+                SelectedPileType = _pileInfo.PileType;
+                WaterWeight = _pileInfo.WaterWeight;
+
+                for (int i = 0; i < 4; i++)
                 {
-                    var _pileInfo = notification.Content;
-
-                    PileDiameter = _pileInfo.PileDiameter /1000; // ECShema store in mm, need to converter to m.
-                    HAT = _pileInfo.HAT;
-                    MHW = _pileInfo.MHW;
-                    MLW = _pileInfo.MLW;
-                    LAT = _pileInfo.LAT;
-
-                    SelectedShape = ShapeCategory.Where(shapeinfo => shapeinfo.Shape == _pileInfo.Shape).FirstOrDefault();
-                    WaterWeight = _pileInfo.WaterDensity;
-
-                    for (int i = 0; i < 4; i++)
-                    {
-                        DesignInputParameters[i].H1 = _pileInfo.WaveHeight[i];
-                        DesignInputParameters[i].T = _pileInfo.WavePeriod[i];
-                    }
-
-                    BM.MessageCenter.Instance.ShowInfoMessage("SUCCESS", "Load Parameter", BM.MessageAlert.None);
-                    Messenger.Default.Send(new NotificationMessage<bool>(true,"Changed!"), "WaveForceForegroundChange");
+                    DesignInputParameters[i].H1 = _pileInfo.WaveHeight[i];
+                    DesignInputParameters[i].T = _pileInfo.WavePeriod[i];
                 }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.ToString());
+                Messenger.Default.Send(new NotificationMessage<bool>(true, "Changed!"), "WaveForceForegroundChange");
+                _mc.ShowInfoMessage("Load parameters successfully", "", false);
             }
         }
 
@@ -334,16 +428,26 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             get
             {
                 return _calculate
-                    ?? (_calculate = new RelayCommand(ExecuteCalculate));
+                    ?? (_calculate = new RelayCommand(ExecuteCalculate, ()=> !_isCalculated));
             }
         }
 
         private void ExecuteCalculate()
         {
-            Messenger.Default.Send(new NotificationMessage<bool>(false, "Changed!"), "WaveForceForegroundChange");
 
             try
             {
+                if (SelectedPileType == PileTypeManaged.SqaurePile)
+                {
+                    VelocityForceCoeffCD = 2.0;
+                    VelocityForceCoeffCM = 2.2;
+                }
+                else
+                {
+                    VelocityForceCoeffCD = 1.2;
+                    VelocityForceCoeffCM = 2.0;
+                }
+
                 foreach (var _input in DesignInputParameters)
                 {
                     switch (_input.DesignWaterLevel)
@@ -371,7 +475,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                     _parameter.H_D = _inputparameters.H1 / _inputparameters.WaterDepth;
                     _parameter.DD_L = _inputparameters.WaterDepth / _inputparameters.WaveLength;
                     double _relativeperiod = WaveForce.CalculateReltiavePeriod(_inputparameters.T, _inputparameters.WaterDepth);
-                    _parameter.YitaMax = WaveForce.CalculateYitaMax(_inputparameters.H1, _inputparameters.WaterDepth,_inputparameters.WaveLength,PileDiameter,_relativeperiod);
+                    _parameter.YitaMax = WaveForce.CalculateYitaMax(_inputparameters.H1, _inputparameters.WaterDepth, _inputparameters.WaveLength, PileDiameter, _relativeperiod);
                     _parameter.Alpha = WaveForce.CalculateAlpha(_inputparameters.H1, _inputparameters.WaterDepth, _inputparameters.WaveLength);
                     _parameter.Beta = WaveForce.CalculateBeta(_inputparameters.H1, _inputparameters.WaterDepth, _inputparameters.WaveLength);
                     _parameter.GammaP = WaveForce.CalculateGammaP(_inputparameters.WaterDepth, _inputparameters.WaveLength);
@@ -388,19 +492,19 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                     _parameter.K4 = WaveForce.CalculateK4(0, _inputparameters.WaterDepth + _parameter.YitaMax - _inputparameters.H1 / 2, _inputparameters.WaveLength, _inputparameters.WaterDepth);
                 }
                 //Calculate the pile cross section area
-                double _crossectionarea;
-                if (SelectedShape.Value == 1)
-                    _crossectionarea = Math.PI * Math.Pow(PileDiameter / 2, 2);
-                else
+                double _crossectionarea = 0;
+                if (SelectedPileType == PileTypeManaged.SqaurePile)
                     _crossectionarea = PileDiameter * PileDiameter;
+                else
+                    _crossectionarea = Math.PI * Math.Pow(PileDiameter / 2, 2);
 
                 foreach (var _result in Results)
                 {
                     var _inputparams = DesignInputParameters.Where(e => e.DesignWaterLevel == _result.DesignWaterLevel).FirstOrDefault();
                     var _calculatedparams = CalculatedParameters.Where(e => e.DesignWaterLevel == _result.DesignWaterLevel).FirstOrDefault();
                     // Calculate Final PDMax, PIMax, MDMax, MIMax
-                    double _cd = WaveForce.CalculateCD(SelectedShape);
-                    double _cm = WaveForce.CalculateCM(PileDiameter, _inputparams.WaveLength, SelectedShape);
+                    double _cd = WaveForce.CalculateCD(SelectedPileType);
+                    double _cm = WaveForce.CalculateCM(PileDiameter, _inputparams.WaveLength, SelectedPileType);
                     _result.PDMax = WaveForce.CalculatePDMax(_cd, WaterWeight, PileDiameter, _inputparams.H1, _calculatedparams.K1);
                     _result.PIMax = WaveForce.CalculatePIMax(_cm, WaterWeight, _crossectionarea, _inputparams.H1, _calculatedparams.K2);
                     _result.MDMax = WaveForce.CalculateMDMax(_cd, WaterWeight, PileDiameter, _inputparams.H1, _inputparams.WaveLength, _calculatedparams.K3);
@@ -427,12 +531,14 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                     _result.Pu = WaveForce.CalculatePu(WaterWeight, _inputparams.H1, PileDiameter, 0, _inputparams.WaveLength, _inputparams.WaterDepth, _calculatedparams.F2, _calculatedparams.F0, _calculatedparams.OmgaT);
                     _result.Mu = WaveForce.CalculateMu(WaterWeight, _inputparams.H1, PileDiameter, 0, _inputparams.WaveLength, _inputparams.WaterDepth, _calculatedparams.F3, _calculatedparams.F1, _calculatedparams.OmgaT);
                 }
+                _isCalculated = true;
+                _mc.ShowInfoMessage("Calculation complete","", false);
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.ToString());
+                _mc.ShowErrorMessage("Calculation failed!", e.ToString(), false);
             }
-            
+
         }
 
         private RelayCommand _generateNote;
@@ -446,7 +552,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             {
                 return _generateNote
                     ?? (_generateNote = new RelayCommand(ExecuteGenerateNote,
-                    () => Results.FirstOrDefault().PMax != 0));
+                    () => _isCalculated));
             }
         }
 
@@ -461,7 +567,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.ToString());
+                _mc.ShowErrorMessage("Calculation Note Generation failed!", e.ToString(), false);
             }
         }
     }
@@ -495,7 +601,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             set
             {
                 Set(() => DesignWaterLevel, ref _designWaterLevel, value);
-                
+
             }
         }
 
@@ -507,6 +613,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _h1;
 
         /// <summary>
+        /// Unit: m
         /// Sets and gets the H1 property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -518,7 +625,10 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
             set
             {
-                Set(() => H1, ref _h1, value);
+                if (value < 0)
+                    Set(() => H1, ref _h1, 0);
+                else
+                    Set(() => H1, ref _h1, value);
                 //Messenger.Default.Send("InputParameterChange","Input");
             }
         }
@@ -530,6 +640,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _h13;
 
         /// <summary>
+        /// Unit: m
         /// Sets and gets the H13 property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -541,7 +652,10 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
             set
             {
-                Set(() => H13, ref _h13, value);
+                if(value < 0)
+                    Set(() => H13, ref _h13, 0);
+                else
+                    Set(() => H13, ref _h13, value);
             }
         }
 
@@ -553,6 +667,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _t;
 
         /// <summary>
+        /// Unit: s
         /// Sets and gets the T property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -564,7 +679,10 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
             set
             {
-                Set(() => T, ref _t, value);
+                if(value < 0)
+                Set(() => T, ref _t, 0);
+                else
+                    Set(() => T, ref _t, value);
                 //Messenger.Default.Send("InputParameterChange","Input");
             }
         }
@@ -577,6 +695,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _waterDepth;
 
         /// <summary>
+        /// Unit: m
         /// Sets and gets the WaterDepth property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -588,7 +707,10 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
             set
             {
-                Set(() => WaterDepth, ref _waterDepth, value);
+                if (value < 0)
+                    Set(() => WaterDepth, ref _waterDepth, 0);
+                else
+                    Set(() => WaterDepth, ref _waterDepth, value);
                 //Messenger.Default.Send("InputParameterChange","Input");
             }
         }
@@ -601,6 +723,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private double _waveLength;
 
         /// <summary>
+        /// Unit: 0
         /// Sets and gets the WaveLength property.
         /// Changes to that property's value raise the PropertyChanged event. 
         /// </summary>
@@ -612,10 +735,13 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
             set
             {
-                Set(() => WaveLength, ref _waveLength, value);
+                if (value < 0)
+                    Set(() => WaveLength, ref _waveLength, double.NaN);
+                else
+                    Set(() => WaveLength, ref _waveLength, value);
             }
         }
-        
+
     }
 
     public class PDIWT_WaveForce_CalculatedParameters : ObservableObject
@@ -781,8 +907,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
         /// <summary>
-            /// The <see cref="GammaP" /> property's name.
-            /// </summary>
+        /// The <see cref="GammaP" /> property's name.
+        /// </summary>
         public const string GammaPPropertyName = "GammaP";
 
         private double _gammaP;
@@ -1152,8 +1278,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
         /// <summary>
-            /// The <see cref="DesignWaterLevel" /> property's name.
-            /// </summary>
+        /// The <see cref="DesignWaterLevel" /> property's name.
+        /// </summary>
         public const string DesignWaterLevelPropertyName = "DesignWaterLevel";
 
         private DesignWaterLevelCondition _designWaterLevel;
@@ -1244,8 +1370,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
         /// <summary>
-            /// The <see cref="Mu" /> property's name.
-            /// </summary>
+        /// The <see cref="Mu" /> property's name.
+        /// </summary>
         public const string MuPropertyName = "Mu";
 
         private double _mu;

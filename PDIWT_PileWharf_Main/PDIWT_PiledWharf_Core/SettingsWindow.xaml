@@ -28,7 +28,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <TabControl Grid.Row="0">
+        <TabControl Grid.Row="0" DataContext="{Binding SettingsInstance}">
 
             <!--<TabItem Header="{x:Static loc:Resources.Geometry}" TabIndex="0">
                 <Grid>

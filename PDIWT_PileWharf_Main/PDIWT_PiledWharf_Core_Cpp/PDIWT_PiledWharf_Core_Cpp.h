@@ -49,10 +49,10 @@ namespace PDIWT_PiledWharf_Core_Cpp {
 			:_pileType(pileType), _pileTypeMap(pileTypeMap), _pileWidth(pileWidth), _pileInsideDiameter(pileInsideDiameter), _pileConcreteCoreLength(pileConcreteCoreLength), _topPoint(topPoint), _bottomPoint(bottomPoint)
 		{
 			InitSQLiteDb();
-			double _uorpermm = ACTIVEMODEL->GetModelInfoCP()->GetUorPerMeter() / 1000;
-			_pileWidth *= _uorpermm;
-			_pileInsideDiameter *= _uorpermm;
-			_pileConcreteCoreLength *= _uorpermm;
+			//double _uorpermm = ACTIVEMODEL->GetModelInfoCP()->GetUorPerMeter() / 1000;
+			//_pileWidth *= _uorpermm;
+			//_pileInsideDiameter *= _uorpermm;
+			//_pileConcreteCoreLength *= _uorpermm;
 		};
 		~PileEntityCreation();
 		BentleyStatus CreatPile();

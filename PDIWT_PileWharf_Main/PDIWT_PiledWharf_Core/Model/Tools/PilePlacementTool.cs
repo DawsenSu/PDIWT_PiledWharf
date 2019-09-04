@@ -1,10 +1,14 @@
-﻿using System;
+﻿using PDIWT_PiledWharf_Core_Cpp;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+
+using GalaSoft.MvvmLight.Messaging;
+using System.Windows;
 
 namespace PDIWT_PiledWharf_Core.Model.Tools
 {
@@ -37,26 +41,27 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
             _mc.StatusPrompt = "Pick Pile [Bottom] Point";
             if (_points.Count < 2)
                 return false;
+            //var _pileplaceViewModel = (ViewModel.PilePlacementViewModel)((PilePlacementUserControl)_pilePlacementToolHost.Content).DataContext;
 
-            var _pileplaceViewModel = (ViewModel.PilePlacementViewModel)((PilePlacementUserControl)_pilePlacementToolHost.Content).DataContext;
+            try
+            {
+                BD.DgnModel _activeDgnModel = BM.Session.Instance.GetActiveDgnModel();
+                double uorpermeter = BM.Session.Instance.GetActiveDgnModel().GetModelInfo().UorPerMeter;
 
-            BD.DgnModel _activeDgnModel = BM.Session.Instance.GetActiveDgnModel();
-            double uorpermm = BM.Session.Instance.GetActiveDgnModel().GetModelInfo().UorPerMaster;
-
-            _points[0].ScaleInPlace(uorpermm);
-            _points[1].ScaleInPlace(uorpermm);
-
-            BD.StatusInt _status = PDIWT_PiledWharf_Core_Cpp.EntityCreation.CreatePile(_pileplaceViewModel.SelectedPileType,
-                                                                _pileplaceViewModel.PileTypes,
-                                                                _pileplaceViewModel.PileWidth,
-                                                                _pileplaceViewModel.PileInsideDiameter,
-                                                                _pileplaceViewModel.ConcreteCoreLength,
-                                                                _points[0],
-                                                                _points[1]);
-            if(_status == BD.StatusInt.Success)
-                _mc.StatusMessage = "Pile Created Successfully";
-
-            base.OnReinitialize();
+                PileBase _pile = new PileBase(PileBase._unknowPileNumbering, PileBase._unknownPileName,
+                    new Joint(_points[0]), new Joint(_points[1]),
+                    _info.Item1, _info.Item2 * uorpermeter, _info.Item3 * uorpermeter, _info.Item4 * uorpermeter, _info.Item5);
+                _pile.DrawInActiveModel();
+                _mc.ShowInfoMessage($"Pile Created Successfully",$"Top Point:{_pile.TopJoint}; Bottom Point:{_pile.BottomJoint}",false);
+            }
+            catch (Exception e)
+            {
+                _mc.ShowErrorMessage("Can't Create Pile", e.ToString(), false);
+            }
+            finally
+            {
+                base.OnReinitialize();
+            }
             return true;
         }
 
@@ -88,16 +93,20 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
             base.OnPostInstall();
         }
 
-
         protected override bool OnResetButton(BD.DgnButtonEvent ev)
         {
             ExitTool();
             return true;
         }
+        protected override void ExitTool()
+        {
+            Messenger.Default.Send(Visibility.Visible, "ImportWindowVisibility");
+            base.ExitTool();
+        }
 
         protected override void OnRestartTool()
         {
-            InstallNewInstance();
+            InstallNewInstance(_info);
         }
 
         protected override void OnCleanup()
@@ -111,26 +120,30 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
             base.OnCleanup();
         }
 
-        public void InstallNewInstance()
+        public void InstallNewInstance(Tuple<PileTypeManaged, double, double, double, PileTipType> info)
         {
             PilePlacementTool _tool = new PilePlacementTool(_addIn);
+            _tool._info = info;
             _tool.InstallTool();
 
             _mc.StatusCommand = "Pile Placement";
             _mc.StatusPrompt = "Pick Pile [Top] Point";
 
+
             if (_pilePlacementToolHost == null)
             {
-                _pilePlacementToolHost = new BMW.ToolSettingsHost();
-                _pilePlacementToolHost.Width = 300;
-                _pilePlacementToolHost.Height = 130;
-                _pilePlacementToolHost.ResizeMode = System.Windows.ResizeMode.CanResize; 
-                _pilePlacementToolHost.Title = PDIWT.Resources.Localization.MainModule.Resources.PilePlacementTool;
-                _pilePlacementToolHost.Icon = new BitmapImage(new Uri("pack://application:,,,/PDIWT.Resources;component/Images/Icons/DrawPile.ico", UriKind.RelativeOrAbsolute));
-
-                _pilePlacementToolHost.Content =new PilePlacementUserControl();
+                _pilePlacementToolHost = new BMW.ToolSettingsHost
+                {
+                    //_pilePlacementToolHost.Width = 300;
+                    //_pilePlacementToolHost.Height = 130;
+                    //_pilePlacementToolHost.ResizeMode = ResizeMode.CanResize; 
+                    Title = PDIWT.Resources.Localization.MainModule.Resources.PilePlacementTool
+                };
+                //_pilePlacementToolHost.Icon = new BitmapImage(new Uri("pack://application:,,,/PDIWT.Resources;component/Images/Icons/DrawPile.ico", UriKind.RelativeOrAbsolute));
+                _pilePlacementToolHost.Closing += _pilePlacementToolHost_Closing;
+                //_pilePlacementToolHost.Content =new PilePlacementUserControl();
                 _pilePlacementToolHost.Attach(_addIn);
-                _pilePlacementToolHost.Show();
+                _pilePlacementToolHost.Show();                
             }
             else
             {
@@ -138,11 +151,17 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
             }
         }
 
+        private void _pilePlacementToolHost_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ExitTool();
+        }
+
         BM.AddIn _addIn;
         BM.MessageCenter _mc = BM.MessageCenter.Instance;
         static BMW.ToolSettingsHost _pilePlacementToolHost;
 
         private List<BG.DPoint3d> _points;
+        private Tuple<PileTypeManaged, double, double, double, PileTipType> _info;
 
     }
 }

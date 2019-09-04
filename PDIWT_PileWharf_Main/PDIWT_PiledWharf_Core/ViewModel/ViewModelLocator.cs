@@ -31,6 +31,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             SimpleIoc.Default.Register<SettingsViewModel>();
             SimpleIoc.Default.Register<Input_ImportFromFileViewModel>();
             SimpleIoc.Default.Register<BearingCapacityViewModel>();
+            SimpleIoc.Default.Register<PileLengthCalculatorViewModel>();
             SimpleIoc.Default.Register<PilePlacementViewModel>();
             SimpleIoc.Default.Register<AttachBCInstanceViewModel>();
             SimpleIoc.Default.Register<CurrentForceViewModel>();
@@ -75,6 +76,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
         }
 
+        public PileLengthCalculatorViewModel PileLengthCalculator => ServiceLocator.Current.GetInstance<PileLengthCalculatorViewModel>();
         //public ReportGeneratorViewModel ReportGenerator => ServiceLocator.Current.GetInstance<ReportGeneratorViewModel>();
 
         public PilePlacementViewModel PilePlacement => ServiceLocator.Current.GetInstance<PilePlacementViewModel>();

@@ -333,16 +333,16 @@
   <data name="Generate" xml:space="preserve">
     <value>Generate</value>
   </data>
-  <data name="PreliminaryFeasibilityStudy" xml:space="preserve">
+  <data name="PP_PreliminaryFeasibilityStudy" xml:space="preserve">
     <value>Preliminary Feasibility Study</value>
   </data>
-  <data name="FeasibilityStudy" xml:space="preserve">
+  <data name="PP_FeasibilityStudy" xml:space="preserve">
     <value>Feasibility Study</value>
   </data>
-  <data name="PreliminaryDesign" xml:space="preserve">
+  <data name="PP_PreliminaryDesign" xml:space="preserve">
     <value>Preliminary Design</value>
   </data>
-  <data name="ConstructionDesign" xml:space="preserve">
+  <data name="PP_ConstructionDesign" xml:space="preserve">
     <value>Construction Design</value>
   </data>
   <data name="WordFileFilter" xml:space="preserve">
@@ -465,17 +465,17 @@
   <data name="IsVerticalPile" xml:space="preserve">
     <value>Is Vertical Pile</value>
   </data>
-  <data name="DrivenPileWithSealedEnd" xml:space="preserve">
+  <data name="BCPileType_DrivenPileWithSealedEnd" xml:space="preserve">
     <value>Driven Pile With Sealed End</value>
   </data>
-  <data name="TubePileOrSteelPile" xml:space="preserve">
+  <data name="BCPileType_TubePileOrSteelPile" xml:space="preserve">
     <value>Tube Pile or Steel Pile</value>
     
   </data>
-  <data name="CastInSituPile" xml:space="preserve">
+  <data name="BCPileType_CastInSituPile" xml:space="preserve">
     <value>Cast In-Situ Pile</value>
   </data>
-  <data name="CastInSituAfterGrountingPile" xml:space="preserve">
+  <data name="BCPileType_CastInSituAfterGrountingPile" xml:space="preserve">
     <value>Cast In-Situ Grounting Pile</value>
   </data>
   <data name="PileName" xml:space="preserve">
@@ -542,5 +542,122 @@
   </data>
   <data name="TN_AttachBCEC" xml:space="preserve">
     <value>Attach Bearing Capacity EC Instance</value>
+  </data>
+  <data name="Note_PartialCoeff" xml:space="preserve">
+    <value>1) For driven pile: 1.45~1.55; 2) For cast in-situ pile: 1.55~1.65</value>
+  </data>
+  <data name="PileLengthCalWindow" xml:space="preserve">
+    <value>Pile Length Calculation Window</value>
+  </data>
+  <data name="PileLengthModulus" xml:space="preserve">
+    <value>Pile length Modulus</value>
+  </data>
+  <data name="Draw" xml:space="preserve">
+    <value>Draw</value>
+  </data>
+  <data name="LoadFromModel" xml:space="preserve">
+    <value>Load From Model</value>
+  </data>
+  <data name="ShowPileLengthBCCurve" xml:space="preserve">
+    <value>Show Curve</value>
+  </data>
+  <data name="CurrentForceCalculation" xml:space="preserve">
+    <value>Current Force Calculation</value>
+  </data>
+  <data name="SeabedElevation" xml:space="preserve">
+    <value>Sea Bed Elevation</value>
+  </data>
+  <data name="ProjectedWidth" xml:space="preserve">
+    <value>Projected Width</value>
+  </data>
+  <data name="Angle" xml:space="preserve">
+    <value>Angle</value>
+  </data>
+  <data name="CurrentVelocity" xml:space="preserve">
+    <value>Current Velocity</value>
+  </data>
+  <data name="HorizontalPileCentraSpan" xml:space="preserve">
+    <value>Horizontal Pile Centra Span</value>
+  </data>
+  <data name="VerticalPileCentraSpan" xml:space="preserve">
+    <value>Vertical Pile Centra Span</value>
+  </data>
+  <data name="WaterDensity" xml:space="preserve">
+    <value>Water Density</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Height</value>
+  </data>
+  <data name="ProjectedArea" xml:space="preserve">
+    <value>Projected Area</value>
+  </data>
+  <data name="CurrentResistentCoeff" xml:space="preserve">
+    <value>Current Resistent Coeff</value>
+  </data>
+  <data name="ShelteringCoeff" xml:space="preserve">
+    <value>Sheltering Coeff</value>
+  </data>
+  <data name="SubmergedCoeff" xml:space="preserve">
+    <value>Submerged Coeff</value>
+  </data>
+  <data name="HorizontalAffectCoeff" xml:space="preserve">
+    <value>Horizontal Affect Coeff</value>
+  </data>
+  <data name="IncliningAffectCoeff" xml:space="preserve">
+    <value>Inclining Affect Coeff</value>
+  </data>
+  <data name="CurrentForceStandardValue" xml:space="preserve">
+    <value>Current Force Standard Value</value>
+  </data>
+  <data name="ActionPoint" xml:space="preserve">
+    <value>Action Point</value>
+  </data>
+  <data name="FrontRow" xml:space="preserve">
+    <value> Front Row</value>
+  </data>
+  <data name="RearRow" xml:space="preserve">
+    <value>Rear Row</value>
+  </data>
+  <data name="WaveForceWindowTitle" xml:space="preserve">
+    <value>Wave Action Force for Pile and Pier Structure</value>
+  </data>
+  <data name="PileDiameter" xml:space="preserve">
+    <value>Pile Diameter</value>
+  </data>
+  <data name="PileCentraSpan" xml:space="preserve">
+    <value>Pile Centra Span</value>
+  </data>
+  <data name="ForceCoeffs" xml:space="preserve">
+    <value>Force Coeffs</value>
+  </data>
+  <data name="VelocityForceCoeffCD" xml:space="preserve">
+    <value>Velocity Force Coefficient(CD)</value>
+  </data>
+  <data name="VelocityForceCoeffCM" xml:space="preserve">
+    <value>Velocity Force Coefficient(CM)</value>
+  </data>
+  <data name="GravitationalAcceleration" xml:space="preserve">
+    <value>Gravitational Acceleration</value>
+  </data>
+  <data name="WaterWeight" xml:space="preserve">
+    <value>Water Weight</value>
+  </data>
+  <data name="WharfElevation" xml:space="preserve">
+    <value>Wharf Elevation</value>
+  </data>
+  <data name="TopElevation" xml:space="preserve">
+    <value>Top Elevation</value>
+  </data>
+  <data name="BottomElevation" xml:space="preserve">
+    <value>Bottom Elevation</value>
+  </data>
+  <data name="DesignWaterLevel" xml:space="preserve">
+    <value>Design Water Level</value>
+  </data>
+  <data name="WaveParameters" xml:space="preserve">
+    <value>Wave Parameters</value>
+  </data>
+  <data name="WaterDepthCoeff" xml:space="preserve">
+    <value>Water Depth Coeff</value>
   </data>
 </root>

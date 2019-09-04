@@ -333,16 +333,16 @@
   <data name="Generate" xml:space="preserve">
     <value>生成</value>
   </data>
-  <data name="PreliminaryFeasibilityStudy" xml:space="preserve">
+  <data name="PP_PreliminaryFeasibilityStudy" xml:space="preserve">
     <value>预可研阶段</value>
   </data>
-  <data name="FeasibilityStudy" xml:space="preserve">
+  <data name="PP_FeasibilityStudy" xml:space="preserve">
     <value>工可阶段</value>
   </data>
-  <data name="PreliminaryDesign" xml:space="preserve">
+  <data name="PP_PreliminaryDesign" xml:space="preserve">
     <value>初步设计阶段</value>
   </data>
-  <data name="ConstructionDesign" xml:space="preserve">
+  <data name="PP_ConstructionDesign" xml:space="preserve">
     <value>施工图阶段</value>
   </data>
   <data name="WordFileFilter" xml:space="preserve">
@@ -465,16 +465,16 @@
   <data name="IsVerticalPile" xml:space="preserve">
     <value>是否为直桩</value>
   </data>
-  <data name="DrivenPileWithSealedEnd" xml:space="preserve">
+  <data name="BCPileType_DrivenPileWithSealedEnd" xml:space="preserve">
     <value>实心桩或桩端封闭的打入桩</value>
   </data>
-  <data name="TubePileOrSteelPile" xml:space="preserve">
+  <data name="BCPileType_TubePileOrSteelPile" xml:space="preserve">
     <value>钢管桩或混凝土管桩</value>
   </data>
-  <data name="CastInSituPile" xml:space="preserve">
+  <data name="BCPileType_CastInSituPile" xml:space="preserve">
     <value>灌注桩</value>
   </data>
-  <data name="CastInSituAfterGrountingPile" xml:space="preserve">
+  <data name="BCPileType_CastInSituAfterGrountingPile" xml:space="preserve">
     <value>后注浆灌注桩</value>
   </data>
   <data name="PileName" xml:space="preserve">
@@ -539,5 +539,122 @@
   </data>
   <data name="TN_AttachBCEC" xml:space="preserve">
     <value>附加EC属性值</value>
+  </data>
+  <data name="Note_PartialCoeff" xml:space="preserve">
+    <value>1) 对于打入桩: 1.45~1.55; 2) 对于灌注桩: 1.55~1.65</value>
+  </data>
+  <data name="PileLengthCalWindow" xml:space="preserve">
+    <value>桩长计算</value>
+  </data>
+  <data name="PileLengthModulus" xml:space="preserve">
+    <value>桩长模数</value>
+  </data>
+  <data name="Draw" xml:space="preserve">
+    <value>绘制</value>
+  </data>
+  <data name="LoadFromModel" xml:space="preserve">
+    <value>从模型中导入</value>
+  </data>
+  <data name="ShowPileLengthBCCurve" xml:space="preserve">
+    <value>显示曲线</value>
+  </data>
+  <data name="CurrentForceCalculation" xml:space="preserve">
+    <value>水流力计算</value>
+  </data>
+  <data name="SeabedElevation" xml:space="preserve">
+    <value>泥面高程</value>
+  </data>
+  <data name="ProjectedWidth" xml:space="preserve">
+    <value>投影宽度</value>
+  </data>
+  <data name="Angle" xml:space="preserve">
+    <value>角度</value>
+  </data>
+  <data name="CurrentVelocity" xml:space="preserve">
+    <value>水流速</value>
+  </data>
+  <data name="HorizontalPileCentraSpan" xml:space="preserve">
+    <value>横向桩中心间距</value>
+  </data>
+  <data name="VerticalPileCentraSpan" xml:space="preserve">
+    <value>纵向桩中心间距</value>
+  </data>
+  <data name="WaterDensity" xml:space="preserve">
+    <value>水密度</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>高度</value>
+  </data>
+  <data name="ProjectedArea" xml:space="preserve">
+    <value>投影面积</value>
+  </data>
+  <data name="CurrentResistentCoeff" xml:space="preserve">
+    <value>水流阻力系数</value>
+  </data>
+  <data name="ShelteringCoeff" xml:space="preserve">
+    <value>遮流影响系数</value>
+  </data>
+  <data name="SubmergedCoeff" xml:space="preserve">
+    <value>淹没深度影响系数</value>
+  </data>
+  <data name="HorizontalAffectCoeff" xml:space="preserve">
+    <value>横向影响系数</value>
+  </data>
+  <data name="IncliningAffectCoeff" xml:space="preserve">
+    <value>斜向影响系数</value>
+  </data>
+  <data name="CurrentForceStandardValue" xml:space="preserve">
+    <value>所受水流力标准值</value>
+  </data>
+  <data name="ActionPoint" xml:space="preserve">
+    <value>作用点</value>
+  </data>
+  <data name="FrontRow" xml:space="preserve">
+    <value>前排</value>
+  </data>
+  <data name="RearRow" xml:space="preserve">
+    <value>后排</value>
+  </data>
+  <data name="WaveForceWindowTitle" xml:space="preserve">
+    <value>波浪对圆形桩基和墩柱建筑物的作用</value>
+  </data>
+  <data name="PileDiameter" xml:space="preserve">
+    <value>桩直径</value>
+  </data>
+  <data name="PileCentraSpan" xml:space="preserve">
+    <value>桩中心距</value>
+  </data>
+  <data name="ForceCoeffs" xml:space="preserve">
+    <value>计算力系数</value>
+  </data>
+  <data name="VelocityForceCoeffCD" xml:space="preserve">
+    <value>速度力系数(CD)</value>
+  </data>
+  <data name="VelocityForceCoeffCM" xml:space="preserve">
+    <value>速度力系数(CM)</value>
+  </data>
+  <data name="GravitationalAcceleration" xml:space="preserve">
+    <value>重力加速度</value>
+  </data>
+  <data name="WaterWeight" xml:space="preserve">
+    <value>水重度</value>
+  </data>
+  <data name="WharfElevation" xml:space="preserve">
+    <value>码头标高</value>
+  </data>
+  <data name="TopElevation" xml:space="preserve">
+    <value>顶标高</value>
+  </data>
+  <data name="BottomElevation" xml:space="preserve">
+    <value>底标高</value>
+  </data>
+  <data name="DesignWaterLevel" xml:space="preserve">
+    <value>设计水位</value>
+  </data>
+  <data name="WaveParameters" xml:space="preserve">
+    <value>波浪要素</value>
+  </data>
+  <data name="WaterDepthCoeff" xml:space="preserve">
+    <value>水深影响系数</value>
   </data>
 </root>

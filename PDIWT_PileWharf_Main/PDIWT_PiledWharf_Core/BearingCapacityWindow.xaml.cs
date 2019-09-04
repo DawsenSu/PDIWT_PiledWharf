@@ -35,6 +35,7 @@ namespace PDIWT_PiledWharf_Core
 
             _controlListNeedForChange = new List<Control>()
             {
+
                 CheckBox_skewness,
                 LabelTextBox_PileTopElevation,
                 LabelTextBox_PileWidth,
@@ -46,10 +47,17 @@ namespace PDIWT_PiledWharf_Core
                 LabelTextBox_SteelWeight,
                 LabelTextBox_SteelUnderWaterWeigth,
                 Lable_PileGeoType,
-                Lable_PileWorkmanshipType,
+                //Lable_PileWorkmanshipType,
             };
 
             Messenger.Default.Register<NotificationMessage<bool>>(this, "BearingCapacityForegroundChange", ChangeControlsForeground);
+            Messenger.Default.Register<Visibility>(this, "ShowMainWindow", v => Visibility = v);
+
+            Closed += (s, e) =>
+            {
+                Messenger.Default.Unregister<NotificationMessage<bool>>(this);
+                Messenger.Default.Unregister<Visibility>(this);
+            };
         }
 
         static BearingCapacityWindow m_BearingCapacityWindowHost;
