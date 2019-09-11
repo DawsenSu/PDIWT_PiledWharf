@@ -237,10 +237,17 @@
     <Compile Include="BuildUpSoilLayersWindow.xaml.cs">
       <DependentUpon>BuildUpSoilLayersWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\BearingCapacityPileTypeComboBox.xaml.cs">
+      <DependentUpon>BearingCapacityPileTypeComboBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Common\Converters.cs" />
     <Compile Include="Common\ExcelFileReader.cs" />
     <Compile Include="Common\Marshal.cs" />
     <Compile Include="Common\PDIWT.Formula.cs" />
+    <Compile Include="Common\PDIWT_Attributes.cs" />
+    <Compile Include="Common\PileTypeComboBox.xaml.cs">
+      <DependentUpon>PileTypeComboBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Common\Services.cs" />
     <Compile Include="CurrentForceWindow.xaml.cs">
       <DependentUpon>CurrentForceWindow.xaml</DependentUpon>
@@ -291,6 +298,10 @@
     <Compile Include="ViewModel\CurrentForceViewModel.cs" />
     <Compile Include="ViewModel\Input_ImportFromFileViewModel.cs" />
     <Compile Include="ViewModel\PickUpSoilLayersFromLibViewModel.cs" />
+    <Compile Include="ViewModel\PileCollisionDetectionViewModel.cs" />
+    <Compile Include="PileCollisionDetectionWindow.xaml.cs">
+      <DependentUpon>PileCollisionDetectionWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\PileLengthCalculatorViewModel.cs" />
     <Compile Include="ViewModel\PileLengthCurveViewModel.cs" />
     <Compile Include="ViewModel\PilePlacementViewModel.cs" />
@@ -308,6 +319,14 @@
     <Page Include="BuildUpSoilLayersWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Common\BearingCapacityPileTypeComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Common\PileTypeComboBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="CurrentForceWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -352,6 +371,10 @@
     <Page Include="Skins\MainSkin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PileCollisionDetectionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WaveForceWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

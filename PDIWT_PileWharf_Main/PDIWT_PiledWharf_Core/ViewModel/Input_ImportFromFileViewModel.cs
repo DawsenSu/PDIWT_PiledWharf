@@ -39,15 +39,16 @@ namespace PDIWT_PiledWharf_Core.ViewModel
     {
         public Input_ImportFromFileViewModel()
         {
-            _pileGeoTypes = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<PileTypeManaged>();
+            //_pileGeoTypes = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<PileTypeManaged>();
+            _pileName = "Unknown";
             _selectedPileGeoType = PileTypeManaged.SqaurePile;
 #if DEBUG
             _pileWidth = 0.6;
             _pileInsideDiameter = 0.5;
-            _concreteCoreLength = 1;
 #endif
             _pileTipTypes = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<PileTipType>();
-            _selecetedPileTipType = PileTipType.TotalSeal;
+            _concreteCoreLength = 0;
+            _selecetedPileTipType = PileTipType.TotalSeal; 
             //_pileTipSealTypes = new List<string> { Resources.PileTip_TotalSeal, Resources.PileTip_HalfSeal, Resources.PileTip_SingleBorad, Resources.PileTip_DoubleBoard, Resources.PileTip_QuadBoard };
             //_selectedPileTipType = _pileTipSealTypes[0];
             //_pileDataTable = new DataTable("PileDataTable");
@@ -67,14 +68,24 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
         private BM.MessageCenter _mc = BM.MessageCenter.Instance;
 
-        private Dictionary<PileTypeManaged, string> _pileGeoTypes;
+        //private Dictionary<PileTypeManaged, string> _pileGeoTypes;
+        ///// <summary>
+        ///// Pile Geo Type dictionary, to let use to choose.
+        ///// </summary>
+        //public Dictionary<PileTypeManaged, string> PileGeoTypes
+        //{
+        //    get { return _pileGeoTypes; }
+        //    set { Set(ref _pileGeoTypes, value); }
+        //}
+
+        private string _pileName;
         /// <summary>
-        /// Pile Geo Type dictionary, to let use to choose.
+        /// Property Description
         /// </summary>
-        public Dictionary<PileTypeManaged, string> PileGeoTypes
+        public string PileName
         {
-            get { return _pileGeoTypes; }
-            set { Set(ref _pileGeoTypes, value); }
+            get { return _pileName; }
+            set { Set(ref _pileName, value); }
         }
 
         private PileTypeManaged _selectedPileGeoType;
@@ -260,7 +271,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             try
             {
                 PilePlacementTool _tool = new PilePlacementTool(AddIn);
-                _tool.InstallNewInstance(Tuple.Create(SelectedPileGeoType, PileWidth, PileInsideDiameter, ConcreteCoreLength, SelectedPileTipType));
+                _tool.InstallNewInstance(Tuple.Create(PileName,SelectedPileGeoType, PileWidth, PileInsideDiameter, ConcreteCoreLength, SelectedPileTipType));
 
                 //// send the pile infos to tool
                 //Messenger.Default.Send(new NotificationMessage<Tuple<PileTypeManaged, double, double, double, PileTipType>>(
@@ -315,18 +326,20 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                         if (!_excelFile.Exists)
                             throw new ArgumentException($"{_excelFile} doesn't exist");
 
+                        string _pileName;
                         double _topx, _topy, _topz, _skewness, _length, _rotationAngel;
                         using (var _excelPackage = new ExcelPackage(_excelFile))
                         {
                             var _worksheet = _excelPackage.Workbook.Worksheets[1];
                             for (int i = 2; i < _worksheet.Dimension.Rows + 1; i++)
                             {
-                                _topx = double.Parse(_worksheet.Cells[i, 1].Text) * _uorpermeter;
-                                _topy = double.Parse(_worksheet.Cells[i, 2].Text) * _uorpermeter;
-                                _topz = double.Parse(_worksheet.Cells[i, 3].Text) * _uorpermeter;
-                                _skewness = double.Parse(_worksheet.Cells[i, 4].Text);
-                                _length = double.Parse(_worksheet.Cells[i, 5].Text) * _uorpermeter;
-                                _rotationAngel = double.Parse(_worksheet.Cells[i, 6].Text);
+                                _pileName = _worksheet.Cells[i, 1].Text;
+                                _topx = double.Parse(_worksheet.Cells[i, 2].Text) * _uorpermeter;
+                                _topy = double.Parse(_worksheet.Cells[i, 3].Text) * _uorpermeter;
+                                _topz = double.Parse(_worksheet.Cells[i, 4].Text) * _uorpermeter;
+                                _skewness = double.Parse(_worksheet.Cells[i, 5].Text);
+                                _length = double.Parse(_worksheet.Cells[i, 6].Text) * _uorpermeter;
+                                _rotationAngel = double.Parse(_worksheet.Cells[i, 7].Text);
                                 BG.Angle _angle = new BG.Angle(); _angle.Degrees = _rotationAngel;
                                 PileBase _pile = PileBase.CreateFromTopPointandLength(new BG.DPoint3d(_topx, _topy, _topz),
                                     _length, _skewness, _angle, SelectedPileGeoType, 
@@ -334,6 +347,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                                     PileInsideDiameter * _uorpermeter, 
                                     ConcreteCoreLength * _uorpermeter, 
                                     SelectedPileTipType);
+                                _pile.Name = _pileName;
                                 _pile.DrawInActiveModel();
                                 _numberofpiles++;
                             }

@@ -11,7 +11,7 @@ using System.Data.SQLite;
 using PDIWT_PiledWharf_Core.ViewModel;
 
 using BD = Bentley.DgnPlatformNET;
-
+using BG = Bentley.GeometryNET;
 using PDIWT_PiledWharf_Core_Cpp;
 namespace PDIWT.Formulas
 {
@@ -751,5 +751,10 @@ namespace PDIWT.Formulas
             else
                 return 1.2;
         }
+    }
+
+    public static class ExtentsionFunction
+    {
+
     }
 }

@@ -11,6 +11,7 @@ using System.Collections;
 using System.IO;
 using System.Xml.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Windows.Media;
 
 namespace PDIWT.Resources
 {
@@ -26,6 +27,19 @@ namespace PDIWT.Resources
 
             }
             return false;
+        }
+
+        public static T GetFristVisualChild<T>(DependencyObject dependencyObject) where T : UIElement
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(dependencyObject); i++)
+            {
+                DependencyObject _dpObject = VisualTreeHelper.GetChild(dependencyObject, i);
+                if (_dpObject is T)
+                    return (T)_dpObject;
+                else
+                    return GetFristVisualChild<T>(_dpObject);
+            }
+            return null;
         }
 
         public static Dictionary<TEnum,string> GetEnumDescriptionDictionary<TEnum>() where TEnum : struct

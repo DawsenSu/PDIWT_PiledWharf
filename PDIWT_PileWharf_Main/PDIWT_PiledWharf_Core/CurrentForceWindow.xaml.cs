@@ -28,7 +28,7 @@ namespace PDIWT_PiledWharf_Core
         public CurrentForceWindow(BM.AddIn addIn)
         {
             InitializeComponent();
-            
+
             Closing += (s, e) => ViewModelLocator.Cleanup();
             ViewModelLocator _locator = new ViewModelLocator();
             DataContext = _locator.CurrentForce;
@@ -48,14 +48,11 @@ namespace PDIWT_PiledWharf_Core
                 //LabelTextBox_PileVerticalCentraSpan,
                 LabelTextBox_WaterDensity};
 
-            Messenger.Default.Register<NotificationMessage<bool>>(this, "ControlForegroundChange" ,ChangeControlsForeground);
+            Messenger.Default.Register<NotificationMessage<bool>>(this, "ControlForegroundChange", ChangeControlsForeground);
             Messenger.Default.Register<Visibility>(this, "ShowMainWindow", v => Visibility = v);
 
-            Closed += (s, e) =>
-            {
-                Messenger.Default.Unregister<NotificationMessage<bool>>(this);
-                Messenger.Default.Unregister<Visibility>(this);
-            };
+            Closed += (s, e) => Messenger.Default.Unregister(this);
+
         }
 
         static CurrentForceWindow m_CurrentForceWindowhost;

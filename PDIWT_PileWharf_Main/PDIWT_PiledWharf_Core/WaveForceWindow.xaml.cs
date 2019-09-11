@@ -48,6 +48,7 @@ namespace PDIWT_PiledWharf_Core
             };
 
             Messenger.Default.Register<NotificationMessage<bool>>(this, "WaveForceForegroundChange", ChangeControlsForeground);
+            Messenger.Default.Register<Visibility>(this, "ShowMainWindow", v => Visibility = v);
 
             Closed += (s, e) => Messenger.Default.Unregister(this);
         }

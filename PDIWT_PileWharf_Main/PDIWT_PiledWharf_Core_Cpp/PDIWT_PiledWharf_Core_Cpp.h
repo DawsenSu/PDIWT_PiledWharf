@@ -31,11 +31,16 @@ namespace PDIWT_PiledWharf_Core_Cpp {
 		// @param[in]	ecInstance	The instance which will hold the given property values
 		// @param[in]	propList	Properties and values list
 		static void SetPropValueList(IECInstanceR ecInstance, bmap<WString, WString> propList);
+
+		// Import ESChema from organization level directory
+		// @param[in]	ecschemaFullName	FullName of Schema to import
+		// @param[in]
+		static StatusInt ImportECSChemaInActiveDgn(WString ecschemaFullName);
 	};
 
 	public enum PileType
 	{
-		SqaurePile = 1,
+		SqaurePile = 0,
 		TubePile,
 		PHCTubePile,
 		SteelTubePile
@@ -45,8 +50,8 @@ namespace PDIWT_PiledWharf_Core_Cpp {
 	{
 	public:
 		//PileEntityCreation();
-		PileEntityCreation(PileType pileType, bmap<PileType,WString> pileTypeMap, double pileWidth, double pileInsideDiameter, double pileConcreteCoreLength, DPoint3d topPoint, DPoint3d bottomPoint)
-			:_pileType(pileType), _pileTypeMap(pileTypeMap), _pileWidth(pileWidth), _pileInsideDiameter(pileInsideDiameter), _pileConcreteCoreLength(pileConcreteCoreLength), _topPoint(topPoint), _bottomPoint(bottomPoint)
+		PileEntityCreation(WString pileName, PileType pileType, double pileWidth, double pileInsideDiameter, double pileConcreteCoreLength, DPoint3d topPoint, DPoint3d bottomPoint)
+			:_pileName(pileName),_pileType(pileType), _pileWidth(pileWidth), _pileInsideDiameter(pileInsideDiameter), _pileConcreteCoreLength(pileConcreteCoreLength), _topPoint(topPoint), _bottomPoint(bottomPoint)
 		{
 			InitSQLiteDb();
 			//double _uorpermm = ACTIVEMODEL->GetModelInfoCP()->GetUorPerMeter() / 1000;
@@ -69,12 +74,13 @@ namespace PDIWT_PiledWharf_Core_Cpp {
 		WString GetCodeString(WString codeName);
 	private:
 		// Engineering data
+		WString _pileName;
 		PileType _pileType;
 		double _pileWidth;
 		double _pileInsideDiameter;
 		double _pileConcreteCoreLength;
 		DPoint3d _topPoint, _bottomPoint;
-		bmap<PileType, WString> _pileTypeMap;
+		//bmap<PileType, WString> _pileTypeMap;
 		sqlite3 *_db;
 	};
 }

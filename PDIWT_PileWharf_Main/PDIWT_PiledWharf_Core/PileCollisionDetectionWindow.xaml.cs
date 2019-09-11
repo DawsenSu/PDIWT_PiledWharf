@@ -15,39 +15,40 @@ using System.Windows.Shapes;
 using BM = Bentley.MstnPlatformNET;
 using BMWPF = Bentley.MstnPlatformNET.WPF;
 using GalaSoft.MvvmLight.Messaging;
+using PDIWT_PiledWharf_Core.ViewModel;
 
 namespace PDIWT_PiledWharf_Core
 {
-    using ViewModel;
     /// <summary>
-    /// Interaction logic for PileLengthCalculatorWindow.xaml
+    /// Interaction logic for PileCollisionDetectionWindow.xaml
     /// </summary>
-    public partial class PileLengthCalculatorWindow : Window
+    public partial class PileCollisionDetectionWindow : Window
     {
-        public PileLengthCalculatorWindow(BM.AddIn addIn)
+        public PileCollisionDetectionWindow(BM.AddIn addIn)
         {
             InitializeComponent();
 
             ViewModelLocator _locator = new ViewModelLocator();
-            DataContext = _locator.PileLengthCalculator;
+            DataContext = _locator.PileCollisionDetection;
             m_wpfhelper = new BMWPF.WPFInteropHelper(this);
-            m_wpfhelper.Attach(addIn, true, "PileLengthCalculatorWindow");
-            Icon = new BitmapImage(new Uri("pack://application:,,,/PDIWT.Resources;component/Images/Icons/PileLength.ico", UriKind.RelativeOrAbsolute));
+            m_wpfhelper.Attach(addIn, true, "PileCollisionDetectionWindow");
+            Icon = new BitmapImage(new Uri("pack://application:,,,/PDIWT.Resources;component/Images/Icons/Collision.ico", UriKind.RelativeOrAbsolute));
+
         }
 
-        static PileLengthCalculatorWindow m_PileLengthCalculatorWindowHost;
+        static PileCollisionDetectionWindow m_PileCollisionDetectionWindowHost;
         BMWPF.WPFInteropHelper m_wpfhelper;
 
         public static void ShowWindow(BM.AddIn addIn)
         {
-            if (m_PileLengthCalculatorWindowHost != null)
+            if (m_PileCollisionDetectionWindowHost != null)
             {
-                m_PileLengthCalculatorWindowHost.Focus();
+                m_PileCollisionDetectionWindowHost.Focus();
                 return;
             };
 
-            m_PileLengthCalculatorWindowHost = new PileLengthCalculatorWindow(addIn);
-            m_PileLengthCalculatorWindowHost.Show();
+            m_PileCollisionDetectionWindowHost = new PileCollisionDetectionWindow(addIn);
+            m_PileCollisionDetectionWindowHost.Show();
         }
         protected override void OnClosed(EventArgs e)
         {
@@ -68,13 +69,8 @@ namespace PDIWT_PiledWharf_Core
             }
             m_wpfhelper.Detach();
             m_wpfhelper.Dispose();
-            m_PileLengthCalculatorWindowHost = null;
+            m_PileCollisionDetectionWindowHost = null;
         }
-
-        //private void DataGird_PileTable_LoadingAndUnLoadingRow(object sender, DataGridRowEventArgs e)
-        //{
-        //    e.Row.Header = e.Row.GetIndex() + 1;
-        //}
 
     }
 }

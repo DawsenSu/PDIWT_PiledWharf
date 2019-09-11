@@ -29,12 +29,12 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock FontWeight="Bold" Text="{Binding SoilLayerNumber, Mode=OneWay}" />
+                                <TextBlock FontWeight="Bold" Text="{Binding SoilLayerObject.Number, Mode=OneWay}" />
                                 <TextBlock
                                     Grid.Column="1"
                                     Margin="2,0"
                                     Text="|" />
-                                <TextBlock Grid.Column="2" Text="{Binding SoilLayerName, Mode=OneWay}" />
+                                <TextBlock Grid.Column="2" Text="{Binding SoilLayerObject.Name, Mode=OneWay}" />
                             </Grid>
                         </Border>
                     </DataTemplate>
@@ -64,12 +64,24 @@
                 <Button
                     x:Name="Button_ToRight"
                     Click="Button_Click_ToRight"
-                    Content="-&gt;"
+                    Content="〉"
                     Style="{StaticResource BasicButton}" />
                 <Button
                     x:Name="Button_ToLeft"
                     Click="Button_Click_ToLeft"
-                    Content="&lt;-"
+                    Content="〈"
+                    Style="{StaticResource BasicButton}" />
+                <Button
+                    x:Name="Buttom_ToUp"
+                    Click="Buttom_ToUp_Click"
+                    Content="︿"
+                    IsEnabled="False"
+                    Style="{StaticResource BasicButton}" />
+                <Button
+                    x:Name="Buttom_ToDown"
+                    Click="Buttom_ToDown_Click"
+                    Content="﹀"
+                    IsEnabled="False"
                     Style="{StaticResource BasicButton}" />
             </StackPanel>
             <GroupBox Grid.Column="2" Header="{x:Static loc:Resources.Picked}">
@@ -77,6 +89,7 @@
                     x:Name="ListBox_Picked"
                     ItemTemplate="{StaticResource SoilLayerListItemDataTemplate}"
                     ItemsSource="{Binding SelectedSoilLayerInfos}"
+                    SelectionChanged="ListBox_Picked_SelectionChanged"
                     SelectionMode="Multiple" />
             </GroupBox>
         </Grid>

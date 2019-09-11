@@ -25,7 +25,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         public CurrentForceViewModel()
         {
 
-            PileGeoTypes = PDIWT_Helper.GetEnumDescriptionDictionary<PileTypeManaged>();
+            //PileGeoTypes = PDIWT_Helper.GetEnumDescriptionDictionary<PileTypeManaged>();
             SelectedPileType = PileTypeManaged.SqaurePile;
 #if DEBUG
             PileTopElevation = 4;
@@ -147,15 +147,15 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
 
-        private Dictionary<PileTypeManaged,string> _pileGeoTypes;
-        /// <summary>
-        /// Pile Types dictionary
-        /// </summary>
-        public Dictionary<PileTypeManaged,string> PileGeoTypes
-        {
-            get { return _pileGeoTypes; }
-            set { Set(ref _pileGeoTypes, value); }
-        }
+        //private Dictionary<PileTypeManaged,string> _pileGeoTypes;
+        ///// <summary>
+        ///// Pile Types dictionary
+        ///// </summary>
+        //public Dictionary<PileTypeManaged,string> PileGeoTypes
+        //{
+        //    get { return _pileGeoTypes; }
+        //    set { Set(ref _pileGeoTypes, value); }
+        //}
 
 
         private PileTypeManaged _selectedPileType;

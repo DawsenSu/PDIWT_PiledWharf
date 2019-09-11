@@ -48,9 +48,9 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
                 BD.DgnModel _activeDgnModel = BM.Session.Instance.GetActiveDgnModel();
                 double uorpermeter = BM.Session.Instance.GetActiveDgnModel().GetModelInfo().UorPerMeter;
 
-                PileBase _pile = new PileBase(PileBase._unknowPileNumbering, PileBase._unknownPileName,
+                PileBase _pile = new PileBase(PileBase._unknowPileNumbering, _info.Item1,
                     new Joint(_points[0]), new Joint(_points[1]),
-                    _info.Item1, _info.Item2 * uorpermeter, _info.Item3 * uorpermeter, _info.Item4 * uorpermeter, _info.Item5);
+                    _info.Item2, _info.Item3 * uorpermeter, _info.Item4 * uorpermeter, _info.Item5 * uorpermeter, _info.Item6);
                 _pile.DrawInActiveModel();
                 _mc.ShowInfoMessage($"Pile Created Successfully",$"Top Point:{_pile.TopJoint}; Bottom Point:{_pile.BottomJoint}",false);
             }
@@ -120,7 +120,7 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
             base.OnCleanup();
         }
 
-        public void InstallNewInstance(Tuple<PileTypeManaged, double, double, double, PileTipType> info)
+        public void InstallNewInstance(Tuple<string, PileTypeManaged, double, double, double, PileTipType> info)
         {
             PilePlacementTool _tool = new PilePlacementTool(_addIn);
             _tool._info = info;
@@ -161,7 +161,7 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
         static BMW.ToolSettingsHost _pilePlacementToolHost;
 
         private List<BG.DPoint3d> _points;
-        private Tuple<PileTypeManaged, double, double, double, PileTipType> _info;
+        private Tuple<string, PileTypeManaged, double, double, double, PileTipType> _info;
 
     }
 }

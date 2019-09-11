@@ -247,7 +247,7 @@
     <value>圆桩</value>
   </data>
   <data name="PHCTubePile" xml:space="preserve">
-    <value>PHC管桩</value>
+    <value>混凝土管桩</value>
   </data>
   <data name="SteelTubePile" xml:space="preserve">
     <value>钢管桩</value>
@@ -532,7 +532,7 @@
     <value>桩基几何类型</value>
   </data>
   <data name="RoundPile" xml:space="preserve">
-    <value>圆桩</value>
+    <value>实心圆桩</value>
   </data>
   <data name="PileSelfWeight" xml:space="preserve">
     <value>桩自重</value>
@@ -656,5 +656,20 @@
   </data>
   <data name="WaterDepthCoeff" xml:space="preserve">
     <value>水深影响系数</value>
+  </data>
+  <data name="PileCollisionDetectionWindowTitle" xml:space="preserve">
+    <value>碰桩检测</value>
+  </data>
+  <data name="MinimumDistance" xml:space="preserve">
+    <value>最小距离</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>序号</value>
+  </data>
+  <data name="PileLengthCurveWindow" xml:space="preserve">
+    <value>桩长曲线</value>
+  </data>
+  <data name="LiftForceDisCoeff" xml:space="preserve">
+    <value>抗拔折减系数 ξi</value>
   </data>
 </root>

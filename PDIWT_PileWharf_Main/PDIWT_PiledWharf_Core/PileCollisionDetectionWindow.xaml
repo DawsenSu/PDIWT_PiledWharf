@@ -1,0 +1,74 @@
+﻿<Window
+    x:Class="PDIWT_PiledWharf_Core.PileCollisionDetectionWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
+    xmlns:com="clr-namespace:PDIWT_PiledWharf_Core.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:loc="clr-namespace:PDIWT.Resources.Localization.MainModule;assembly=PDIWT.Resources"
+    xmlns:local="clr-namespace:PDIWT_PiledWharf_Core.ViewModel"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pdi="clr-namespace:PDIWT.Resources.CustomUserControl;assembly=PDIWT.Resources"
+    Title="{x:Static loc:Resources.PileCollisionDetectionWindowTitle}"
+    Width="225.333"
+    Height="300"
+    mc:Ignorable="d">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <cmd:EventToCommand Command="{Binding WindowClosing}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Skins/MainSkin.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <pdi:LabelTextBox
+            DisplayName="{x:Static loc:Resources.MinimumDistance}"
+            Parameter="{Binding MinimumDistance}"
+            Unit="m" />
+        <ListView
+            Grid.Row="1"
+            ItemsSource="{Binding CollisionPiles}"
+            SelectionMode="Extended">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <cmd:EventToCommand Command="{Binding CollisionPileSelectionChanged}" PassEventArgsToCommand="True" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <ListView.View>
+                <GridView AllowsColumnReorder="False">
+                    <GridViewColumn DisplayMemberBinding="{Binding Number}" Header="{x:Static loc:Resources.Number}" />
+                    <GridViewColumn DisplayMemberBinding="{Binding FirstPile.Numbering}" Header="{x:Static loc:Resources.PileName}" />
+                    <GridViewColumn DisplayMemberBinding="{Binding SecondPile.Numbering}" Header="{x:Static loc:Resources.PileName}" />
+                    <GridViewColumn DisplayMemberBinding="{Binding MinimumDistance, StringFormat={}{0:F2}}">
+                        <GridViewColumn.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{x:Static loc:Resources.MinimumDistance}" />
+                                <TextBlock Text="(m)" />
+                            </StackPanel>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel
+            Grid.Row="2"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+                Command="{Binding Calculate}"
+                Content="{x:Static loc:Resources.Calculate}"
+                Style="{StaticResource BasicButton}" />
+        </StackPanel>
+    </Grid>
+</Window>

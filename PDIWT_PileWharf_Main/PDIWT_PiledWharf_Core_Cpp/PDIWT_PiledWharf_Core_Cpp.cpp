@@ -151,6 +151,49 @@ void PDIWT_PiledWharf_Core_Cpp::PDIWTECFramework::SetPropValueList(IECInstanceR 
 	}
 }
 
+
+StatusInt PDIWT_PiledWharf_Core_Cpp::PDIWTECFramework::ImportECSChemaInActiveDgn(WString ecschemaFullName)
+{
+	DgnECManagerR _dgnECManager = DgnECManager::GetManager();
+
+	WString _pdiwtSchemaName;
+	unsigned int _versionMajor, _versionMinor;
+	if (ECOBJECTS_STATUS_Success != ECSchema::ParseSchemaFullName(_pdiwtSchemaName, _versionMajor, _versionMinor, ecschemaFullName))
+	{
+		mdlOutput_error(WPrintfString(L"Can't parse %s", ecschemaFullName));
+		return ERROR;
+	}
+
+	// Get Schema paths defined by variable at Organization Level
+	bvector<WString> _ecSchemaXMLFilePaths;
+	if (GetOrganizationECSchemaFile(_pdiwtSchemaName, WString(L"PDIWT_ORGANIZATION_ECSCHEMAPATH"), &_ecSchemaXMLFilePaths) != SUCCESS)
+	{
+		mdlOutput_error(WPrintfString(L"Can't find %s in related directories.", ecschemaFullName));
+		return ERROR;
+	}
+
+	// If dgnfile doesn't contain the designated schema, Import it.
+	SchemaInfo _pdiwtSchemaInfo(SchemaKey(_pdiwtSchemaName.GetWCharCP(), _versionMajor, _versionMinor), *ISessionMgr::GetActiveDgnFile());
+	if (!_dgnECManager.IsSchemaContainedWithinFile(_pdiwtSchemaInfo, SCHEMAMATCHTYPE_LatestCompatible))
+	{
+		ECSchemaPtr _pdiwtSchemaImportPtr = nullptr;
+		for each (auto _filepath in _ecSchemaXMLFilePaths)
+		{
+			if (_dgnECManager.ReadSchemaFromXmlFile(_pdiwtSchemaImportPtr, WString(_filepath + ecschemaFullName).GetWCharCP(), ISessionMgr::GetActiveDgnFile())
+				== SchemaReadStatus::SCHEMA_READ_STATUS_Success)
+				break;
+			mdlOutput_error(L"Can't Read Schema");
+			return ERROR;
+		}
+		if (_dgnECManager.ImportSchema(*_pdiwtSchemaImportPtr, *ISessionMgr::GetActiveDgnFile()) != SchemaImportStatus::SCHEMAIMPORT_Success)
+		{
+			mdlOutput_error(L"Can't Import Schema");
+			return ERROR;
+		}
+	}
+	return SUCCESS;
+	
+}
 //! ****************************************************
 //!		Pile Creation Part
 //! ****************************************************
@@ -226,8 +269,13 @@ BentleyStatus PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::CreatPile()
 			mdlOutput_error(L"Fail to attach information to element");
 			return ERROR;
 		}
+		return SUCCESS;
 	}
-	return SUCCESS;
+	else
+	{
+		return ERROR;
+	}
+
 }
 
 
@@ -428,6 +476,7 @@ BentleyStatus PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::BuildECInstanceOnEl
 		_elementDescr = _elementDescr->h.next;
 	}
 	
+	_proplist.Insert(L"Name", _pileName);
 	_proplist.Insert(L"Code", GetCodeString(L"IfcPile"));
 	//WString _pileTypeStr;
 	//switch (_pileType)
@@ -448,7 +497,7 @@ BentleyStatus PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::BuildECInstanceOnEl
 	//	_pileTypeStr = L"Unknown";
 	//	break;
 	//}
-	_proplist.Insert(L"Type", _pileTypeMap[_pileType]);
+	_proplist.Insert(L"Type", WPrintfString(L"%d",_pileType));
 
 	PDIWTECFramework::SetPropValueList(_ifcPileWIPECInstance, _proplist);
 	DgnECInstanceStatus _status = _ifcPileInstanceEnablerP->CreateInstanceOnElement(&_ifcPileElementInstancePtr, _ifcPileWIPECInstance, inout);
@@ -529,6 +578,9 @@ WString PDIWT_PiledWharf_Core_Cpp::PileEntityCreation::GetCodeString(WString cod
 	return _level1Code + _delimiter + _level2Code + _delimiter + _level3Code;
 }
 
+//! ****************************************************
+//!		Transient Element Part 
+//! ****************************************************
 
 
 

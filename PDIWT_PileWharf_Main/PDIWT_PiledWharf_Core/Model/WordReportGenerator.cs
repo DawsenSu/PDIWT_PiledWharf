@@ -656,12 +656,13 @@ namespace PDIWT_PiledWharf_Core.Model
                 _db.Write(_cell);
             }
             _db.EndRow();
-            foreach (var _soillayer in _vm.SoilLayerInfosLib)
+            foreach (var _soillayer in _vm.SoilLayersLibrary)
             {
-                _db.InsertCell(); _db.Write(_soillayer.SoilLayerName);
-                _db.InsertCell(); _db.Write(_soillayer.SoilLayerNumber);
-                _db.InsertCell(); _db.Write(_soillayer.SideFrictionStandardValue.ToString("F2"));
-                _db.InsertCell(); _db.Write(_soillayer.EndResistanceStandardValue.ToString("F2"));
+                //todo need to revise depend on pile type
+                _db.InsertCell(); _db.Write(_soillayer.Number);
+                _db.InsertCell(); _db.Write(_soillayer.Name);
+                _db.InsertCell(); _db.Write(_soillayer.DPSE_Qfi.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_soillayer.DPSE_Qr.Value.ToString("F2"));
                 _db.EndRow();
             }
             _db.EndTable();
@@ -687,7 +688,7 @@ namespace PDIWT_PiledWharf_Core.Model
             _db.EndRow();
             foreach (var _pile in _vm.PileInfos)
             {
-                _db.InsertCell(); _db.Write(_pile.PileCode);
+                _db.InsertCell(); _db.Write(_pile.PileName);
                 _db.InsertCell(); _db.Write(_pile.PileLength.ToString("F2"));
                 _db.InsertCell(); _db.Write(_pile.DesignAxialBearingCapacity.ToString("F2"));
                 _db.InsertCell(); _db.Write(_pile.DesignAxialUpliftCapacity.ToString("F2"));
@@ -706,7 +707,7 @@ namespace PDIWT_PiledWharf_Core.Model
             foreach (var _pile in _vm.PileInfos)
             {
                 SetToHeading2(_db.ParagraphFormat);
-                _db.Writeln($"桩{_pile.PileCode}计算结果计算过程");
+                _db.Writeln($"桩{_pile.PileName}计算结果计算过程");
 
                 SetToMainBody(_db.ParagraphFormat);
                 switch (_pile.SelectedBearingCapacityPileType)
@@ -747,10 +748,10 @@ namespace PDIWT_PiledWharf_Core.Model
                         _db.Writeln($"圆桩直径 D = {_pile.PileDiameter.ToString("F2")}m；");
                         break;
                     case PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.PHCTubePile:
-                        _db.Writeln($"管桩外直径 D = {_pile.PileDiameter.ToString("F2")}m；管桩内直径 d = {_pile.PileInsideDiameter.ToString("F2")}m；");
+                        _db.Writeln($"管桩外直径 D = {_pile.PileDiameter.ToString("F2")}m；管桩内直径 d = {_pile.PileInnerDiameter.ToString("F2")}m；");
                         break;
                     case PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.SteelTubePile:
-                        _db.Writeln($"钢管桩外直径 D = {_pile.PileDiameter.ToString("F2")}m；钢管桩内直径 d = {_pile.PileInsideDiameter.ToString("F2")}m；钢管桩灌芯长度 Lc = {_pile.ConcreteCoreLength.ToString("F2")}m；");
+                        _db.Writeln($"钢管桩外直径 D = {_pile.PileDiameter.ToString("F2")}m；钢管桩内直径 d = {_pile.PileInnerDiameter.ToString("F2")}m；钢管桩灌芯长度 Lc = {_pile.ConcreteCoreLength.ToString("F2")}m；");
                         break;
                     default:
                         break;
@@ -801,13 +802,13 @@ namespace PDIWT_PiledWharf_Core.Model
             _db.EndRow();
             foreach (var _layer in _pile.PileSoilLayersInfo)
             {
-                _db.InsertCell(); _db.Write(_layer.SoilLayerNumber);
-                _db.InsertCell(); _db.Write(_layer.SoilLayerName);
-                _db.InsertCell(); _db.Write(_layer.SoilLayerTopElevation.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.SoilLayerThickness.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.SideFrictionStandardValue.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.EndResistanceStandardValue.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.DiscountCoeff.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.Number);
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.Name);
+                _db.InsertCell(); _db.Write(_layer.PileIntersectionTopEle.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write((_layer.PileIntersectionTopEle - _layer.PileIntersectionBottomEle).Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.DPSE_Qfi.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.DPSE_Qr.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.Xii.Value.ToString("F2"));
                 _db.EndRow();
             }
             _db.EndTable();
@@ -829,13 +830,13 @@ namespace PDIWT_PiledWharf_Core.Model
             _db.EndRow();
             foreach (var _layer in _pile.PileSoilLayersInfo)
             {
-                _db.InsertCell(); _db.Write(_layer.SoilLayerNumber);
-                _db.InsertCell(); _db.Write(_layer.SoilLayerName);
-                _db.InsertCell(); _db.Write(_layer.SoilLayerTopElevation.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.SoilLayerThickness.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.SideFrictionStandardValue.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.EndResistanceStandardValue.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.DiscountCoeff.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.Number);
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.Name);
+                _db.InsertCell(); _db.Write(_layer.PileIntersectionTopEle.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write((_layer.PileIntersectionTopEle - _layer.PileIntersectionBottomEle).Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.TPSP_Qfi.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.TPSP_Qr.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.Xii.Value.ToString("F2"));
                 _db.EndRow();
             }
             _db.EndTable();
@@ -857,15 +858,15 @@ namespace PDIWT_PiledWharf_Core.Model
             _db.EndRow();
             foreach (var _layer in _pile.PileSoilLayersInfo)
             {
-                _db.InsertCell(); _db.Write(_layer.SoilLayerNumber);
-                _db.InsertCell(); _db.Write(_layer.SoilLayerName);
-                _db.InsertCell(); _db.Write(_layer.SoilLayerTopElevation.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.Psii.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.SoilLayerThickness.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.SideFrictionStandardValue.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.Psip.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.EndResistanceStandardValue.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.DiscountCoeff.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.Number);
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.Name);
+                _db.InsertCell(); _db.Write(_layer.PileIntersectionTopEle.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.CISP_Psisi.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write((_layer.PileIntersectionTopEle - _layer.PileIntersectionBottomEle).Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.CISP_Qfi.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.CISP_Psip.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.CISP_Qr.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.Xii.Value.ToString("F2"));
                 _db.EndRow();
             }
             _db.EndTable();
@@ -887,17 +888,17 @@ namespace PDIWT_PiledWharf_Core.Model
             _db.EndRow();
             foreach (var _layer in _pile.PileSoilLayersInfo)
             {
-                _db.InsertCell(); _db.Write(_layer.SoilLayerNumber);
-                _db.InsertCell(); _db.Write(_layer.SoilLayerName);
-                _db.InsertCell(); _db.Write(_layer.SoilLayerTopElevation.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.Betasi.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.Psii.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.SoilLayerThickness.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.SideFrictionStandardValue.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.Betap.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.Psip.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.EndResistanceStandardValue.ToString("F2"));
-                _db.InsertCell(); _db.Write(_layer.DiscountCoeff.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.Number);
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.Name);
+                _db.InsertCell(); _db.Write(_layer.PileIntersectionTopEle.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.CISAGP_Betasi.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.CISAGP_Psisi.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write((_layer.PileIntersectionTopEle - _layer.PileIntersectionBottomEle).Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.CISAGP_Qfi.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.CISAGP_Betap.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.CISAGP_Psip.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.CISAGP_Qr.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_layer.SoilLayerObject.Xii.Value.ToString("F2"));
                 _db.EndRow();
             }
             _db.EndTable();

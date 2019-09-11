@@ -25,8 +25,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo> soilLayerInfosFromLib,
             ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo> pileInSoilLayerInfos)
         {
-            _soilLayerInfosFromLib = soilLayerInfosFromLib;
-            _selectedSoilLayerInfos = pileInSoilLayerInfos;
+            _soilLayerInfosFromLib = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>(soilLayerInfosFromLib);
+            _selectedSoilLayerInfos = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>(pileInSoilLayerInfos);
             _selectedItemsFromLib = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>(_soilLayerInfosFromLib.Except(_selectedSoilLayerInfos));
         }
 

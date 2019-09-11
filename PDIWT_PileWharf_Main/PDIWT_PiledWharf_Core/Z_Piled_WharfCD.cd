@@ -1,40 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
-  <Class Name="PDIWT_PiledWharf_Core.Model.PDIWT_BearingCapacity_PileInfo" Collapsed="true">
-    <Position X="0.5" Y="3.75" Width="4" />
+  <Class Name="PDIWT_PiledWharf_Core.Model.VirtualSteelOrTubePile" Collapsed="true">
+    <Position X="6.5" Y="3.25" Width="2.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAwAAAAFiwBAAClIMAoFAVoAAuAwJgChSQwBk8AAIAQ=</HashCode>
-      <FileName>Model\PDIWT_BearingCapacity_PileInfo.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="PDIWT_PiledWharf_Core.Model.PDIWT_BearingCapacity_SoilLayerInfo" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="0.5" Y="2.75" Width="2.75" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AABYgAAAAAAgEAGAgAgACAAAXQAA4IAAAFBAAAAAAAA=</HashCode>
-      <FileName>Model\SoilLayerInfo.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.242" Collapsed="true" />
-  </Class>
-  <Class Name="PDIWT_PiledWharf_Core.Model.PDIWT_SoilLayerInfoReader">
-    <Position X="3.75" Y="4.75" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Model\SoilLayerInfo.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="PDIWT_PiledWharf_Core.Model.VirtualSteelOrTubePile">
-    <Position X="3.75" Y="6.25" Width="2.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>BQAAAIAAAAEBAAAgBAhAAQAAAIBgAkAAwAARAgAAAIA=</HashCode>
+      <HashCode>BQAAAIAAAAEBAAAgBAggAQAAAIBgAkAAwAARAgAAAIA=</HashCode>
       <FileName>Model\VirtualPile.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -96,17 +68,17 @@
     </TypeIdentifier>
   </Class>
   <Class Name="PDIWT_PiledWharf_Core.ViewModel.BearingCapacityViewModel" Collapsed="true">
-    <Position X="3.5" Y="2.75" Width="2.75" />
+    <Position X="0.5" Y="6" Width="2.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>wAIEQAAEAAQAAQUAgAAAAIAEASEgAAQRAAEIQMCAIAA=</HashCode>
+      <HashCode>wAIEQAAEAAUAAQUAgAAAAIAEASEgABQRAAEIQMCAIAA=</HashCode>
       <FileName>ViewModel\BearingCapacityViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="PDIWT_PiledWharf_Core.Model.PileSoilLayersIntersectionGetter" Collapsed="true">
-    <Position X="9.5" Y="6.5" Width="3.5" />
+  <Class Name="PDIWT_PiledWharf_Core.Model.PileSoilLayersIntersectionGetter">
+    <Position X="9.25" Y="8.5" Width="3.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAACAAAAABAAAAAAAQRAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Model\PDWIT_PileSoilLayerIntersectionInfo.cs</FileName>
@@ -134,18 +106,24 @@
       <FileName>Model\PDIWT_Wharf.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="PDIWT_PiledWharf_Core.Model.PileBase">
+  <Class Name="PDIWT_PiledWharf_Core.Model.PileBase" Collapsed="true">
     <Position X="11.5" Y="5.25" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>BBACMAAAABAAACgIBEAgQEQsQCIAIEEAGAABAAwAAAA=</HashCode>
+      <HashCode>BBACMABAABAAACgMBEAgQEQsQCIAIEEAGAABAAwAAAA=</HashCode>
       <FileName>Model\PDIWT_Pile.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="PDIWT_PiledWharf_Core.Model.SoilLayer" Collapsed="true">
     <Position X="6.5" Y="6.5" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AABQgAAAAAAgEACAgAgACAAAXQAAYIAAAUBAAAAAAAA=</HashCode>
+      <HashCode>QCFAoAABAAEAAAwDgEEEAxQQFAzCAoJgJQAAAABAAEA=</HashCode>
       <FileName>Model\PDIWT_SoilLayer.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -157,8 +135,8 @@
       <FileName>Model\PDIWT_SoilLayerCollection.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="PDIWT_PiledWharf_Core.Model.IntersectionInfo" Collapsed="true">
-    <Position X="10" Y="7.5" Width="2.5" />
+  <Class Name="PDIWT_PiledWharf_Core.Model.IntersectionInfo">
+    <Position X="6.5" Y="8.5" Width="2.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
@@ -187,11 +165,32 @@
       <FileName>Model\PileWharfStaadGenerator.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="PDIWT_PiledWharf_Core.ViewModel.PileLengthCurveViewModel">
-    <Position X="0.5" Y="4.75" Width="3" />
+  <Class Name="PDIWT_PiledWharf_Core.Model.BearingCapacityPile">
+    <Position X="14" Y="6.75" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ViewModel\PileLengthCurveViewModel.cs</FileName>
+      <HashCode>BAAAAAAAAAAAgAAAAAAAgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\PDIWT_Pile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PDIWT_PiledWharf_Core.ViewModel.PDIWT_BearingCapacity_SoilLayerInfo">
+    <Position X="3.25" Y="3" Width="3" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAgAgAAAAAICAAAAAIAACAgAAAAAAAA=</HashCode>
+      <FileName>ViewModel\BearingCapacityViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="PDIWT_PiledWharf_Core.ViewModel.PDIWT_BearingCapacity_PileInfo" Collapsed="true">
+    <Position X="0.5" Y="3" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AQgAAIAFiQFAAClIMAoFAVgAAuAwJgAhQAwBk8AAIAA=</HashCode>
+      <FileName>ViewModel\BearingCapacityViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Enum Name="PDIWT_PiledWharf_Core.Model.BearingCapacityPileTypes" Collapsed="true">

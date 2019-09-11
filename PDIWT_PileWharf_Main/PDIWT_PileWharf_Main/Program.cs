@@ -21,7 +21,20 @@ namespace PDIWT_PiledWharf_Main
         private Program(IntPtr mdlDesc) : base(mdlDesc)
         {
             Addin = this;
-            Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-US");
+
+            string _language = "en-US";
+            string _languageVariable = "PDIWT_LANGUAGE";
+            if (BD.ConfigurationManager.IsVariableDefined(_languageVariable))
+            {
+                _language = BD.ConfigurationManager.GetVariable(_languageVariable, BD.ConfigurationVariableLevel.Organization);
+            }
+            List<string> _languagelist = new List<string>{ "en-US", "zh-CN" };
+            if(!_languagelist.Contains(_language))
+            {
+                BM.MessageCenter.Instance.ShowMessage(BM.MessageType.Warning, $"Variable {_languageVariable} in organization level doesn't define correctly", "change to default en-US", BM.MessageAlert.Balloon);
+                _language = "en-US";
+            }
+            Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(_language);
         }
 
         protected override int Run(string[] commandLine)

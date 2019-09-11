@@ -7,10 +7,11 @@
     xmlns:loc="clr-namespace:PDIWT.Resources.Localization.MainModule;assembly=PDIWT.Resources"
     xmlns:local="clr-namespace:PDIWT_PiledWharf_Core"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pdiext="clr-namespace:PDIWT.Resources.CustomUserControl"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     Title="{x:Static loc:Resources.Draw}"
-    Width="400"
-    Height="220"
+    Width="320"
+    Height="190"
     Visibility="Visible"
     mc:Ignorable="d">
     <Window.Resources>
@@ -20,7 +21,6 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-
     <Grid x:Name="MainGridLayout">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -54,40 +54,52 @@
                     <Label
                         Grid.Row="0"
                         Grid.Column="0"
+                        Content="{x:Static loc:Resources.PileName}" />
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Text="{Binding PileName}" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
                         Content="{x:Static loc:Resources.PileType}" />
-                    <ComboBox
+                    <!--<ComboBox
                         Grid.Row="0"
                         Grid.Column="1"
                         DisplayMemberPath="Value"
                         ItemsSource="{Binding PileGeoTypes, Mode=OneTime}"
                         SelectedValue="{Binding SelectedPileGeoType}"
-                        SelectedValuePath="Key" />
-                    <Label
+                        SelectedValuePath="Key" />-->
+                    <pdiext:PileTypeComboBox
                         Grid.Row="1"
+                        Grid.Column="1"
+                        SelectedPileType="{Binding SelectedPileGeoType}" />
+                    <Label
+                        Grid.Row="2"
                         Grid.Column="0"
                         Content="{x:Static loc:Resources.PileWidth}" />
                     <TextBox
-                        Grid.Row="1"
+                        Grid.Row="2"
                         Grid.Column="1"
                         Text="{Binding PileWidth}" />
                     <Label
-                        Grid.Row="1"
+                        Grid.Row="2"
                         Grid.Column="2"
                         Content="m" />
                     <Label
-                        Grid.Row="2"
+                        Grid.Row="3"
                         Grid.Column="0"
                         Content="{x:Static loc:Resources.PileInsideDiameter}" />
                     <TextBox
-                        Grid.Row="2"
+                        Grid.Row="3"
                         Grid.Column="1"
                         IsEnabled="{Binding SelectedPileGeoType, Converter={StaticResource TubePileToBooleanConverter}, Mode=OneWay}"
                         Text="{Binding PileInsideDiameter}" />
                     <Label
-                        Grid.Row="2"
+                        Grid.Row="3"
                         Grid.Column="2"
                         Content="m" />
-                    <Label
+                    <!--<Label
                         Grid.Row="3"
                         Grid.Column="0"
                         Content="{x:Static loc:Resources.ConcreteCoreLength}" />
@@ -111,9 +123,9 @@
                         IsEnabled="{Binding SelectedPileGeoType, Mode=OneWay, Converter={StaticResource SteelPileToBooleanConverter}}"
                         ItemsSource="{Binding PileTipTypes, Mode=OneTime}"
                         SelectedValue="{Binding SelectedPileTipType}"
-                        SelectedValuePath="Key" />
+                        SelectedValuePath="Key" />-->
                 </Grid>
-                <Label
+                <!--<Label
                     Grid.Row="0"
                     Grid.Column="1"
                     Content="{x:Static loc:Resources.PileTypeIllustration}" />
@@ -123,11 +135,13 @@
                     Width="100"
                     Height="100"
                     Margin="1">
-                    <!--<TextBlock
+                -->
+                <!--<TextBlock
                         Canvas.Left="0"
                         Canvas.Top="-3"
                         FontSize="10"
                         Text="{Binding SelectedPileType}" />-->
+                <!--
                     <Rectangle
                         Canvas.Left="10"
                         Canvas.Top="10"
@@ -172,7 +186,7 @@
                             </CombinedGeometry>
                         </Path.Data>
                     </Path>
-                </Canvas>
+                </Canvas>-->
             </Grid>
         </GroupBox>
         <!--<GroupBox

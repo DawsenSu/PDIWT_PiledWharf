@@ -27,20 +27,43 @@ namespace PDIWT_PiledWharf_Core.ViewModel
     {
         public BuildUpSoilLayersViewModel()
         {
-            SoilLayerInfos = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>();
+            //SoilLayerInfos = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>();
+            _soilLayerCollection = new SoilLayerCollection();
         }
 
         /// <summary>
         /// Property Description
         /// </summary>
-        public ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo> SoilLayerInfos { get; set; }
+        //public ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo> SoilLayerInfos { get; set; }
 
 
-        private PDIWT_BearingCapacity_SoilLayerInfo _selectedSoilLayer;
+        //private PDIWT_BearingCapacity_SoilLayerInfo _selectedSoilLayer;
+        ///// <summary>
+        ///// Property Description
+        ///// </summary>
+        //public PDIWT_BearingCapacity_SoilLayerInfo SelectedSoilLayer
+        //{
+        //    get { return _selectedSoilLayer; }
+        //    set { Set(ref _selectedSoilLayer, value); }
+        //}
+
+
+        private SoilLayerCollection _soilLayerCollection;
         /// <summary>
         /// Property Description
         /// </summary>
-        public PDIWT_BearingCapacity_SoilLayerInfo SelectedSoilLayer
+        public SoilLayerCollection SoilLayerCollection
+        {
+            get { return _soilLayerCollection; }
+            set { Set(ref _soilLayerCollection, value); }
+        }
+
+
+        private SoilLayer _selectedSoilLayer;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public SoilLayer SelectedSoilLayer
         {
             get { return _selectedSoilLayer; }
             set { Set(ref _selectedSoilLayer, value); }
@@ -60,25 +83,25 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                     p =>
                     {
                         var _item = p.Row.Item;
-                        if (_item is PDIWT_BearingCapacity_SoilLayerInfo)
+                        if (_item is SoilLayer)
                         {
-                            var _newSoilLayer = _item as PDIWT_BearingCapacity_SoilLayerInfo;
+                            var _newSoilLayer = _item as SoilLayer;
 
                             if (p.EditAction == DataGridEditAction.Commit)
                             {
                                 _isReadyForAction = true;
 
-                                if (string.IsNullOrEmpty(_newSoilLayer.SoilLayerNumber))
+                                if (string.IsNullOrEmpty(_newSoilLayer.Number))
                                 {
-                                    MessageBox.Show($"Newly adding soil number {_newSoilLayer.SoilLayerNumber} doesn't allow to be empty.", "Invalid Soil Layer Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    MessageBox.Show($"Newly adding soil number {_newSoilLayer.Number} doesn't allow to be empty.", "Invalid Soil Layer Information", MessageBoxButton.OK, MessageBoxImage.Information);
                                     p.Cancel = true;
                                     p.Row.Focus();
                                     _isReadyForAction = false;
                                 }
-                                var _exceptCollection = SoilLayerInfos.Except(new List<PDIWT_BearingCapacity_SoilLayerInfo> { _newSoilLayer });
+                                var _exceptCollection = SoilLayerCollection.Except(new List<SoilLayer> { _newSoilLayer });
                                 if (_exceptCollection.Contains(_newSoilLayer))
                                 {
-                                    MessageBox.Show($"Newly adding soil number {_newSoilLayer.SoilLayerNumber} has already existed in current list.", "Duplicated Soil Layer Information", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    MessageBox.Show($"Newly adding soil number {_newSoilLayer.Number} has already existed in current list.", "Duplicated Soil Layer Information", MessageBoxButton.OK, MessageBoxImage.Information);
                                     p.Cancel = true;
                                     p.Row.Focus();
                                     _isReadyForAction = false;
@@ -108,7 +131,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
         private void ExecuteConfirm()
         {
-            SoilLayerInfos = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>(SoilLayerInfos.OrderBy(e => e.SoilLayerNumber));
+            SoilLayerCollection = new SoilLayerCollection(SoilLayerCollection.OrderBy(e => e.Number));
             // Bearing Capacity ViewModel Register it.
             //Messenger.Default.Send(
             //    new NotificationMessage<ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>>(SoilLayerInfos, "Confirm"), "BuildupSoilLayerLib");
@@ -148,6 +171,11 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                     ?? (_mainWindowClosing = new RelayCommand<CancelEventArgs>(
                     p =>
                     {
+                        foreach (var _layerInfo in SoilLayerCollection)
+                        {
+                            if (_layerInfo.Number == null)
+                                _isReadyForAction = false;  
+                        }
                         if (_isReadyForAction == false)
                         {
                             MessageBox.Show(PDIWT.Resources.Localization.MainModule.Resources.Note_EEIL);
@@ -170,8 +198,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                     ?? (_add = new RelayCommand(
                     () =>
                     {
-                        var _newlayer = new PDIWT_BearingCapacity_SoilLayerInfo();
-                        SoilLayerInfos.Add(_newlayer);
+                        var _newlayer = new SoilLayer();
+                        SoilLayerCollection.Add(_newlayer);
                         SelectedSoilLayer = _newlayer;
                     }));
             }
@@ -192,20 +220,20 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                     {
                         var _temp = SelectedSoilLayer;
 
-                        if (SoilLayerInfos.Count == 1)
+                        if (SoilLayerCollection.Count == 1)
                         {
                             SelectedSoilLayer = null;
                         }
                         else
                         {
-                            int _indexOfSelectedRow = SoilLayerInfos.IndexOf(SelectedSoilLayer);
+                            int _indexOfSelectedRow = SoilLayerCollection.IndexOf(SelectedSoilLayer);
 
-                            if (_indexOfSelectedRow == SoilLayerInfos.Count - 1)
-                                SelectedSoilLayer = SoilLayerInfos.ElementAt(_indexOfSelectedRow - 1);
+                            if (_indexOfSelectedRow == SoilLayerCollection.Count - 1)
+                                SelectedSoilLayer = SoilLayerCollection.ElementAt(_indexOfSelectedRow - 1);
                             else
-                                SelectedSoilLayer = SoilLayerInfos.ElementAt(_indexOfSelectedRow + 1);
+                                SelectedSoilLayer = SoilLayerCollection.ElementAt(_indexOfSelectedRow + 1);
                         }
-                        SoilLayerInfos.Remove(_temp);
+                        SoilLayerCollection.Remove(_temp);
                     },
                     () => SelectedSoilLayer != null));
             }
@@ -230,24 +258,24 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             var _mc = Bentley.MstnPlatformNET.MessageCenter.Instance;
             try
             {
-                SoilLayerCollection _soilLayer = SoilLayerCollection.ObtainFromModel(Bentley.MstnPlatformNET.Session.Instance.GetActiveDgnModel());
+                SoilLayerCollection = SoilLayerCollection.ObtainFromModel(Bentley.MstnPlatformNET.Session.Instance.GetActiveDgnModel());
 
-                SoilLayerInfos.Clear();
-                foreach (var _layer in _soilLayer)
-                {
-                    var _soilLayerInfo = new PDIWT_BearingCapacity_SoilLayerInfo()
-                    {
-                        SoilLayerNumber = _layer.SoilLayerNumber,
-                        SoilLayerName = _layer.SoilLayerName,
-                        Betasi = _layer.Betasi,
-                        Psii = _layer.Psii,
-                        SideFrictionStandardValue = _layer.SideFrictionStandardValue,
-                        Betap = _layer.Betap,
-                        Psip = _layer.Psip,
-                        EndResistanceStandardValue = _layer.EndResistanceStandardValue
-                    };
-                    SoilLayerInfos.Add(_soilLayerInfo);
-                }
+                //SoilLayerCollection.Clear();
+                //foreach (var _layer in _soilLayer)
+                //{
+                //    var _soilLayerInfo = new PDIWT_BearingCapacity_SoilLayerInfo()
+                //    {
+                //        SoilLayerNumber = _layer.SoilLayerNumber,
+                //        SoilLayerName = _layer.SoilLayerName,
+                //        Betasi = _layer.Betasi,
+                //        Psii = _layer.Psii,
+                //        SideFrictionStandardValue = _layer.SideFrictionStandardValue,
+                //        Betap = _layer.Betap,
+                //        Psip = _layer.Psip,
+                //        EndResistanceStandardValue = _layer.EndResistanceStandardValue
+                //    };
+                //    SoilLayerInfos.Add(_soilLayerInfo);
+                //}
                 _mc.ShowMessage(Bentley.MstnPlatformNET.MessageType.Info, "Load successfully from model", "", Bentley.MstnPlatformNET.MessageAlert.None);
             }
             catch (Exception e)

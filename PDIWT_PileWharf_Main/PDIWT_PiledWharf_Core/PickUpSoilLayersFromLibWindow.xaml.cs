@@ -100,5 +100,35 @@ namespace PDIWT_PiledWharf_Core
                 return (PickUpSoilLayersFromLibViewModel)DataContext;
             }
         }
+
+        private void Buttom_ToUp_Click(object sender, RoutedEventArgs e)
+        {
+            var _soilLayer = (PDIWT_BearingCapacity_SoilLayerInfo)ListBox_Picked.SelectedItem;
+            int _index = Vm.SelectedSoilLayerInfos.IndexOf(_soilLayer);
+            if (_index != 0)
+                Vm.SelectedSoilLayerInfos.Move(_index, _index - 1);
+        }
+
+        private void Buttom_ToDown_Click(object sender, RoutedEventArgs e)
+        {
+            var _soilLayer = (PDIWT_BearingCapacity_SoilLayerInfo)ListBox_Picked.SelectedItem;
+            int _index = Vm.SelectedSoilLayerInfos.IndexOf(_soilLayer);
+            if (_index != Vm.SelectedSoilLayerInfos.Count - 1)
+                Vm.SelectedSoilLayerInfos.Move(_index, _index + 1);
+        }
+
+        private void ListBox_Picked_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ListBox_Picked.SelectedItems.Count == 1)
+            {
+                Buttom_ToUp.IsEnabled = true;
+                Buttom_ToDown.IsEnabled = true;
+            }
+            else
+            {
+                Buttom_ToUp.IsEnabled = false;
+                Buttom_ToDown.IsEnabled = false;
+            }
+        }
     }
 }

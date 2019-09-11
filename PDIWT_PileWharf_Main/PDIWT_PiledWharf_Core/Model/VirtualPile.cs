@@ -279,8 +279,8 @@ namespace PDIWT_PiledWharf_Core.Model
             double _sideBCPartEachLayer = 0;
             foreach (var _layer in _insectInfos)
             {
-                _sideBCPartEachLayer += 1 / partialCoeff * _pilePerimeter * _layer.SoilLayer.SideFrictionStandardValue * _layer.GetPileLengthInSoilLayer() / _uorpermeter;
-                double _endBCPartEacnLayer = 1 / partialCoeff * blockCoeff * _layer.SoilLayer.EndResistanceStandardValue * _pileArea;
+                _sideBCPartEachLayer += 1 / partialCoeff * _pilePerimeter * _layer.SoilLayer.TPSP_Qfi.GetValueOrDefault() * _layer.GetPileLengthInSoilLayer() / _uorpermeter;
+                double _endBCPartEacnLayer = 1 / partialCoeff * blockCoeff * _layer.SoilLayer.TPSP_Qr.GetValueOrDefault() * _pileArea;
                 _sideAndendBCPart.Add(Tuple.Create(_sideBCPartEachLayer, _endBCPartEacnLayer));
             }
 

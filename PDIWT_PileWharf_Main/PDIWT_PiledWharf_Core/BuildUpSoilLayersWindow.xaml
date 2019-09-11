@@ -22,6 +22,13 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Skins/MainSkin.xaml" />
+                <ResourceDictionary>
+                    <SolidColorBrush x:Key="DataGridBorder" Color="Gray" />
+                    <Style x:Key="DataGridCell" TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Center" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                    </Style>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -31,110 +38,606 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <GroupBox Header="{x:Static loc:Resources.SoilParameters}">
-            <DataGrid
-                AutoGenerateColumns="False"
-                CanUserAddRows="False"
-                CanUserDeleteRows="False"
-                CanUserReorderColumns="False"
-                ColumnWidth="*"
-                ContextMenu="{DynamicResource GridAndListContextMenu}"
-                ItemsSource="{Binding SoilLayerInfos}"
-                SelectedItem="{Binding SelectedSoilLayer}">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="RowEditEnding">
-                        <cmd:EventToCommand Command="{Binding AddNewSoilLayer}" PassEventArgsToCommand="True" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding SoilLayerNumber, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False">
-                        <DataGridTextColumn.Header>
-                            <Label Content="{x:Static loc:Resources.SoilLayerNumber}" />
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding SoilLayerName, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False">
-                        <DataGridTextColumn.Header>
-                            <Label Content="{x:Static loc:Resources.SoilLayerName}" />
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Betasi, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False">
-                        <DataGridTextColumn.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <!--<Label Content="{x:Static loc:Resources.SideFrictionStandardValue}" />-->
-                                <Label Content="βsi" />
-                            </StackPanel>
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Psii, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False">
-                        <DataGridTextColumn.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <!--<Label Content="{x:Static loc:Resources.SideFrictionStandardValue}" />-->
-                                <Label Content="ψsi" />
-                            </StackPanel>
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding SideFrictionStandardValue, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False">
-                        <DataGridTextColumn.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <!--<Label Content="{x:Static loc:Resources.SideFrictionStandardValue}" />-->
-                                <Label Content="qfi(kPa)" />
-                            </StackPanel>
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
-                    <!--<DataGridTextColumn Binding="{Binding SoilLayerThickness}">
-                        <DataGridTextColumn.Header>
-                            <StackPanel Orientation="Horizontal">
-                    -->
-                    <!--<Label Content="{x:Static loc:Resources.SoilLayerThickness}" />-->
-                    <!--
-                                <Label Content="li(m)" />
-                            </StackPanel>
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>-->
-                    <DataGridTextColumn Binding="{Binding Betap, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False">
-                        <DataGridTextColumn.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <!--<Label Content="{x:Static loc:Resources.EndResistanceStandardValue}" />-->
-                                <Label Content="βp" />
-                            </StackPanel>
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Psip, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False">
-                        <DataGridTextColumn.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <!--<Label Content="{x:Static loc:Resources.EndResistanceStandardValue}" />-->
-                                <Label Content="ψp" />
-                            </StackPanel>
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding EndResistanceStandardValue, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False">
-                        <DataGridTextColumn.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <!--<Label Content="{x:Static loc:Resources.EndResistanceStandardValue}" />-->
-                                <Label Content="qr(kPa)" />
-                            </StackPanel>
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding DiscountCoeff, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False">
-                        <DataGridTextColumn.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <!--<Label Content="{x:Static loc:Resources.DiscountCoefficient}" />-->
-                                <Label Content="η" />
-                            </StackPanel>
-                        </DataGridTextColumn.Header>
-                    </DataGridTextColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-            <!--<ListView AutomationProperties.IsRowHeader="True" ItemsSource="{Binding SoilLayerInfos}">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn DisplayMemberBinding="{Binding SoilLayerNumber}" Header="{x:Static loc:Resources.SoilLayerNumber}" />
-                        <GridViewColumn DisplayMemberBinding="{Binding SoilLayerName}" Header="{x:Static loc:Resources.SoilLayerName}" />
-                        <GridViewColumn DisplayMemberBinding="{Binding SideFrictionStandardValue}" Header="{x:Static loc:Resources.SideFrictionStandardValue}" />
-                        <GridViewColumn DisplayMemberBinding="{Binding EndResistanceStandardValue}" Header="{x:Static loc:Resources.EndResistanceStandardValue}" />
-                        <GridViewColumn DisplayMemberBinding="{Binding DiscountCoeff}" Header="{x:Static loc:Resources.DiscountCoefficient}" />
-                    </GridView>
-                </ListView.View>
-            </ListView>-->
+            <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                <DataGrid
+                    AutoGenerateColumns="False"
+                    CanUserAddRows="False"
+                    CanUserDeleteRows="False"
+                    CanUserReorderColumns="False"
+                    ColumnHeaderHeight="60"
+                    ColumnWidth="*"
+                    ContextMenu="{DynamicResource GridAndListContextMenu}"
+                    ItemsSource="{Binding SoilLayerCollection}"
+                    PreparingCellForEdit="DataGrid_PreparingCellForEdit"
+                    SelectedItem="{Binding SelectedSoilLayer}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="RowEditEnding">
+                            <cmd:EventToCommand Command="{Binding AddNewSoilLayer}" PassEventArgsToCommand="True" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn
+                            Width="90"
+                            Binding="{Binding Number, UpdateSourceTrigger=PropertyChanged}"
+                            ElementStyle="{StaticResource DataGridCell}"
+                            IsReadOnly="False">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="DataGridColumnHeader">
+                                                <Border
+                                                    Padding="0"
+                                                    BorderBrush="{DynamicResource DataGridBorder}"
+                                                    BorderThickness="0,0,1,1">
+                                                    <Label VerticalContentAlignment="Center" Content="{x:Static loc:Resources.SoilLayerNumber}" />
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn
+                            Width="90"
+                            Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                            ElementStyle="{StaticResource DataGridCell}"
+                            IsReadOnly="False">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="DataGridColumnHeader">
+                                                <Border
+                                                    Padding="0"
+                                                    BorderBrush="{DynamicResource DataGridBorder}"
+                                                    BorderThickness="0,0,1,1">
+                                                    <Label VerticalContentAlignment="Center" Content="{x:Static loc:Resources.SoilLayerName}" />
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                        </DataGridTextColumn>
+                        <DataGridTemplateColumn Width="140">
+                            <DataGridTemplateColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="DataGridColumnHeader">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="1" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="1" />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="1" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="1" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border
+                                                        Grid.Row="1"
+                                                        Grid.ColumnSpan="3"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.Row="3"
+                                                        Grid.ColumnSpan="3"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.Row="2"
+                                                        Grid.Column="1"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.RowSpan="4"
+                                                        Grid.Column="3"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Label
+                                                        Grid.Row="0"
+                                                        Grid.ColumnSpan="3"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="{x:Static loc:Resources.BCPileType_DrivenPileWithSealedEnd}" />
+                                                    <Label
+                                                        Grid.Row="2"
+                                                        Grid.Column="0"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="qfi" />
+                                                    <Label
+                                                        Grid.Row="2"
+                                                        Grid.Column="2"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="qR" />
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </DataGridTemplateColumn.HeaderStyle>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Background="Transparent" Columns="2">
+                                        <Border
+                                            Padding="0"
+                                            BorderBrush="{DynamicResource DataGridBorder}"
+                                            BorderThickness="0,0,1,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding DPSE_Qfi, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                        <Border
+                                            Padding="0"
+                                            BorderBrush="{DynamicResource DataGridBorder}"
+                                            BorderThickness="0,0,0,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding DPSE_Qr, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Columns="2">
+                                        <TextBox Text="{Binding DPSE_Qfi, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nulldoulbe2str}}" />
+                                        <TextBox Text="{Binding DPSE_Qr, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nulldoulbe2str}}" />
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="210">
+                            <DataGridTemplateColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="DataGridColumnHeader">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="1" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="1" />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="1" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="1" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="1" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border
+                                                        Grid.Row="1"
+                                                        Grid.ColumnSpan="5"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.Row="3"
+                                                        Grid.ColumnSpan="5"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.Row="2"
+                                                        Grid.Column="1"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.Row="2"
+                                                        Grid.Column="3"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.RowSpan="4"
+                                                        Grid.Column="5"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Label
+                                                        Grid.Row="0"
+                                                        Grid.ColumnSpan="5"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="{x:Static loc:Resources.BCPileType_TubePileOrSteelPile}" />
+                                                    <Label
+                                                        Grid.Row="2"
+                                                        Grid.Column="0"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="qfi" />
+                                                    <Label
+                                                        Grid.Row="2"
+                                                        Grid.Column="2"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="η" />
+                                                    <Label
+                                                        Grid.Row="2"
+                                                        Grid.Column="4"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="qR" />
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </DataGridTemplateColumn.HeaderStyle>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Background="Transparent" Columns="3">
+                                        <Border
+                                            Padding="0"
+                                            BorderBrush="{DynamicResource DataGridBorder}"
+                                            BorderThickness="0,0,1,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding TPSP_Qfi, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                        <Border
+                                            Padding="0"
+                                            BorderBrush="{DynamicResource DataGridBorder}"
+                                            BorderThickness="0,0,1,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding TPSP_Yita, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                        <Border
+                                            Padding="0"
+                                            BorderBrush="{DynamicResource DataGridBorder}"
+                                            BorderThickness="0,0,0,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding TPSP_Qr, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Columns="3">
+                                        <TextBox Text="{Binding TPSP_Qfi, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nulldoulbe2str}}" />
+                                        <TextBox Text="{Binding TPSP_Yita, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nulldoulbe2str}}" />
+                                        <TextBox Text="{Binding TPSP_Qr, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nulldoulbe2str}}" />
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="280">
+                            <DataGridTemplateColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="DataGridColumnHeader">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="1" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="1" />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="1" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="1" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="1" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="1" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border
+                                                        Grid.Row="1"
+                                                        Grid.ColumnSpan="9"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.Row="3"
+                                                        Grid.ColumnSpan="9"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.Row="2"
+                                                        Grid.Column="1"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.Row="2"
+                                                        Grid.Column="3"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.Row="2"
+                                                        Grid.Column="5"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.RowSpan="4"
+                                                        Grid.Column="7"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Label
+                                                        Grid.Row="0"
+                                                        Grid.ColumnSpan="7"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="{x:Static loc:Resources.BCPileType_CastInSituPile}" />
+                                                    <Label
+                                                        Grid.Row="2"
+                                                        Grid.Column="0"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="ψsi" />
+                                                    <Label
+                                                        Grid.Row="2"
+                                                        Grid.Column="2"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="qfi" />
+                                                    <Label
+                                                        Grid.Row="2"
+                                                        Grid.Column="4"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="ψp" />
+                                                    <Label
+                                                        Grid.Row="2"
+                                                        Grid.Column="6"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="qR" />
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </DataGridTemplateColumn.HeaderStyle>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Background="Transparent" Columns="4">
+                                        <Border
+                                            Padding="0"
+                                            BorderBrush="{DynamicResource DataGridBorder}"
+                                            BorderThickness="0,0,1,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding CISP_Psisi, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                        <Border
+                                            Padding="0"
+                                            BorderBrush="{DynamicResource DataGridBorder}"
+                                            BorderThickness="0,0,1,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding CISP_Qfi, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                        <Border
+                                            Padding="0"
+                                            BorderBrush="{DynamicResource DataGridBorder}"
+                                            BorderThickness="0,0,1,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding CISP_Psip, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                        <Border
+                                            Padding="0"
+                                            BorderBrush="{DynamicResource DataGridBorder}"
+                                            BorderThickness="0,0,0,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding CISP_Qr, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Columns="4">
+                                        <TextBox Text="{Binding CISP_Psisi, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nulldoulbe2str}}" />
+                                        <TextBox Text="{Binding CISP_Qfi, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nulldoulbe2str}}" />
+                                        <TextBox Text="{Binding CISP_Psip, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nulldoulbe2str}}" />
+                                        <TextBox Text="{Binding CISP_Qr, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nulldoulbe2str}}" />
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="420">
+                            <DataGridTemplateColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="DataGridColumnHeader">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="1" />
+                                                        <RowDefinition Height="*" />
+                                                        <RowDefinition Height="1" />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="1" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="1" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="1" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="1" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="1" />
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="1" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border
+                                                        Grid.Row="1"
+                                                        Grid.ColumnSpan="11"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.Row="3"
+                                                        Grid.ColumnSpan="11"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.Row="2"
+                                                        Grid.Column="1"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.Row="2"
+                                                        Grid.Column="3"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.Row="2"
+                                                        Grid.Column="5"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.Row="2"
+                                                        Grid.Column="7"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.Row="2"
+                                                        Grid.Column="9"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Border
+                                                        Grid.RowSpan="4"
+                                                        Grid.Column="11"
+                                                        Background="{DynamicResource DataGridBorder}" />
+                                                    <Label
+                                                        Grid.Row="0"
+                                                        Grid.ColumnSpan="11"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="{x:Static loc:Resources.BCPileType_CastInSituAfterGrountingPile}" />
+                                                    <Label
+                                                        Grid.Row="2"
+                                                        Grid.Column="0"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="βsi" />
+                                                    <Label
+                                                        Grid.Row="2"
+                                                        Grid.Column="2"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="ψsi" />
+                                                    <Label
+                                                        Grid.Row="2"
+                                                        Grid.Column="4"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="qfi" />
+                                                    <Label
+                                                        Grid.Row="2"
+                                                        Grid.Column="6"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="βp" />
+                                                    <Label
+                                                        Grid.Row="2"
+                                                        Grid.Column="8"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="ψp" />
+                                                    <Label
+                                                        Grid.Row="2"
+                                                        Grid.Column="10"
+                                                        HorizontalContentAlignment="Center"
+                                                        Content="qR" />
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </DataGridTemplateColumn.HeaderStyle>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Background="Transparent" Columns="6">
+                                        <Border
+                                            Padding="0"
+                                            BorderBrush="{DynamicResource DataGridBorder}"
+                                            BorderThickness="0,0,1,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding CISAGP_Betasi, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                        <Border
+                                            Padding="0"
+                                            BorderBrush="{DynamicResource DataGridBorder}"
+                                            BorderThickness="0,0,1,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding CISAGP_Psisi, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                        <Border
+                                            Padding="0"
+                                            BorderBrush="{DynamicResource DataGridBorder}"
+                                            BorderThickness="0,0,1,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding CISAGP_Qfi, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                        <Border
+                                            Padding="0"
+                                            BorderBrush="{DynamicResource DataGridBorder}"
+                                            BorderThickness="0,0,1,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding CISAGP_Betap, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                        <Border
+                                            Padding="0"
+                                            BorderBrush="{DynamicResource DataGridBorder}"
+                                            BorderThickness="0,0,1,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding CISAGP_Psip, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                        <Border
+                                            Padding="0"
+                                            BorderBrush="{DynamicResource DataGridBorder}"
+                                            BorderThickness="0,0,0,0">
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding CISAGP_Qr, UpdateSourceTrigger=PropertyChanged}" />
+                                        </Border>
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Columns="6">
+                                        <TextBox Text="{Binding CISAGP_Betasi, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nulldoulbe2str}}" />
+                                        <TextBox Text="{Binding CISAGP_Psisi, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nulldoulbe2str}}" />
+                                        <TextBox Text="{Binding CISAGP_Qfi, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nulldoulbe2str}}" />
+                                        <TextBox Text="{Binding CISAGP_Betap, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nulldoulbe2str}}" />
+                                        <TextBox Text="{Binding CISAGP_Psip, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nulldoulbe2str}}" />
+                                        <TextBox Text="{Binding CISAGP_Qr, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nulldoulbe2str}}" />
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn
+                            Width="70"
+                            Binding="{Binding Xii, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource nulldoulbe2str}}"
+                            ElementStyle="{StaticResource DataGridCell}"
+                            IsReadOnly="False">
+                            <DataGridTextColumn.HeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="DataGridColumnHeader">
+                                                <Border
+                                                    Padding="0"
+                                                    BorderBrush="{DynamicResource DataGridBorder}"
+                                                    BorderThickness="0,0,1,1">
+                                                    <Label
+                                                        HorizontalContentAlignment="Center"
+                                                        VerticalContentAlignment="Center"
+                                                        Content="ξi" />
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </DataGridTextColumn.HeaderStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </ScrollViewer>
         </GroupBox>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>

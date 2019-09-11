@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Messaging;
 
 using LiveCharts;
+using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 
 namespace PDIWT_PiledWharf_Core.ViewModel
@@ -16,7 +18,6 @@ namespace PDIWT_PiledWharf_Core.ViewModel
     {
         public PileLengthCurveViewModel()
         {
-            SeriesCollection = new SeriesCollection();
             //{
             //    new LineSeries
             //    {
@@ -25,18 +26,27 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             //    }
             //};
             //Labels = new List<string>();
+            //var _mapper = LiveCharts.Configurations.Mappers.Xy<Tuple<double, double>>().X(item => item.Item1).Y(item => item.Item2);
+            //LineSeries _lineSeries = new LineSeries()
+            //{
+            //    Title = "Length",
+            //    Values = _dataResources,
+            //    LineSmoothness = 0
+            //};
+            InverseFormatter = value => (-value).ToString();
+            LabelFromater = value => string.Format("BearCapacity:{0:F2}\nLength:{1:F2}", value.X, value.Y);
         }
 
-        private SeriesCollection _seriesCollection;
+        private ChartValues<ObservablePoint> _dataResources;
         /// <summary>
         /// Property Description
         /// </summary>
-        public SeriesCollection SeriesCollection
+        public ChartValues<ObservablePoint> DataResources
         {
-            get { return _seriesCollection; }
-            set { Set(ref _seriesCollection, value); }
+            get { return _dataResources; }
+            set { Set(ref _dataResources, value); }
         }
-
+        public Func<double,string> InverseFormatter { get; set; }
         //private List<string> _labels;
         ///// <summary>
         ///// Property Description
@@ -46,5 +56,6 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         //    get { return _labels; }
         //    set { Set(ref _labels, value); }
         //}
+        public Func<ChartPoint,string> LabelFromater { get; set; }
     }
 }

@@ -54,8 +54,8 @@ namespace PDIWT_PiledWharf_Main
         }
         public static void Process_DetectCollision(string unparsed)
         {
-            Bentley.MstnPlatformNET.MessageCenter.Instance.StatusMessage = "Input Process Detectcollision";
-
+            //Bentley.MstnPlatformNET.MessageCenter.Instance.StatusMessage = "Input Process Detectcollision";
+            PileCollisionDetectionWindow.ShowWindow(Program.Addin);
         }
 
         public static void Output_CalculationNote(string unparsed)

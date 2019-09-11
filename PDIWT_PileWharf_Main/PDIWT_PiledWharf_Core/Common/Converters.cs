@@ -112,13 +112,13 @@ namespace PDIWT_PiledWharf_Core.Common
         }
     }
 
-    [ValueConversion(typeof(DataGridRow),typeof(int))]
-    public class RowToIndexConveter : IValueConverter
+    [ValueConversion(typeof(int),typeof(string))]
+    public class RowNumberToIndexConveter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            DataGridRow row = value as DataGridRow;
-            return row.GetIndex() + 1;
+            int _row = (int)value;
+            return _row == 0? "*" : _row.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -142,6 +142,33 @@ namespace PDIWT_PiledWharf_Core.Common
             var _value = (string)value;
             var _dict = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<DesignWaterLevelCondition>();
             return _dict.Where(item => item.Value == _value).First().Key;
+        }
+    }
+
+    [ValueConversion(typeof(double?),typeof(string))]
+    public class NullDoubleToString : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double? _double = (double?)value;
+            if (_double == null)
+                return null;
+            else
+                return _double.ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            string _str = (string)value;
+            if (string.IsNullOrEmpty(_str) || string.IsNullOrWhiteSpace(_str))
+                return null;
+            else
+            {
+                if (double.TryParse(_str, out double _doubleValue))
+                    return _doubleValue;
+                else
+                    return null;
+            }
         }
     }
 }

@@ -17,6 +17,7 @@ using BDE = Bentley.DgnPlatformNET.Elements;
 using BMW = Bentley.MstnPlatformNET.WPF;
 using BG = Bentley.GeometryNET;
 using PDIWT_PiledWharf_Core.Model.Tools;
+using PDIWT_PiledWharf_Core.ViewModel;
 
 namespace PDIWT_PiledWharf_Core.Model
 {
@@ -54,10 +55,11 @@ namespace PDIWT_PiledWharf_Core.Model
                     var _layerInfo = new PDIWT_BearingCapacity_SoilLayerInfo();
                     BDE.MeshHeaderElement _mesh = (BDE.MeshHeaderElement)_element;
                     SoilLayer _soilLayer = SoilLayer.ObtainInfoFromMesh(_mesh);
-                    _soilLayers.Add(_soilLayer);
+                    if (_soilLayer != null)
+                        _soilLayers.Add(_soilLayer);
                     return BD.StatusInt.Success;
                 });
-                _soilLayers = new SoilLayerCollection(_soilLayers.OrderBy(_layer => _layer.SoilLayerNumber));
+                _soilLayers = new SoilLayerCollection(_soilLayers.OrderBy(_layer => _layer.Number));
                 return _soilLayers;
             }
             catch (Exception e)

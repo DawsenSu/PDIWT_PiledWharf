@@ -8,6 +8,7 @@
     xmlns:loc="clr-namespace:PDIWT.Resources.Localization.MainModule;assembly=PDIWT.Resources"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pdi="clr-namespace:PDIWT.Resources.CustomUserControl;assembly=PDIWT.Resources"
+    xmlns:pdiext="clr-namespace:PDIWT.Resources.CustomUserControl"
     Title="{x:Static loc:Resources.CurrentForceCalculation}"
     Width="400"
     Height="450"
@@ -77,12 +78,13 @@
                             <ColumnDefinition Width="150" />
                         </Grid.ColumnDefinitions>
                         <Label x:Name="Label_Shape" Content="{x:Static loc:Resources.PileType}" />
-                        <ComboBox
+                        <pdiext:PileTypeComboBox Grid.Column="1" SelectedPileType="{Binding SelectedPileType}" />
+                        <!--<ComboBox
                             Grid.Column="1"
                             DisplayMemberPath="Value"
                             ItemsSource="{Binding PileGeoTypes, Mode=OneTime}"
                             SelectedValue="{Binding SelectedPileType}"
-                            SelectedValuePath="Key" />
+                            SelectedValuePath="Key" />-->
                     </Grid>
                     <pdi:LabelTextBox
                         x:Name="LabelTextBox_SquarePileAngle"

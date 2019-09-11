@@ -40,5 +40,14 @@ namespace PDIWT_PiledWharf_Core
             });
             Closed += (s,e) => Messenger.Default.Unregister<NotificationMessage>(this, "BuildUpWindowButtonClicked");
         }
+
+        private void DataGrid_PreparingCellForEdit(object sender, DataGridPreparingCellForEditEventArgs e)
+        {
+            UIElement _ui = PDIWT.Resources.PDIWT_Helper.GetFristVisualChild<TextBox>(e.EditingElement);
+            if(_ui != null)
+            {
+                Keyboard.Focus(_ui);
+            }
+        }
     }
 }

@@ -68,8 +68,12 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             _virtualPileTable.Columns.Add(new DataColumn("PlanRotationAngle", typeof(double)) { DefaultValue = 0 });//5 Degree
             _virtualPileTable.Columns.Add(new DataColumn("PileDiameter", typeof(double)) { DefaultValue = 0 });//6 unit: m
             _virtualPileTable.Columns.Add(new DataColumn("PileInnerDiameter", typeof(double)) { DefaultValue = 0 });//7 unit: m
-            _virtualPileTable.Columns.Add(new DataColumn("PileLength", typeof(double)) { DefaultValue = double.NaN});//8 unit: m
+            _virtualPileTable.Columns.Add(new DataColumn("PileLength", typeof(double)) { DefaultValue = double.NaN });//8 unit: m
+            _virtualPileTable.Columns.Add(new DataColumn("RowNumber", typeof(int)) { DefaultValue = 0 });//9 unit: RowNumber
+            _virtualPileTable.RowChanged += _virtualPileTable_RowChanged;
+            _virtualPileTable.RowDeleting += _virtualPileTable_RowDeleting;
 
+#if DEBUG
             DataRow _row = _virtualPileTable.NewRow();
             _row[1] = 480770;
             _row[2] = 2500575.0 ;
@@ -79,6 +83,30 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             _row[6] = 1;
             _row[7] = 0.8;
             _virtualPileTable.Rows.Add(_row);
+#endif
+        }
+
+        private void _virtualPileTable_RowDeleting(object sender, DataRowChangeEventArgs e)
+        {
+            int index = 1;
+            for (int i = 0; i < e.Row.Table.Rows.Count; i++)
+            {
+                if (e.Row.Table.Rows[i] == e.Row)
+                    continue;
+                e.Row.Table.Rows[i][9] = index;
+                index++;
+            }
+        }
+
+        private void _virtualPileTable_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action == DataRowAction.Add)
+            {
+                for (int i = 0; i < e.Row.Table.Rows.Count; i++)
+                {
+                    e.Row.Table.Rows[i][9] = i + 1;
+                }
+            }
         }
 
         private readonly BM.MessageCenter _mc = BM.MessageCenter.Instance;
@@ -228,16 +256,23 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                 LiveCharts.ChartValues<ObservablePoint> _chartPoints = new LiveCharts.ChartValues<ObservablePoint>();
                 foreach (var _result in _results)
                 {
-                    _chartPoints.Add(new ObservablePoint(_result.Item2, _result.Item1 / _uorpermeter));
+                    _chartPoints.Add(new ObservablePoint(_result.Item2, -_result.Item1 / _uorpermeter));
                 }
+                //LiveCharts.ChartValues<Tuple<double, double>> _tuples = new LiveCharts.ChartValues<Tuple<double, double>>();
+                //foreach (var _result in _results)
+                //{
+                //    _tuples.Add(Tuple.Create(_result.Item2, _result.Item1 / _uorpermeter));
+                //}
 
                 PileLengthCurveWindow _curveWindow = new PileLengthCurveWindow();
                 PileLengthCurveViewModel _vm = new PileLengthCurveViewModel()
                 {
-                    SeriesCollection = new LiveCharts.SeriesCollection
-                    {
-                        new LiveCharts.Wpf.LineSeries{Title="PileLength/m",Values = _chartPoints, LineSmoothness=0}
-                    }
+                    //SeriesCollection = new LiveCharts.SeriesCollection
+                    //{
+                    //    new LiveCharts.Wpf.LineSeries{Title="PileLength/m",Values = _chartPoints, LineSmoothness=0}
+                    //}
+                    ////DataResources = _tuples
+                    DataResources = _chartPoints
                 };
                 _curveWindow.DataContext = _vm;
                 _curveWindow.ShowDialog();
@@ -314,6 +349,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
                         using (var _excelPackage = new ExcelPackage(_excelFile))
                         {
+                            _virtualPileTable.RowChanged -= _virtualPileTable_RowChanged;
+                            _virtualPileTable.RowDeleting -= _virtualPileTable_RowDeleting;
                             var _worksheet = _excelPackage.Workbook.Worksheets[1];
                             for (int i = 2; i < _worksheet.Dimension.Rows + 1; i++)
                             {
@@ -325,10 +362,12 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                                 _newRow[5] = double.Parse(_worksheet.Cells[i, 5].Text);
                                 _newRow[6] = double.Parse(_worksheet.Cells[i, 6].Text);
                                 _newRow[7] = double.Parse(_worksheet.Cells[i, 7].Text);
-
+                                _newRow[9] = _numberofpiles + 1;
                                 _numberofpiles++;
                                 VirtualPileTable.Rows.Add(_newRow);
                             }
+                            _virtualPileTable.RowChanged += _virtualPileTable_RowChanged;
+                            _virtualPileTable.RowDeleting += _virtualPileTable_RowDeleting;
                         }
                     }
                 }
@@ -380,7 +419,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                 double _uorpermeter = BM.Session.Instance.GetActiveDgnModel().GetModelInfo().UorPerMeter;
                 double _successPileNumber = 0;
                 double _totalNumber = 0;
-                IntPtr _dialog = Marshal.mdlDialog_completionBarOpen("Start");
+                IntPtr _dialog = Marshal.mdlDialog_completionBarOpen("");
                 foreach (DataRow _row in VirtualPileTable.Rows)
                 {
                     VirtualSteelOrTubePile _pile = new VirtualSteelOrTubePile()

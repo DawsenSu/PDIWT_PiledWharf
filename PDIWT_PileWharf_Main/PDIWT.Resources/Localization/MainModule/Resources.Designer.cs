@@ -709,6 +709,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lifting Force Discount Coeff ξi.
+        /// </summary>
+        public static string LiftForceDisCoeff {
+            get {
+                return ResourceManager.GetString("LiftForceDisCoeff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Load From Model.
         /// </summary>
         public static string LoadFromModel {
@@ -750,6 +759,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         public static string MHW {
             get {
                 return ResourceManager.GetString("MHW", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimum Distance.
+        /// </summary>
+        public static string MinimumDistance {
+            get {
+                return ResourceManager.GetString("MinimumDistance", resourceCulture);
             }
         }
         
@@ -808,6 +826,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No..
+        /// </summary>
+        public static string Number {
+            get {
+                return ResourceManager.GetString("Number", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Number of Volume.
         /// </summary>
         public static string NumberOfVolume {
@@ -844,7 +871,7 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to PHC Tube Pile.
+        ///   Looks up a localized string similar to Concrete Tube Pile.
         /// </summary>
         public static string PHCTubePile {
             get {
@@ -907,6 +934,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pile Collision Detection.
+        /// </summary>
+        public static string PileCollisionDetectionWindowTitle {
+            get {
+                return ResourceManager.GetString("PileCollisionDetectionWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pile Cross Section Area.
         /// </summary>
         public static string PileCrossSectionArea {
@@ -957,6 +993,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         public static string PileLengthCalWindow {
             get {
                 return ResourceManager.GetString("PileLengthCalWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pile Length Curve Window.
+        /// </summary>
+        public static string PileLengthCurveWindow {
+            get {
+                return ResourceManager.GetString("PileLengthCurveWindow", resourceCulture);
             }
         }
         

@@ -58,9 +58,8 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
 
             cantAcceptReason = "It's not pile";
             BDE.Element _ele = path.GetHeadElement();
-            if (_ele.ElementType == BD.MSElementType.CellHeader && ((BDE.CellHeaderElement)_ele).CellName == "Pile")
-                return true;
-            return false; ;
+
+            return (_ele.ElementType == BD.MSElementType.CellHeader) && ECSChemaReader.IsElementAttachedECInstance(_ele, "IfcPort", "IfcPile");
         }
 
         protected override bool IsSingleShot()
@@ -92,7 +91,7 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
 
         protected override void ExitTool()
         {
-            Messenger.Default.Send(Visibility.Visible,"ShowMainWindow");
+            Messenger.Default.Send(Visibility.Visible, "ShowMainWindow");
             base.ExitTool();
         }
 
@@ -288,9 +287,11 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
                     {
                         if (_pr.Property.Name == _prop)
                         {
-                            object _result;
-                            if (_pr.TryGetNativeValue(out _result))
+                            if (_pr.TryGetNativeValue(out object _result)) // if the property is not set, then get null
+                            {
                                 result[_prop] = _result;
+                                break;
+                            }
                         }
                     }
 
@@ -300,9 +301,50 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
                     //    result[_prop] = _eci.GetPropertyValue(_prop).NativeValue;
                 }
             }
-            
-
             return BD.StatusInt.Success;
+        }
+
+        /// <summary>
+        /// To Test if an element is attached specific ecinstance.
+        /// </summary>
+        /// <param name="ele">element to test</param>
+        /// <param name="ecSchemaName">ECschema Name of testing instance</param>
+        /// <param name="ecClassName">ECClass Name of testing instance</param>
+        /// <returns>true, if it's attached.</returns>
+        public static bool IsElementAttachedECInstance(BDE.Element ele, string ecSchemaName, string ecClassName)
+        {
+            var _ecMgr = BDEC.DgnECManager.Manager;
+            BES.IECSchema _eCSchema = _ecMgr.LocateSchemaInScope(BDEC.FindInstancesScope.CreateScope(BM.Session.Instance.GetActiveDgnFile(), new BDEC.FindInstancesScopeOption(BDEC.DgnECHostType.All, false)),
+                                      ecSchemaName, 1, 0, BES.SchemaMatchType.Latest);
+            if (_eCSchema == null) return false;
+
+            BES.IECClass _eCClass = _eCSchema.GetClass(ecClassName);
+            if (_eCClass == null) return false;
+
+            Bentley.EC.Persistence.Query.ECQuery _eCQuery = new Bentley.EC.Persistence.Query.ECQuery(_eCClass);
+            BDEC.DgnECInstanceCollection _eCInstances = _ecMgr.FindInstances(BDEC.FindInstancesScope.CreateScope(ele, new BDEC.FindInstancesScopeOption(BDEC.DgnECHostType.Element, false)), _eCQuery);
+            return _eCInstances.Count() != 0;
+        }
+        /// <summary>
+        /// Test if an model is attached specific ecinstance
+        /// </summary>
+        /// <param name="model">the model to be tested</param>
+        /// <param name="ecSchemaName">ECSchema Name of testing instance</param>
+        /// <param name="ecClassName">ECClass Name of testing instance</param>
+        /// <returns>true, if it's attached</returns>
+        public static bool IsDgnModelAttachedECInstance(BD.DgnModel model, string ecSchemaName, string ecClassName)
+        {
+            var _ecMgr = BDEC.DgnECManager.Manager;
+            BES.IECSchema _eCSchema = _ecMgr.LocateSchemaInScope(BDEC.FindInstancesScope.CreateScope(BM.Session.Instance.GetActiveDgnFile(), new BDEC.FindInstancesScopeOption(BDEC.DgnECHostType.All, false)),
+                                      ecSchemaName, 1, 0, BES.SchemaMatchType.Latest);
+            if (_eCSchema == null) return false;
+
+            BES.IECClass _eCClass = _eCSchema.GetClass(ecClassName);
+            if (_eCClass == null) return false;
+
+            Bentley.EC.Persistence.Query.ECQuery _eCQuery = new Bentley.EC.Persistence.Query.ECQuery(_eCClass);
+            BDEC.DgnECInstanceCollection _eCInstances = _ecMgr.FindInstances(BDEC.FindInstancesScope.CreateScope(model, new BDEC.FindInstancesScopeOption(BDEC.DgnECHostType.Model, false)), _eCQuery);
+            return _eCInstances.Count() != 0;
         }
     }
 
@@ -384,10 +426,10 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
             double _uorpermeter = _activeModel.GetModelInfo().UorPerMeter;
             Settings _settings = Settings.ObtainFromModel(_activeModel);
             PileBase _pile = PileBase.ObtainFromPileCell(pile);
-            SoilLayerCollection _soilLayers = SoilLayerCollection.ObtainFromModel(_activeModel);
-            PileSoilLayersIntersectionGetter _psIntersectionGetter = new PileSoilLayersIntersectionGetter(_pile, _soilLayers);
-            if (PileSoilLayersInsectionStatus.Success != _psIntersectionGetter.GetInterSectionInfo(out ObservableCollection<IntersectionInfo> _intersectionInfos))
-                return BD.StatusInt.Error;
+            //SoilLayerCollection _soilLayers = SoilLayerCollection.ObtainFromModel(_activeModel);
+            //PileSoilLayersIntersectionGetter _psIntersectionGetter = new PileSoilLayersIntersectionGetter(_pile, _soilLayers);
+            //if (PileSoilLayersInsectionStatus.Success != _psIntersectionGetter.GetInterSectionInfo(out ObservableCollection<IntersectionInfo> _intersectionInfos))
+            //    return BD.StatusInt.Error;
 
             pileInfo.PileType = _pile.GeoType;
             pileInfo.PileDiameter = _pile.Diameter / _uorpermeter;
@@ -469,6 +511,7 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
 
         public static BD.StatusInt AxialBearingCapacityPileInfoEnabler(BDE.CellHeaderElement pile, out PDIWT_BearingCapacity_PileInfo pileInfo)
         {
+            #region old code
             //pileInfo = new PDIWT_BearingCapacity_PileInfo();            
 
             //var _activeModel = BM.Session.Instance.GetActiveDgnModel();
@@ -641,7 +684,7 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
             //    //    _mc.ShowInfoMessage("The pile has more than two intersection point with soil layer", "", false);
             //    //}
             //}
-            
+
             //if(_soilLayers.Count == 0)
             //{
             //    _mc.ShowInfoMessage("There is no intersection between selected pile and existing soil layer",$"The pile axis is {_lineStartPoint} to {_lineEndPoint}", false);
@@ -650,7 +693,7 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
 
             //_soilLayers = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>(_soilLayers.OrderByDescending(_layer => _layer.SoilLayerTopElevation));
             //pileInfo.PileSoilLayersInfo = _soilLayers;
-
+            #endregion
 
 
             pileInfo = new PDIWT_BearingCapacity_PileInfo();
@@ -669,32 +712,23 @@ namespace PDIWT_PiledWharf_Core.Model.Tools
             pileInfo.SteelWeight = _settings.SteelUnitWeight;
             pileInfo.SteelUnderwaterWeight = _settings.SteelUnitWeight - _settings.WaterUnitWeight;
 
-            pileInfo.PileCode = _pile.Name;
+            pileInfo.PileName = _pile.Name;
             pileInfo.IsVerticalPile = _pile.IsVertical;
             pileInfo.SelectedPileGeoType = _pile.GeoType;
             pileInfo.PileTopElevation = _pile.TopJoint.Point.Z / _uorpermeter;
             pileInfo.PileLength = _pile.GetLength() / _uorpermeter;
             pileInfo.PileSkewness = _pile.GetSkewness();
             pileInfo.PileDiameter = _pile.Diameter / _uorpermeter;
-            pileInfo.PileInsideDiameter = _pile.InnerDiameter / _uorpermeter;
+            pileInfo.PileInnerDiameter = _pile.InnerDiameter / _uorpermeter;
             pileInfo.ConcreteCoreLength = _pile.ConcreteCoreLength / _uorpermeter;
 
             foreach (var _intersect in _intersectionInfos)
             {
                 PDIWT_BearingCapacity_SoilLayerInfo _soilLayerInfo = new PDIWT_BearingCapacity_SoilLayerInfo()
                 {
-                    SoilLayerNumber = _intersect.SoilLayer.SoilLayerNumber,
-                    SoilLayerName = _intersect.SoilLayer.SoilLayerName,
-                    SoilLayerTopElevation = _intersect.GetTopPoint().Z / _uorpermeter,
-                    SoilLayerBottomElevation = _intersect.GetBottomPoint().Z / _uorpermeter,
-                    Betasi = _intersect.SoilLayer.Betasi,
-                    Psii = _intersect.SoilLayer.Psii,
-                    SideFrictionStandardValue = _intersect.SoilLayer.SideFrictionStandardValue,
-                    SoilLayerThickness = _intersect.GetPileLengthInSoilLayer() / _uorpermeter,
-                    Betap = _intersect.SoilLayer.Betap,
-                    Psip = _intersect.SoilLayer.Psip,
-                    EndResistanceStandardValue = _intersect.SoilLayer.EndResistanceStandardValue,
-                    DiscountCoeff = _intersect.SoilLayer.DiscountCoeff
+                    PileIntersectionTopEle = _intersect.GetTopPoint().Z / _uorpermeter,
+                    PileIntersectionBottomEle = _intersect.GetBottomPoint().Z / _uorpermeter,
+                    SoilLayerObject = _intersect.SoilLayer
                 };
                 pileInfo.PileSoilLayersInfo.Add(_soilLayerInfo);
             }

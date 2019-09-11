@@ -38,7 +38,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             //        new ShapeInfo() { Shape = Resources.SteelTubePile, Value =1 }
             //    };
             //SelectedShape = ShapeCategory[0];
-            PileGeoTypes = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<PileTypeManaged>();
+            //PileGeoTypes = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<PileTypeManaged>();
             SelectedPileType = PileTypeManaged.SqaurePile;
 
             PileDiameter = 11.5;
@@ -86,15 +86,15 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         private readonly BM.MessageCenter _mc = BM.MessageCenter.Instance;
 
         //********************* Input parameters *****************//
-        private Dictionary<PileTypeManaged, string> _pileGeoTypes;
-        /// <summary>
-        /// Geo Type
-        /// </summary>
-        public Dictionary<PileTypeManaged, string> PileGeoTypes
-        {
-            get { return _pileGeoTypes; }
-            set { Set(ref _pileGeoTypes, value); }
-        }
+        //private Dictionary<PileTypeManaged, string> _pileGeoTypes;
+        ///// <summary>
+        ///// Geo Type
+        ///// </summary>
+        //public Dictionary<PileTypeManaged, string> PileGeoTypes
+        //{
+        //    get { return _pileGeoTypes; }
+        //    set { Set(ref _pileGeoTypes, value); }
+        //}
 
         private PileTypeManaged _selectedPileType;
         /// <summary>

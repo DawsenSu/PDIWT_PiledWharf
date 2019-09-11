@@ -178,7 +178,6 @@
                 Header="{x:Static loc:Resources.PileSpatialInformation}">
                 <DataGrid
                     x:Name="DataGird_PileTable"
-                    LoadingRow="DataGird_PileTable_LoadingRow"
                     AutoGenerateColumns="False"
                     ColumnWidth="*"
                     ItemsSource="{Binding VirtualPileTable}"
@@ -192,11 +191,11 @@
                             </MenuItem>
                         </ContextMenu>
                     </DataGrid.ContextMenu>
-                    <!--<DataGrid.RowHeaderTemplate>
+                    <DataGrid.RowHeaderTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource RowToIndexConv}, Mode=OneWay}" />
+                            <TextBlock Text="{Binding DataContext.RowNumber, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource RowToIndexConv}, Mode=OneWay}" />
                         </DataTemplate>
-                    </DataGrid.RowHeaderTemplate>-->
+                    </DataGrid.RowHeaderTemplate>
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding PileName}" Header="{x:Static loc:Resources.PileName}" />
                         <DataGridTextColumn Binding="{Binding PileX}" Header="x(m)" />

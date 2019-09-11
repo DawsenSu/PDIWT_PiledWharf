@@ -126,5 +126,14 @@ namespace PDIWT.Formulas.Tests
             Assert.AreEqual(-90, _singedangle.Degrees);
         }
 
+        [Test]
+        public void TestDSegment3d()
+        {
+            BG.DSegment3d _first = new BG.DSegment3d(0, 0, 0, 1, 0, 0);
+            BG.DSegment3d _second = new BG.DSegment3d(0.5, 0, 1, 1, 0, 1);
+            BG.DSegment3d.ClosestApproachSegment(_first, _second, out BG.DSegment3d _mind, out double _firstfraction, out double _secondfraction);
+            Assert.AreEqual(1,_mind.Length);
+        }
+
     }
 }

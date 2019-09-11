@@ -131,7 +131,7 @@ namespace PDIWT_PiledWharf_Core.Model
         //public PileBase(BG.DPoint3d topPoint, BG.DPoint3d bottomPoint)
         //    : this(topPoint, bottomPoint, PileTypeManaged.SqaurePile, 0) { }
 
-      
+
         private long _numbering;
         /// <summary>
         /// positive numbering, -1 represent no particular assignment 
@@ -318,6 +318,7 @@ namespace PDIWT_PiledWharf_Core.Model
             Dictionary<string, object> _pileProps;
             List<string> _requirePilePropNameList = new List<string>()
             {
+                "Name",
                 "Type",
                 "CrossSectionWidth",
                 "OutsideDiameter",
@@ -327,9 +328,8 @@ namespace PDIWT_PiledWharf_Core.Model
             if (BD.StatusInt.Error == ECSChemaReader.ReadECInstanceProperties(_ifcECSchemaName, _ifcPileECClassName, _requirePilePropNameList, pileCell, out _pileProps))
                 throw new InvalidOperationException("Can't read properties from pile cell");
 
-            var _pileGeoType = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<PileTypeManaged>()
-                                                            .Where(e => e.Value == _pileProps["Type"].ToString())
-                                                            .First().Key;
+
+            var _pileGeoType = (PileTypeManaged)_pileProps["Type"];
             double _pileDiameter, _pileInnerDiameter;
             _pileDiameter = _pileInnerDiameter = 0;
             switch (_pileGeoType)
@@ -352,7 +352,7 @@ namespace PDIWT_PiledWharf_Core.Model
                     break;
             }
 
-            return new PileBase(pileCell.ElementId, _unknownPileName, new Joint(_pileBase.TopJoint.Point), new Joint(_pileBase.BottomJoint.Point), _pileGeoType, _pileDiameter, _pileInnerDiameter, 0, PileTipType.TotalSeal);
+            return new PileBase(pileCell.ElementId, _pileProps["Name"].ToString(), new Joint(_pileBase.TopJoint.Point), new Joint(_pileBase.BottomJoint.Point), _pileGeoType, _pileDiameter, _pileInnerDiameter, 0, PileTipType.TotalSeal);
         }
 
         /// <summary>
@@ -437,11 +437,11 @@ namespace PDIWT_PiledWharf_Core.Model
         /// <summary>
         /// Get Pile Self weight in give calculated water level. Unit: SI, length -> m; force -> kN
         /// </summary>
-        /// <param name="calculatedWaterLevel"></param>
-        /// <param name="concreteWeight"></param>
-        /// <param name="concreteUnderwaterWeight"></param>
-        /// <param name="steelWeight"></param>
-        /// <param name="steelUnderwaterWeight"></param>
+        /// <param name="calculatedWaterLevel">unit: m</param>
+        /// <param name="concreteWeight">unit: kN/m3</param>
+        /// <param name="concreteUnderwaterWeight">unit: kN/m3</param>
+        /// <param name="steelWeight">unit: kN/m3</param>
+        /// <param name="steelUnderwaterWeight">unit: kN/m3</param>
         /// <returns>weight kN</returns>
         public double GetPileSelfWeight(
             double calculatedWaterLevel,
@@ -462,7 +462,7 @@ namespace PDIWT_PiledWharf_Core.Model
         }
 
         /// <summary>
-        /// Get Pile outer perimeter
+        /// Get Pile outer perimeter. Unit: uor
         /// </summary>
         /// <returns>perimeter. Unit: uor</returns>
         public double GetPerimeter()
@@ -470,7 +470,7 @@ namespace PDIWT_PiledWharf_Core.Model
             return AxialBearingCapacity.CalculatePilePrimeter(GeoType, Diameter);
         }
         /// <summary>
-        /// Get outer cross section area of pile
+        /// Get outer cross section area of pile.Unit: uor
         /// </summary>
         /// <returns>Cross section. Unit: uor</returns>
         public double GetOuterArea()
@@ -484,9 +484,155 @@ namespace PDIWT_PiledWharf_Core.Model
             if (false == _activeModel.Is3d)
                 throw new InvalidProgramException("The active model is not 3D");
 
-            var _pileTypes = PDIWT.Resources.PDIWT_Helper.GetEnumDescriptionDictionary<PileTypeManaged>();
-            EntityCreation.CreatePile(GeoType, _pileTypes, Diameter, InnerDiameter, ConcreteCoreLength, TopJoint.Point, BottomJoint.Point);
+            EntityCreation.CreatePile(Name ,GeoType, Diameter, InnerDiameter, ConcreteCoreLength, TopJoint.Point, BottomJoint.Point);
+        }
+        /// <summary>
+        /// Calculate minimum distance between two piles. Unit: uor
+        /// </summary>
+        /// <param name="other"> another pile</param>
+        /// <param name="distance">the minimum distance, considering two pile's diameter. Unit:m</param>
+        /// <param name="distanceSeg">minimum distance segment, axis to axis. used to draw transient element to identify</param>
+        public void ClosestDistanceFromAnotherPile(PileBase other, out double distance, out BG.DSegment3d distanceSeg)
+        {
+            BG.DSegment3d _thisDS = new BG.DSegment3d(TopJoint.Point, BottomJoint.Point);
+            BG.DSegment3d _otherDS = new BG.DSegment3d(other.TopJoint.Point, other.BottomJoint.Point);
+            double _thisRadius = Diameter / 2, _otherRadius = other.Diameter / 2;
+            if (GeoType == PileTypeManaged.SqaurePile)
+                _thisRadius *= Math.Sqrt(2);
+            if (other.GeoType == PileTypeManaged.SqaurePile)
+                _otherRadius *= Math.Sqrt(2);
+
+            if (BG.DSegment3d.ClosestApproachSegment(_thisDS, _otherDS, out BG.DSegment3d _mid, out double _thisFraction, out double _otherFraction))
+            {
+                if (0 <= _thisFraction && _thisFraction <= 1 && 0 <= _otherFraction && _otherFraction <= 1)
+                {
+                    distance = _mid.Length - _thisRadius - _otherRadius;
+                    distanceSeg = _mid;
+                }
+                else
+                {
+                    List<BG.DSegment3d> _distanceInfos = new List<BG.DSegment3d>();
+                    _otherDS.ClosestFractionAndPoint(_thisDS.StartPoint, true, out double _dummyfraction, out BG.DPoint3d _closestPoint);
+                    _distanceInfos.Add(new BG.DSegment3d(_thisDS.StartPoint, _closestPoint));
+                    _otherDS.ClosestFractionAndPoint(_thisDS.EndPoint, true, out _dummyfraction, out _closestPoint);
+                    _distanceInfos.Add(new BG.DSegment3d(_thisDS.EndPoint, _closestPoint));
+                    _thisDS.ClosestFractionAndPoint(_otherDS.StartPoint, true, out _dummyfraction, out _closestPoint);
+                    _distanceInfos.Add(new BG.DSegment3d(_otherDS.StartPoint, _closestPoint));
+                    _thisDS.ClosestFractionAndPoint(_otherDS.EndPoint, true, out _dummyfraction, out _closestPoint);
+                    _distanceInfos.Add(new BG.DSegment3d(_otherDS.EndPoint, _closestPoint));
+
+                    BG.DSegment3d _minimumDS = _distanceInfos[0];
+                    for (int i = 1; i < _distanceInfos.Count; i++)
+                        if (_distanceInfos[i].Length < _minimumDS.Length) _minimumDS = _distanceInfos[i];
+
+                    distance = _minimumDS.Length - _thisRadius - _otherRadius;
+                    distanceSeg = _minimumDS;
+                }
+            }
+            else // parallel or collineation
+            {
+                List<BG.DSegment3d> _distanceInfos = new List<BG.DSegment3d>();
+                _otherDS.ClosestFractionAndPoint(_thisDS.StartPoint, true, out double _dummyfraction, out BG.DPoint3d _closestPoint);
+                _distanceInfos.Add(new BG.DSegment3d(_thisDS.StartPoint, _closestPoint));
+                _otherDS.ClosestFractionAndPoint(_thisDS.EndPoint, true, out _dummyfraction, out _closestPoint);
+                _distanceInfos.Add(new BG.DSegment3d(_thisDS.EndPoint, _closestPoint));
+                _thisDS.ClosestFractionAndPoint(_otherDS.StartPoint, true, out _dummyfraction, out _closestPoint);
+                _distanceInfos.Add(new BG.DSegment3d(_otherDS.StartPoint, _closestPoint));
+                _thisDS.ClosestFractionAndPoint(_otherDS.EndPoint, true, out _dummyfraction, out _closestPoint);
+                _distanceInfos.Add(new BG.DSegment3d(_otherDS.EndPoint, _closestPoint));
+
+                BG.DSegment3d _minimumDS = _distanceInfos[0];
+                for (int i = 1; i < _distanceInfos.Count; i++)
+                    if (_distanceInfos[i].Length < _minimumDS.Length) _minimumDS = _distanceInfos[i];
+
+                distance = _minimumDS.Length - _thisRadius - _otherRadius;
+                distanceSeg = _minimumDS;
+            }
         }
     }
 
+
+    /// <summary>
+    /// Pile class used for bearing capacity calculation
+    /// </summary>
+    public class BearingCapacityPile : PileBase
+    {
+
+        public BearingCapacityPile(PileBase pilebase, BearingCapacityPileTypes bearingCapacityPileTypes) 
+            :base(pilebase.Numbering,pilebase.Name,pilebase.TopJoint,pilebase.BottomJoint,pilebase.GeoType,pilebase.Diameter,pilebase.InnerDiameter,pilebase.ConcreteCoreLength,pilebase.PileTipType)
+        {
+            _bearingCapacityPileType = bearingCapacityPileTypes;
+        }
+        private BearingCapacityPileTypes _bearingCapacityPileType;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public BearingCapacityPileTypes BearingCapacityPileType
+        {
+            get { return _bearingCapacityPileType; }
+            set { Set(ref _bearingCapacityPileType, value); }
+        }
+        /// <summary>
+        /// Get Bearing Capacity and lifting force. Unit: SI.
+        /// </summary>
+        /// <param name="gammaR">Partial coefficients</param>
+        /// <param name="infos">Intersection info list</param>
+        /// <param name="waterLevel">Unit: m</param>
+        /// <param name="concreteUnitW">Unit:kN/m</param>
+        /// <param name="concreteUnderWaterUnitW">Unit:kN/m</param>
+        /// <param name="steelUnitW">Unit:kN/m</param>
+        /// <param name="steelUnderWaterUnitW">Unit:kN/m</param>
+        /// <param name="bearingcapacityForce">Unit: kN</param>
+        /// <param name="liftingForce">Unit: KN</param>
+        public void GetPileAxialCapacity(double gammaR, List<IntersectionInfo> infos, double waterLevel, double concreteUnitW, double concreteUnderWaterUnitW, double steelUnitW, double steelUnderWaterUnitW, out double bearingcapacityForce, out double liftingForce)
+        {
+            bearingcapacityForce = liftingForce = 0;
+            double _uorpermeter = BM.Session.Instance.GetActiveDgnModel().GetModelInfo().UorPerMeter;
+
+            double _permeter = GetPerimeter() / _uorpermeter;
+            double _crosssectionArea = GetOuterArea() / Math.Pow(_uorpermeter,2);
+            double _pileselfweight = GetPileSelfWeight(waterLevel,concreteUnitW,concreteUnderWaterUnitW,steelUnitW,steelUnderWaterUnitW);
+            double _cosAlpha = AxialBearingCapacity.CalculateCosAlpha(GetSkewness());
+
+            var _xii = from _info in infos select _info.SoilLayer.Xii.Value;
+            var _li = from _info in infos select _info.GetPileLengthInSoilLayer() / _uorpermeter;
+
+            switch (BearingCapacityPileType)
+            {
+                case BearingCapacityPileTypes.DrivenPileWithSealedEnd:
+                    var _qfi = from _info in infos select _info.SoilLayer.DPSE_Qfi.Value;
+                    var _qr = from _info in infos select _info.SoilLayer.DPSE_Qr.Value;
+                    bearingcapacityForce = AxialBearingCapacity.CalculateDrivenPileBearingCapacity(gammaR, _qfi.ToList(), _li.ToList(), _permeter, _qr.Last(), _crosssectionArea);
+                    liftingForce = AxialBearingCapacity.CalculateDrivenAndCastInSituPileUpliftForce(gammaR, _qfi.ToList(), _li.ToList(), _xii.ToList(), _permeter, _pileselfweight, _cosAlpha);
+                    break;
+                case BearingCapacityPileTypes.TubePileOrSteelPile:
+                    var _qfi_1 = from _info in infos select _info.SoilLayer.TPSP_Qfi.Value;
+                    var _qr_1 = from _info in infos select _info.SoilLayer.TPSP_Qr.Value;
+                    var _yita = from _info in infos select _info.SoilLayer.TPSP_Yita.Value;
+                    bearingcapacityForce = AxialBearingCapacity.CalculateDrivenPileBearingCapacity(gammaR, _qfi_1.ToList(), _li.ToList(), _permeter, _qr_1.Last(), _crosssectionArea, _yita.Last());
+                    liftingForce = AxialBearingCapacity.CalculateDrivenAndCastInSituPileUpliftForce(gammaR, _qfi_1.ToList(), _li.ToList(), _xii.ToList(), _permeter, _pileselfweight, _cosAlpha);
+                    break;
+                case BearingCapacityPileTypes.CastInSituPile:
+                    var _psisi = from _info in infos select _info.SoilLayer.CISP_Psisi.Value;
+                    var _qfi_2 = from _info in infos select _info.SoilLayer.CISP_Qfi.Value;
+                    var _psip = from _info in infos select _info.SoilLayer.CISP_Psip.Value;
+                    var _qr_2 = from _info in infos select _info.SoilLayer.CISP_Qr.Value;
+                    bearingcapacityForce = AxialBearingCapacity.CalculateCasInSituPileBearingCapacity(gammaR, _qfi_2.ToList(), _li.ToList(), _psisi.ToList(), _permeter, _qr_2.Last(), _crosssectionArea, _psip.Last());
+                    liftingForce = AxialBearingCapacity.CalculateDrivenAndCastInSituPileUpliftForce(gammaR, _qfi_2.ToList(), _li.ToList(), _xii.ToList(), _permeter, _pileselfweight, _cosAlpha);
+                    break;
+                case BearingCapacityPileTypes.CastInSituAfterGrountingPile:
+                    var _betasi = from _info in infos select _info.SoilLayer.CISAGP_Betasi.Value;
+                    var _psisi_1 = from _info in infos select _info.SoilLayer.CISAGP_Psisi.Value;
+                    var _qfi_3 = from _info in infos select _info.SoilLayer.CISAGP_Qfi.Value;
+                    var _betap = from _info in infos select _info.SoilLayer.CISAGP_Betap.Value;
+                    var _psip_1 = from _info in infos select _info.SoilLayer.CISAGP_Psip.Value;
+                    var _qr_3 = from _info in infos select _info.SoilLayer.CISAGP_Qr.Value;
+                    bearingcapacityForce = AxialBearingCapacity.CalculateCastInSituAfterGrountingPileBearingCapacity(gammaR, _qfi_3.ToList(), _li.ToList(), _psisi_1.ToList(), _betasi.ToList(), _permeter, _qr_3.Last(), _crosssectionArea, _psip_1.Last(), _betap.Last());
+                    liftingForce = AxialBearingCapacity.CalculateDrivenAndCastInSituPileUpliftForce(gammaR, _qfi_3.ToList(), _li.ToList(), _xii.ToList(), _permeter, _pileselfweight, _cosAlpha);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 }

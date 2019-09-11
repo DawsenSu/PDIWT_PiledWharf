@@ -247,7 +247,7 @@
     <value>Round Pile</value>
   </data>
   <data name="PHCTubePile" xml:space="preserve">
-    <value>PHC Tube Pile</value>
+    <value>Concrete Tube Pile</value>
   </data>
   <data name="SteelTubePile" xml:space="preserve">
     <value>Steel Tube Pile</value>
@@ -659,5 +659,20 @@
   </data>
   <data name="WaterDepthCoeff" xml:space="preserve">
     <value>Water Depth Coeff</value>
+  </data>
+  <data name="PileCollisionDetectionWindowTitle" xml:space="preserve">
+    <value>Pile Collision Detection</value>
+  </data>
+  <data name="MinimumDistance" xml:space="preserve">
+    <value>Minimum Distance</value>
+  </data>
+  <data name="Number" xml:space="preserve">
+    <value>No.</value>
+  </data>
+  <data name="PileLengthCurveWindow" xml:space="preserve">
+    <value>Pile Length Curve Window</value>
+  </data>
+  <data name="LiftForceDisCoeff" xml:space="preserve">
+    <value>Lifting Force Discount Coeff ξi</value>
   </data>
 </root>

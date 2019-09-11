@@ -113,6 +113,8 @@
     <com:PileWorkmanshipTypeToVisibilityConverter x:Key="TubeorSteelToVisibilityConverter" Item1="{x:Static loc:Resources.BCPileType_TubePileOrSteelPile}" />
     <com:PileWorkmanshipTypeToVisibilityConverter x:Key="DrivenToVisibilityConverter" Item1="{x:Static loc:Resources.BCPileType_DrivenPileWithSealedEnd}" />
 
-    <com:RowToIndexConveter x:Key="RowToIndexConv" />
+    <com:RowNumberToIndexConveter x:Key="RowToIndexConv" />
     <com:DesignWaterLevelConverter x:Key="DesignWaterLevelConverter" />
+
+    <com:NullDoubleToString x:Key="nulldoulbe2str" />
 </ResourceDictionary>

@@ -40,6 +40,7 @@ namespace PDIWT_PiledWharf_Core
             if (!SimpleIoc.Default.IsRegistered<BM.AddIn>())
                 SimpleIoc.Default.Register<BM.AddIn>(() => addIn);
             Messenger.Default.Register<Visibility>(this, "ImportWindowVisibility", v => Visibility = v);
+            Closed += (s, e) => Messenger.Default.Unregister(this);
         }
 
         ~Input_ImportFromFileWindow()

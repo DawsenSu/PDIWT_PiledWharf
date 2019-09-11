@@ -7,8 +7,8 @@
     xmlns:local="clr-namespace:PDIWT_PiledWharf_Core.Model.Tools"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pdi="clr-namespace:PDIWT.Resources.CustomUserControl;assembly=PDIWT.Resources"
-    d:DesignHeight="200"
-    d:DesignWidth="270"
+    d:DesignHeight="250"
+    d:DesignWidth="240"
     Background="White"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -18,51 +18,90 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Margin="3">
+    <Grid Margin="3" DataContext="{Binding CurrentSoilLayer}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <pdi:LabelTextBox
             Grid.Row="0"
             DisplayName="{x:Static loc:Resources.SoilLayerNumber}"
-            Parameter="{Binding SoilLayerNumber}" />
+            Parameter="{Binding Number, UpdateSourceTrigger=PropertyChanged}" />
         <pdi:LabelTextBox
             Grid.Row="1"
             DisplayName="{x:Static loc:Resources.SoilLayerName}"
-            Parameter="{Binding SoilLayerName}" />
+            Parameter="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
         <pdi:LabelTextBox
             Grid.Row="2"
-            DisplayName="βsi"
-            Parameter="{Binding Betasi}" />
-        <pdi:LabelTextBox
-            Grid.Row="3"
-            DisplayName="ψsi"
-            Parameter="{Binding Psisi}" />
-        <pdi:LabelTextBox
-            Grid.Row="4"
-            DisplayName="qfi"
-            Parameter="{Binding Qfi}"
-            Unit="kPa" />
-        <pdi:LabelTextBox
-            Grid.Row="5"
-            DisplayName="βp"
-            Parameter="{Binding Betap}" />
-        <pdi:LabelTextBox
-            Grid.Row="6"
-            DisplayName="ψp"
-            Parameter="{Binding Psip}" />
-        <pdi:LabelTextBox
-            Grid.Row="7"
-            DisplayName="qr"
-            Parameter="{Binding Qr}"
-            Unit="kPa" />
+            DisplayName="{x:Static loc:Resources.LiftForceDisCoeff}"
+            Parameter="{Binding Xii, UpdateSourceTrigger=PropertyChanged}" />
+        <TabControl Grid.Row="3">
+            <TabItem Header="{x:Static loc:Resources.BCPileType_DrivenPileWithSealedEnd}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <pdi:LabelTextBox
+                            DisplayName="qfi"
+                            Parameter="{Binding DPSE_Qfi, UpdateSourceTrigger=PropertyChanged}"
+                            Unit="kPa" />
+                        <pdi:LabelTextBox
+                            DisplayName="qR"
+                            Parameter="{Binding DPSE_Qr, UpdateSourceTrigger=PropertyChanged}"
+                            Unit="kPa" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="{x:Static loc:Resources.BCPileType_TubePileOrSteelPile}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <pdi:LabelTextBox
+                            DisplayName="qfi"
+                            Parameter="{Binding TPSP_Qfi, UpdateSourceTrigger=PropertyChanged}"
+                            Unit="kPa" />
+                        <pdi:LabelTextBox DisplayName="η" Parameter="{Binding TPSP_Yita, UpdateSourceTrigger=PropertyChanged}" />
+                        <pdi:LabelTextBox
+                            DisplayName="qR"
+                            Parameter="{Binding TPSP_Qr, UpdateSourceTrigger=PropertyChanged}"
+                            Unit="kPa" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="{x:Static loc:Resources.BCPileType_CastInSituPile}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <pdi:LabelTextBox DisplayName="ψsi" Parameter="{Binding CISP_Psisi, UpdateSourceTrigger=PropertyChanged}" />
+                        <pdi:LabelTextBox
+                            DisplayName="qfi"
+                            Parameter="{Binding CISP_Qfi, UpdateSourceTrigger=PropertyChanged}"
+                            Unit="kPa" />
+                        <pdi:LabelTextBox DisplayName="ψP" Parameter="{Binding CISP_Psip, UpdateSourceTrigger=PropertyChanged}" />
+                        <pdi:LabelTextBox
+                            DisplayName="qR"
+                            Parameter="{Binding CISP_Qr, UpdateSourceTrigger=PropertyChanged}"
+                            Unit="kPa" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="{x:Static loc:Resources.BCPileType_CastInSituAfterGrountingPile}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <pdi:LabelTextBox DisplayName="βsi" Parameter="{Binding CISAGP_Betasi, UpdateSourceTrigger=PropertyChanged}" />
+                        <pdi:LabelTextBox DisplayName="ψsi" Parameter="{Binding CISAGP_Psisi, UpdateSourceTrigger=PropertyChanged}" />
+                        <pdi:LabelTextBox
+                            DisplayName="qfi"
+                            Parameter="{Binding CISAGP_Qfi, UpdateSourceTrigger=PropertyChanged}"
+                            Unit="kPa" />
+                        <pdi:LabelTextBox DisplayName="βp" Parameter="{Binding CISAGP_Betap, UpdateSourceTrigger=PropertyChanged}" />
+                        <pdi:LabelTextBox DisplayName="ψp" Parameter="{Binding CISAGP_Psip, UpdateSourceTrigger=PropertyChanged}" />
+                        <pdi:LabelTextBox
+                            DisplayName="qR"
+                            Parameter="{Binding CISAGP_Qr, UpdateSourceTrigger=PropertyChanged}"
+                            Unit="kPa" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+
     </Grid>
 </UserControl>
