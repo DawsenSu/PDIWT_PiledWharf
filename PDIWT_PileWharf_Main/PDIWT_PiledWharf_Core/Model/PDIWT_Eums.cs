@@ -81,4 +81,16 @@ namespace PDIWT_PiledWharf_Core.Model
         TargetBearingCapacityIsTooLarge,
         NoLayerInfos
     }
+
+    public enum BearingCapacityWindowType
+    {
+        SoilLayerLibraryWindow,
+        SoilLayerPickUpWindow,
+        ReportGenerator
+    }
+
+    public enum PileLengthCalculatorWindowType
+    {
+        CurveWidnow
+    }
 }

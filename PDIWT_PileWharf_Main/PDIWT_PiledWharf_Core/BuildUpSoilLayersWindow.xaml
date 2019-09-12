@@ -11,6 +11,7 @@
     Title="{x:Static loc:Resources.BuildUpSoilLayerLib}"
     Width="800"
     Height="450"
+    WindowStartupLocation="CenterOwner"
     WindowStyle="ToolWindow"
     mc:Ignorable="d">
     <i:Interaction.Triggers>

@@ -675,4 +675,7 @@
   <data name="LiftForceDisCoeff" xml:space="preserve">
     <value>Lifting Force Discount Coeff ξi</value>
   </data>
+  <data name="PileDetailInformation" xml:space="preserve">
+    <value>Pile Detail Information</value>
+  </data>
 </root>

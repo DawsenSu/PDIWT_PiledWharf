@@ -39,7 +39,5 @@ namespace PDIWT.Resources.CustomUserControl
                 new FrameworkPropertyMetadata(BearingCapacityPileTypes.DrivenPileWithSealedEnd, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
 
-
-
     }
 }

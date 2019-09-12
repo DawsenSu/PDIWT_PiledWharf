@@ -28,6 +28,10 @@
                     <con:ReferenceToVisibilityConverter x:Key="ReferenceToVisiblityConverter" />
                     <con:BoolenToVisibilityConverter x:Key="IsCalculatedToCheckPicConverter" />
                     <!--  Convert to control the visibility of kinds of controls  -->
+                    <Style x:Key="DGTS_Center" TargetType="TextBlock">
+                        <Setter Property="TextAlignment" Value="Center" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                    </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -132,10 +136,6 @@
             <TabControl>
                 <TabItem DataContext="{Binding PileInfos}" Header="{x:Static loc:Resources.InputPileParameters}">
                     <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="218*" />
-                            <ColumnDefinition Width="421*" />
-                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
@@ -152,7 +152,10 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <pdi:LabelTextBox DisplayName="{x:Static loc:Resources.PileName}" Parameter="{Binding PileName}" />
+                                <pdi:LabelTextBox
+                                    x:Name="LabelTextBox_PileName"
+                                    DisplayName="{x:Static loc:Resources.PileName}"
+                                    Parameter="{Binding PileName}" />
                                 <CheckBox
                                     x:Name="CheckBox_skewness"
                                     Grid.Row="0"
@@ -378,41 +381,68 @@
                             ItemsSource="{Binding PileSoilLayersInfo}"
                             Visibility="{Binding SelectedBearingCapacityPileType, Mode=OneWay, Converter={StaticResource DrivenToVisibilityConverter}}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.Number}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.Number}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <Label Content="{x:Static loc:Resources.SoilLayerNumber}" />
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.Name}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.Name}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <Label Content="{x:Static loc:Resources.SoilLayerName}" />
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding PileIntersectionTopEle, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding PileIntersectionTopEle, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="False">
                                     <DataGridTextColumn.Header>
-                                        <Label Content="{x:Static loc:Resources.TopElevation}" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{x:Static loc:Resources.TopElevation}" />
+                                            <TextBlock Text="(m)" />
+                                        </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding PileIntersectionBottomEle, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding PileIntersectionBottomEle, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="False">
                                     <DataGridTextColumn.Header>
-                                        <Label Content="{x:Static loc:Resources.BottomElevation}" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{x:Static loc:Resources.BottomElevation}" />
+                                            <TextBlock Text="(m)" />
+                                        </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.DPSE_Qfi, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.DPSE_Qfi, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="qfi(kPa)" />
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.DPSE_Qr, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.DPSE_Qr, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="qR(kPa)" />
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.Xii, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.Xii, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="ξi" />
@@ -432,48 +462,78 @@
                             ItemsSource="{Binding PileSoilLayersInfo}"
                             Visibility="{Binding SelectedBearingCapacityPileType, Mode=OneWay, Converter={StaticResource TubeorSteelToVisibilityConverter}}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.Number}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.Number}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <Label Content="{x:Static loc:Resources.SoilLayerNumber}" />
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.Name}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.Name}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <Label Content="{x:Static loc:Resources.SoilLayerName}" />
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding PileIntersectionTopEle, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding PileIntersectionTopEle, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="False">
                                     <DataGridTextColumn.Header>
-                                        <Label Content="{x:Static loc:Resources.TopElevation}" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{x:Static loc:Resources.TopElevation}" />
+                                            <TextBlock Text="(m)" />
+                                        </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding PileIntersectionBottomEle, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding PileIntersectionBottomEle, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="False">
                                     <DataGridTextColumn.Header>
-                                        <Label Content="{x:Static loc:Resources.BottomElevation}" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{x:Static loc:Resources.BottomElevation}" />
+                                            <TextBlock Text="(m)" />
+                                        </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.TPSP_Qfi, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.TPSP_Qfi, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="qfi(kPa)" />
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.TPSP_Yita, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.TPSP_Yita, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="η" />
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.TPSP_Qr, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.TPSP_Qr, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="qR(kPa)" />
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.Xii, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.Xii, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="ξi" />
@@ -493,55 +553,88 @@
                             ItemsSource="{Binding PileSoilLayersInfo}"
                             Visibility="{Binding SelectedBearingCapacityPileType, Mode=OneWay, Converter={StaticResource CastInSituToVisibilityConverter}}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.Number}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.Number}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <Label Content="{x:Static loc:Resources.SoilLayerNumber}" />
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.Name}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.Name}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <Label Content="{x:Static loc:Resources.SoilLayerName}" />
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding PileIntersectionTopEle, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding PileIntersectionTopEle, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="False">
                                     <DataGridTextColumn.Header>
-                                        <Label Content="{x:Static loc:Resources.TopElevation}" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{x:Static loc:Resources.TopElevation}" />
+                                            <TextBlock Text="(m)" />
+                                        </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding PileIntersectionBottomEle, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding PileIntersectionBottomEle, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="False">
                                     <DataGridTextColumn.Header>
-                                        <Label Content="{x:Static loc:Resources.BottomElevation}" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{x:Static loc:Resources.BottomElevation}" />
+                                            <TextBlock Text="(m)" />
+                                        </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.CISP_Psisi, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.CISP_Psisi, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="ψsi" />
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.CISP_Qfi, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.CISP_Qfi, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="qfi(kPa)" />
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.CISP_Psip, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.CISP_Psip, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="ψp" />
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.CISP_Qr, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.CISP_Qr, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="qR(kPa)" />
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.Xii, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.Xii, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="ξi" />
@@ -561,70 +654,108 @@
                             ItemsSource="{Binding PileSoilLayersInfo}"
                             Visibility="{Binding SelectedBearingCapacityPileType, Mode=OneWay, Converter={StaticResource CastInSituAfterGrountingToVisibilityConverter}}">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.Number}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.Number}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <Label Content="{x:Static loc:Resources.SoilLayerNumber}" />
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.Name}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.Name}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <Label Content="{x:Static loc:Resources.SoilLayerName}" />
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding PileIntersectionTopEle, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding PileIntersectionTopEle, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="False">
                                     <DataGridTextColumn.Header>
-                                        <Label Content="{x:Static loc:Resources.TopElevation}" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{x:Static loc:Resources.TopElevation}" />
+                                            <TextBlock Text="(m)" />
+                                        </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding PileIntersectionBottomEle, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding PileIntersectionBottomEle, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="False">
                                     <DataGridTextColumn.Header>
-                                        <Label Content="{x:Static loc:Resources.BottomElevation}" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{x:Static loc:Resources.BottomElevation}" />
+                                            <TextBlock Text="(m)" />
+                                        </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.CISAGP_Betasi, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.CISAGP_Betasi, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="βsi" />
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.CISAGP_Psisi, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.CISAGP_Psisi, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="ψsi" />
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.CISAGP_Qfi, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.CISAGP_Qfi, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="qfi(kPa)" />
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.CISAGP_Betap, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.CISAGP_Betap, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="βp" />
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.CISAGP_Psip, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.CISAGP_Psip, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="ψp" />
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.CISAGP_Qr, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.CISAGP_Qr, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="qR(kPa)" />
                                         </StackPanel>
                                     </DataGridTextColumn.Header>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding SoilLayerObject.Xii, StringFormat={}{0:F2}}" IsReadOnly="False">
+                                <DataGridTextColumn
+                                    Binding="{Binding SoilLayerObject.Xii, StringFormat={}{0:F2}}"
+                                    ElementStyle="{StaticResource DGTS_Center}"
+                                    IsReadOnly="True">
                                     <DataGridTextColumn.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="ξi" />

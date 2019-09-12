@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="PDIWT_PiledWharf_Core.Model.VirtualSteelOrTubePile" Collapsed="true">
-    <Position X="6.5" Y="3.25" Width="2.5" />
+    <Position X="6.5" Y="3" Width="2.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>BQAAAIAAAAEBAAAgBAggAQAAAIBgAkAAwAARAgAAAIA=</HashCode>
+      <HashCode>BQAABIAAAAEBAAAgBAggAQYAAIBoAkAAwAARAgAAAIA=</HashCode>
       <FileName>Model\VirtualPile.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -73,7 +73,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>wAIEQAAEAAUAAQUAgAAAAIAEASEgABQRAAEIQMCAIAA=</HashCode>
+      <HashCode>wAIEQAAAAAEAAAUAgAAAAIAEASEgABQRAAEIQMCAIAA=</HashCode>
       <FileName>ViewModel\BearingCapacityViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>

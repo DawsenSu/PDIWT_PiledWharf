@@ -9,6 +9,7 @@
     Title="{x:Static loc:Resources.PickupSoilLayersFromLib}"
     Width="500"
     Height="450"
+    WindowStartupLocation="CenterOwner"
     WindowStyle="ToolWindow"
     mc:Ignorable="d">
     <Window.Resources>

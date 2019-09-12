@@ -9,6 +9,7 @@
     Title="{x:Static loc:Resources.ReportGenerator}"
     Width="400"
     Height="300"
+    WindowStartupLocation="CenterOwner"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>

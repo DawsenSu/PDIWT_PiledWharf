@@ -21,6 +21,7 @@ using BG = Bentley.GeometryNET;
 using System.Collections.ObjectModel;
 using PDIWT.Formulas;
 using MathNet.Numerics;
+using PDIWT_PiledWharf_Core_Cpp;
 
 namespace PDIWT_PiledWharf_Core.Model
 {
@@ -48,6 +49,27 @@ namespace PDIWT_PiledWharf_Core.Model
         {
             get { return _pileName; }
             set { Set(ref _pileName, value); }
+        }
+
+
+        private BearingCapacityPileTypes _BCPileType;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public BearingCapacityPileTypes BCPileType
+        {
+            get { return _BCPileType; }
+            set { Set(ref _BCPileType, value); }
+        }
+
+        private PileTypeManaged _geoPileType;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public PileTypeManaged GeoPileType
+        {
+            get { return _geoPileType; }
+            set { Set(ref _geoPileType, value); }
         }
 
         private double _pileX;
@@ -155,18 +177,18 @@ namespace PDIWT_PiledWharf_Core.Model
             if (double.IsNaN(PileSkewness))
                 _yAngle.Radians = 0;
             else
-                _yAngle.Radians = - Math.Atan(1 / PileSkewness);
+                _yAngle.Radians = -Math.Atan(1 / PileSkewness);
             BG.Angle _zAngle = new BG.Angle
             {
                 Degrees = PlanRotationAngle
             };
             BG.DTransform3d _ytrans = BG.DTransform3d.Rotation(1, _yAngle);
             BG.DTransform3d _ztrans = BG.DTransform3d.Rotation(2, _zAngle);
-            var _wholetrans = BG.DTransform3d.Multiply(_ztrans,_ytrans);
+            var _wholetrans = BG.DTransform3d.Multiply(_ztrans, _ytrans);
             _wholetrans.MultiplyInPlace(ref _unitZ);
 
             //double _uorpermm = BM.Session.Instance.GetActiveDgnModel().GetModelInfo().UorPerMeter / 1000;
-            return new BG.DRay3d(new BG.DPoint3d(PileX , PileY , PileZ ), _unitZ);
+            return new BG.DRay3d(new BG.DPoint3d(PileX, PileY, PileZ), _unitZ);
         }
 
         /// <summary>
@@ -182,72 +204,6 @@ namespace PDIWT_PiledWharf_Core.Model
             out ObservableCollection<Tuple<double, double>> results // Tuple(double, double) represents (fraction, bc) 
             )
         {
-            //if (_meshInfoTuples == null || _meshInfoTuples.Count == 0)
-            //    return BD.StatusInt.Error;
-
-            //BG.DRay3d _axisRay = GetPileRay3D();
-            //List<Tuple<double, double, PDIWT_BearingCapacity_SoilLayerInfo>> _layerTuples = new List<Tuple<double, double, PDIWT_BearingCapacity_SoilLayerInfo>>();
-            //foreach (var _meshInfo in _meshInfoTuples)
-            //{
-            //    BG.DPoint3d _facetPoint;
-            //    double _fractionInAxis;
-            //    BG.PolyfaceVisitor _polyfaceVisitor = BG.PolyfaceVisitor.Attach(_meshInfo.Item1.AsMeshEdit().GetMeshData(), true);
-            //    List<double> _insertFractions = new List<double>();
-            //    //todo Sometimes it will count more than two points, ask the problem on the forum
-            //    while (_polyfaceVisitor.AdvanceToFacetBySearchRay(_axisRay, 0, out _facetPoint, out _fractionInAxis))
-            //    {
-            //        _insertFractions.Add(_fractionInAxis);
-            //    }
-            //    _insertFractions = _insertFractions.Distinct().ToList();
-
-            //    BG.DPoint3d _topPoint, _bottomPoint;
-            //    double _topFraction, _bottomFraction;
-            //    if (_insertFractions.Count == 0 || _insertFractions.Count == 1)
-            //        continue;
-            //    //else if (_insertFractions.Count == 2)
-            //    //{                   
-
-            //    //    if (_insertFractions[0] >= _insertFractions[1])
-            //    //    {
-            //    //        _topFraction = _insertFractions[1];
-            //    //        _bottomFraction = _insertFractions[0];
-            //    //    }
-            //    //    else
-            //    //    {
-            //    //        _topFraction = _insertFractions[0];
-            //    //        _bottomFraction = _insertFractions[1];
-            //    //    }
-
-            //    //}
-            //    else
-            //    {
-            //        if (_insertFractions.Count > 2)
-            //            _insertFractions = _insertFractions.GetRange(0, 2);
-            //        _topFraction = _insertFractions.Min();
-            //        _bottomFraction = _insertFractions.Max();
-            //    }
-
-            //    _topPoint = _axisRay.PointAtFraction(_topFraction);
-            //    _bottomPoint = _axisRay.PointAtFraction(_bottomFraction);
-
-            //    var _soilLayerInfo = new PDIWT_BearingCapacity_SoilLayerInfo();
-            //    _soilLayerInfo.SoilLayerTopElevation = _topPoint.Z;
-            //    _soilLayerInfo.SoilLayerBottomElevation = _bottomPoint.Z;
-            //    _soilLayerInfo.SoilLayerNumber = _meshInfo.Item2["LayerNumber"].ToString();
-            //    _soilLayerInfo.SoilLayerName = _meshInfo.Item2["LayerName"].ToString();
-            //    _soilLayerInfo.Betasi = double.Parse(_meshInfo.Item2["Betasi"].ToString());
-            //    _soilLayerInfo.Psii = double.Parse(_meshInfo.Item2["Psisi"].ToString());
-            //    _soilLayerInfo.SideFrictionStandardValue = double.Parse(_meshInfo.Item2["qfi"].ToString());
-            //    _soilLayerInfo.Betap = double.Parse(_meshInfo.Item2["Betap"].ToString());
-            //    _soilLayerInfo.Psip = double.Parse(_meshInfo.Item2["Psip"].ToString());
-            //    _soilLayerInfo.EndResistanceStandardValue = double.Parse(_meshInfo.Item2["qr"].ToString());
-            //    _soilLayerInfo.SoilLayerThickness = Math.Abs(_bottomFraction-_topFraction) / _uorpermeter;
-            //    _layerTuples.Add(Tuple.Create(_topFraction, _bottomFraction, _soilLayerInfo));
-            //}
-
-            //if (_layerTuples.Count == 0)
-            //    return BD.StatusInt.Error;
-
             results = new ObservableCollection<Tuple<double, double>>();
             // Tuple(double, double, double, double) represents (fractionTop, bcTop, fractionBottom, bcBottom) 
             ObservableCollection<Tuple<double, double, double, double>> _tuples = new ObservableCollection<Tuple<double, double, double, double>>();
@@ -261,7 +217,7 @@ namespace PDIWT_PiledWharf_Core.Model
             PileSoilLayersInsectionStatus _insectionStatus = _getter.GetInterSectionInfo(out ObservableCollection<IntersectionInfo> _insectInfos, false);
             switch (_insectionStatus)
             {
-                case PileSoilLayersInsectionStatus.NoSoilLayer:                   
+                case PileSoilLayersInsectionStatus.NoSoilLayer:
                 case PileSoilLayersInsectionStatus.NotAllSoilLayersContainMeshElement:
                     return GetPileBearingCapacityCurveInfoStatus.InvalidObjectStruct;
                 case PileSoilLayersInsectionStatus.NoIntersection:
@@ -272,16 +228,41 @@ namespace PDIWT_PiledWharf_Core.Model
             //if (_getter.GetInterSectionInfo(out ObservableCollection<IntersectionInfo> _insectInfos, false) != PileSoilLayersInsectionStatus.Success)
             //    return BD.StatusInt.Error;
 
-            double _pilePerimeter = AxialBearingCapacity.CalculatePilePrimeter(PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.TubePile, PileDiameter / _uorpermeter);
-            double _pileArea = AxialBearingCapacity.CalculatePileEndOutsideArea(PDIWT_PiledWharf_Core_Cpp.PileTypeManaged.TubePile, PileDiameter / _uorpermeter);
+            double _pilePerimeter = AxialBearingCapacity.CalculatePilePrimeter(GeoPileType, PileDiameter / _uorpermeter);
+            double _pileArea = AxialBearingCapacity.CalculatePileEndOutsideArea(GeoPileType, PileDiameter / _uorpermeter);
 
             List<Tuple<double, double>> _sideAndendBCPart = new List<Tuple<double, double>>();
+
             double _sideBCPartEachLayer = 0;
+            double _endBCPartEacnLayer = 0;
             foreach (var _layer in _insectInfos)
             {
-                _sideBCPartEachLayer += 1 / partialCoeff * _pilePerimeter * _layer.SoilLayer.TPSP_Qfi.GetValueOrDefault() * _layer.GetPileLengthInSoilLayer() / _uorpermeter;
-                double _endBCPartEacnLayer = 1 / partialCoeff * blockCoeff * _layer.SoilLayer.TPSP_Qr.GetValueOrDefault() * _pileArea;
-                _sideAndendBCPart.Add(Tuple.Create(_sideBCPartEachLayer, _endBCPartEacnLayer));
+                switch (BCPileType)
+                {
+                    case BearingCapacityPileTypes.DrivenPileWithSealedEnd:
+                        _sideBCPartEachLayer += 1 / partialCoeff * _pilePerimeter * _layer.SoilLayer.DPSE_Qfi.Value * _layer.GetPileLengthInSoilLayer() / _uorpermeter;
+                        _endBCPartEacnLayer = 1 / partialCoeff * _layer.SoilLayer.DPSE_Qr.Value * _pileArea;
+                        _sideAndendBCPart.Add(Tuple.Create(_sideBCPartEachLayer, _endBCPartEacnLayer));
+                        break;
+                    case BearingCapacityPileTypes.TubePileOrSteelPile:
+                        _sideBCPartEachLayer += 1 / partialCoeff * _pilePerimeter * _layer.SoilLayer.TPSP_Qfi.Value * _layer.GetPileLengthInSoilLayer() / _uorpermeter;
+                        _endBCPartEacnLayer = 1 / partialCoeff * blockCoeff * _layer.SoilLayer.TPSP_Qr.Value * _pileArea;
+                        _sideAndendBCPart.Add(Tuple.Create(_sideBCPartEachLayer, _endBCPartEacnLayer));
+                        break;
+                    case BearingCapacityPileTypes.CastInSituPile:
+                        _sideBCPartEachLayer += 1 / partialCoeff * _pilePerimeter * _layer.SoilLayer.CISP_Psisi.Value * _layer.SoilLayer.CISP_Qfi.Value * _layer.GetPileLengthInSoilLayer() / _uorpermeter;
+                        _endBCPartEacnLayer = 1 / partialCoeff *  _layer.SoilLayer.CISP_Psip.Value * _layer.SoilLayer.CISP_Qr.Value * _pileArea;
+                        _sideAndendBCPart.Add(Tuple.Create(_sideBCPartEachLayer, _endBCPartEacnLayer));
+                        break;
+                    case BearingCapacityPileTypes.CastInSituAfterGrountingPile:
+                        _sideBCPartEachLayer += 1 / partialCoeff * _pilePerimeter * _layer.SoilLayer.CISAGP_Betasi.Value * _layer.SoilLayer.CISAGP_Psisi.Value * _layer.SoilLayer.CISAGP_Qfi.Value * _layer.GetPileLengthInSoilLayer() / _uorpermeter;
+                        _endBCPartEacnLayer = 1 / partialCoeff * _layer.SoilLayer.CISAGP_Betap.Value * _layer.SoilLayer.CISAGP_Psip.Value * _layer.SoilLayer.CISAGP_Qr.Value * _pileArea;
+                        _sideAndendBCPart.Add(Tuple.Create(_sideBCPartEachLayer, _endBCPartEacnLayer));
+                        break;
+                    default:
+                        break;
+                }
+
             }
 
             for (int i = 0; i < _sideAndendBCPart.Count; i++)
@@ -303,7 +284,7 @@ namespace PDIWT_PiledWharf_Core.Model
             {
                 for (int j = results.Count - 1; j > i; j--)
                 {
-                    if(Math.Abs(results[i].Item1 - results[j].Item1) < _uorpermeter * 0.01 &&
+                    if (Math.Abs(results[i].Item1 - results[j].Item1) < _uorpermeter * 0.01 &&
                         Math.Abs(results[i].Item2 - results[j].Item2) < 0.01)
                     {
                         results.RemoveAt(j);
@@ -325,25 +306,11 @@ namespace PDIWT_PiledWharf_Core.Model
             double pileLengthModulus,
             ObservableCollection<Tuple<double, double>> fractionandBCInfos)
         {
-            
+
             if (fractionandBCInfos == null || fractionandBCInfos.Count == 0)
                 return CalculatePileLengthStatues.NoLayerInfos;
-            if (targetBC > fractionandBCInfos.Last().Item2)
-                return CalculatePileLengthStatues.TargetBearingCapacityIsTooLarge;
-
-            //BG.DRay3d _axisRay = GetPileRay3D();
-            ////!Have problems
-            ////todo to fix gap between layers
-
-            //var _bclist = from _bc in fractionandBCInfos select _bc.Item2;
-
-            //foreach (var _layer in fractionandBCInfos)
-            //{
-            //    if((_layer.Item2- targetBC) * (_layer.Item4 - targetBC) <=0)
-            //    {
-
-            //    }
-            //}
+            //if (targetBC > fractionandBCInfos.Last().Item2)
+            //    return CalculatePileLengthStatues.TargetBearingCapacityIsTooLarge;
 
             var _interpolate = Interpolate.Linear(fractionandBCInfos.Select(_tuple => _tuple.Item2), fractionandBCInfos.Select(_tuple => _tuple.Item1));
             double _franction = _interpolate.Interpolate(targetBC);
@@ -356,7 +323,6 @@ namespace PDIWT_PiledWharf_Core.Model
             }
             return CalculatePileLengthStatues.Success;
         }
-        
 
         public void DrawInActiveModel()
         {
@@ -371,24 +337,4 @@ namespace PDIWT_PiledWharf_Core.Model
             _axis.AddToModel();
         }
     }
-
-    //class BCTupleComparer : IEqualityComparer<Tuple<double, double>>
-    //{
-    //    readonly double _uorpermeter = BM.Session.Instance.GetActiveDgnModel().GetModelInfo().UorPerMeter;
-    //    public bool Equals(Tuple<double, double> x, Tuple<double, double> y)
-    //    {
-    //        if (ReferenceEquals(x, y)) return true;
-    //        if (ReferenceEquals(x, null) || ReferenceEquals(y, null))
-    //            return false;
-    //        return (Math.Abs(x.Item1 - y.Item1) < 0.01) && (Math.Abs(x.Item2 - y.Item2) < 0.01);
-    //    }
-
-    //    public int GetHashCode(Tuple<double, double> obj)
-    //    {
-    //        if (ReferenceEquals(obj, null)) return 0;
-
-    //        return obj.GetHashCode();
-    //    }
-    //}
-
 }

@@ -90,15 +90,25 @@ namespace PDIWT_PiledWharf_Core.ViewModel
 
         private void ExecuteWindowClosing()
         {
-            BD.ElementAgendaDisplayable _disappear = new BD.ElementAgendaDisplayable();
-            BD.DgnModel _activeModel = BM.Session.Instance.GetActiveDgnModel();
-
-            foreach (DataRow _row in CollisionPiles.Rows)
+            try
             {
-                _disappear.Insert(_activeModel.FindElementById((BD.ElementId)(_row[1] as PileBase).Numbering), false);
-                _disappear.Insert(_activeModel.FindElementById((BD.ElementId)(_row[2] as PileBase).Numbering), false);
+                BD.ElementAgendaDisplayable _disappear = new BD.ElementAgendaDisplayable();
+                BD.DgnModel _activeModel = BM.Session.Instance.GetActiveDgnModel();
+
+                foreach (DataRow _row in CollisionPiles.Rows)
+                {
+                    _disappear.Insert(_activeModel.FindElementById((BD.ElementId)(_row[1] as PileBase).Numbering), false);
+                    _disappear.Insert(_activeModel.FindElementById((BD.ElementId)(_row[2] as PileBase).Numbering), false);
+                }
+                _disappear.ClearHilite();
+
+                CollisionPiles.Clear();
             }
-            _disappear.ClearHilite();
+            catch(Exception e)
+            {
+                _mc.ShowErrorMessage(e.Message, e.ToString(), false);
+            }
+
         }
 
         private RelayCommand<SelectionChangedEventArgs> _collisionPileSelectionChanged;

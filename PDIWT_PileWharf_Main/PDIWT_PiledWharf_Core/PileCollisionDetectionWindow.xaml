@@ -48,8 +48,8 @@
             <ListView.View>
                 <GridView AllowsColumnReorder="False">
                     <GridViewColumn DisplayMemberBinding="{Binding Number}" Header="{x:Static loc:Resources.Number}" />
-                    <GridViewColumn DisplayMemberBinding="{Binding FirstPile.Numbering}" Header="{x:Static loc:Resources.PileName}" />
-                    <GridViewColumn DisplayMemberBinding="{Binding SecondPile.Numbering}" Header="{x:Static loc:Resources.PileName}" />
+                    <GridViewColumn DisplayMemberBinding="{Binding FirstPile.Name}" Header="{x:Static loc:Resources.PileName}" />
+                    <GridViewColumn DisplayMemberBinding="{Binding SecondPile.Name}" Header="{x:Static loc:Resources.PileName}" />
                     <GridViewColumn DisplayMemberBinding="{Binding MinimumDistance, StringFormat={}{0:F2}}">
                         <GridViewColumn.Header>
                             <StackPanel Orientation="Horizontal">

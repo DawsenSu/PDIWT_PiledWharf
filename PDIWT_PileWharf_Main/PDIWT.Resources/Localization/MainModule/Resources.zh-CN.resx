@@ -672,4 +672,7 @@
   <data name="LiftForceDisCoeff" xml:space="preserve">
     <value>抗拔折减系数 ξi</value>
   </data>
+  <data name="PileDetailInformation" xml:space="preserve">
+    <value>桩基详细信息</value>
+  </data>
 </root>

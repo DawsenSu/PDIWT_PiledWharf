@@ -952,6 +952,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pile Detail Information.
+        /// </summary>
+        public static string PileDetailInformation {
+            get {
+                return ResourceManager.GetString("PileDetailInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pile Diameter.
         /// </summary>
         public static string PileDiameter {

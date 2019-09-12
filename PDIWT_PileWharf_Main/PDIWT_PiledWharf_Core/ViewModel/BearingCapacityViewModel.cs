@@ -373,37 +373,8 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             get
             {
                 return _buildupSoilLayerLib
-                    ?? (_buildupSoilLayerLib = new RelayCommand(ExecuteBuildUpSoilLayerLib));
+                    ?? (_buildupSoilLayerLib = new RelayCommand(()=> Messenger.Default.Send<BearingCapacityWindowType, BearingCapacityWindow>(BearingCapacityWindowType.SoilLayerLibraryWindow)));
             }
-        }
-
-        private void ExecuteBuildUpSoilLayerLib()
-        {
-            try
-            {
-                BuildUpSoilLayersWindow _window = new BuildUpSoilLayersWindow();
-
-                BuildUpSoilLayersViewModel _vm = new BuildUpSoilLayersViewModel()
-                {
-                    SoilLayerCollection = new SoilLayerCollection(SoilLayersLibrary)
-                };
-                _window.DataContext = _vm;
-                bool? _dialogResult = _window.ShowDialog();
-                if (_dialogResult == true)
-                {
-                    BM.MessageCenter.Instance.ShowInfoMessage("The soil Library is updated", "", false);
-                    SoilLayersLibrary = _vm.SoilLayerCollection;
-                }
-
-            }
-            catch (Exception e)
-            {
-                BM.MessageCenter.Instance.ShowErrorMessage("The soil Library is Can't be update", e.ToString(), false);
-            }
-            finally
-            {
-            }
-
         }
 
         private RelayCommand _pickupSoilLayersFromLib;
@@ -416,38 +387,10 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             get
             {
                 return _pickupSoilLayersFromLib
-                    ?? (_pickupSoilLayersFromLib = new RelayCommand(ExecutePickupSoilLayersFromLib,
-                    () => SelectedPile != null));
+                    ?? (_pickupSoilLayersFromLib = new RelayCommand(
+                        () => Messenger.Default.Send<BearingCapacityWindowType, BearingCapacityWindow>(BearingCapacityWindowType.SoilLayerPickUpWindow),
+                        () => SelectedPile != null));
             }
-        }
-
-        private void ExecutePickupSoilLayersFromLib()
-        {
-            try
-            {
-                if (SoilLayersLibrary.Count == 0)
-                {
-                    _mc.ShowErrorMessage("Please build up soil layer library first!", "", false);
-                    return;
-                }
-                PickUpSoilLayersFromLibWindow _window = new PickUpSoilLayersFromLibWindow();
-                ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo> _soilLayerInfos = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>();
-                foreach (var _layer in SoilLayersLibrary)
-                    _soilLayerInfos.Add(new PDIWT_BearingCapacity_SoilLayerInfo() { SoilLayerObject = _layer, PileIntersectionBottomEle = 0, PileIntersectionTopEle = 0 });
-
-                PickUpSoilLayersFromLibViewModel _vm = new PickUpSoilLayersFromLibViewModel(_soilLayerInfos, SelectedPile.PileSoilLayersInfo);
-                _window.DataContext = _vm;
-                if (true == _window.ShowDialog())
-                {
-                    SelectedPile.PileSoilLayersInfo = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>(_vm.SelectedSoilLayerInfos);
-                    _mc.ShowInfoMessage("Picked soil layers from library", "", false);
-                }
-            }
-            catch (Exception e)
-            {
-                _mc.ShowErrorMessage("Can't pick soil layer", e.ToString(), false);
-            }
-
         }
 
 
@@ -477,7 +420,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             }
             catch (Exception e)
             {
-                _mc.ShowErrorMessage("Calculation fail", e.ToString(), false);
+                _mc.ShowErrorMessage("Calculation fail." + e.Message, e.ToString(), false);
             }
 
         }
@@ -495,9 +438,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                     ?? (_generateNote = new RelayCommand(
                         () =>
                         {
-                            ReportGeneratorWindow _reportWindow = new ReportGeneratorWindow();
-                            Messenger.Default.Send(new NotificationMessage(this, "BearingCapacityViewModelInvoke"), "ViewModelForReport");
-                            _reportWindow.ShowDialog();
+                            Messenger.Default.Send<BearingCapacityWindowType, BearingCapacityWindow>(BearingCapacityWindowType.ReportGenerator);
                         },
                         () =>
                         {
@@ -527,16 +468,10 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             get
             {
                 return _selectionChanged
-                    ?? (_selectionChanged = new RelayCommand<SelectionChangedEventArgs>(ExecuteSelectionChanged));
+                    ?? (_selectionChanged = new RelayCommand<SelectionChangedEventArgs>(
+                        parameter => Messenger.Default.Send(new NotificationMessage<bool>(false, "Changed!"), "BearingCapacityForegroundChange")));
             }
         }
-
-        private void ExecuteSelectionChanged(SelectionChangedEventArgs parameter)
-        {
-            // Register in view, send false to change foreground of controls to black.
-            Messenger.Default.Send(new NotificationMessage<bool>(false, "Changed!"), "BearingCapacityForegroundChange");
-        }
-
     }
 
     /// <summary>
@@ -621,10 +556,18 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             _steelWeight = 78;
             _steelUnderwaterWeight = 68;
             PileSoilLayersInfo = new ObservableCollection<PDIWT_BearingCapacity_SoilLayerInfo>();
+            DesignAxialBearingCapacity = null;
+            DesignAxialUpliftCapacity = null;
             PropertyChanged += (s, e) =>
             {
-                if (e.PropertyName != "IsCalculated")
+                if (e.PropertyName != "IsCalculated"
+                && e.PropertyName != "DesignAxialBearingCapacity"
+                && e.PropertyName != "DesignAxialUpliftCapacity")
+                {
                     IsCalculated = false;
+                    DesignAxialBearingCapacity = null;
+                    DesignAxialUpliftCapacity = null;
+                }
             };
         }
         //****************** For The Status of Calculation Item **********************//
@@ -677,7 +620,12 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         public bool IsVerticalPile
         {
             get { return _isVerticalPile; }
-            set { Set(ref _isVerticalPile, value); }
+            set
+            {
+                Set(ref _isVerticalPile, value);
+                if (!double.IsNaN(PileSkewness))
+                    PileSkewness = double.NaN;
+            }
         }
 
         //****************** Input parameters | Geometry **********************//
@@ -938,21 +886,21 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
         //****************** results parameters **********************//
-        private double _designAxialBearingCapacity;
+        private double? _designAxialBearingCapacity;
         /// <summary>
         /// unit: kN
         /// </summary>
-        public double DesignAxialBearingCapacity
+        public double? DesignAxialBearingCapacity
         {
             get { return _designAxialBearingCapacity; }
             private set { Set(ref _designAxialBearingCapacity, value); }
         }
 
-        private double _designAxialUpliftCapacity;
+        private double? _designAxialUpliftCapacity;
         /// <summary>
         /// unit: kN
         /// </summary>
-        public double DesignAxialUpliftCapacity
+        public double? DesignAxialUpliftCapacity
         {
             get { return _designAxialUpliftCapacity; }
             private set { Set(ref _designAxialUpliftCapacity, value); }

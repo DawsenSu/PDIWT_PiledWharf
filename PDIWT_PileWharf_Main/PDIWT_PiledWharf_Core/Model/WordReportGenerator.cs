@@ -690,8 +690,8 @@ namespace PDIWT_PiledWharf_Core.Model
             {
                 _db.InsertCell(); _db.Write(_pile.PileName);
                 _db.InsertCell(); _db.Write(_pile.PileLength.ToString("F2"));
-                _db.InsertCell(); _db.Write(_pile.DesignAxialBearingCapacity.ToString("F2"));
-                _db.InsertCell(); _db.Write(_pile.DesignAxialUpliftCapacity.ToString("F2"));
+                _db.InsertCell(); _db.Write(_pile.DesignAxialBearingCapacity.Value.ToString("F2"));
+                _db.InsertCell(); _db.Write(_pile.DesignAxialUpliftCapacity.Value.ToString("F2"));
                 _db.EndRow();
             }
             _db.EndTable();
@@ -781,8 +781,8 @@ namespace PDIWT_PiledWharf_Core.Model
                         break;
                 }
 
-                _db.Writeln($"单桩极限抗压承载力设计值 Qd = {_pile.DesignAxialBearingCapacity.ToString("F2")}kN");
-                _db.Writeln($"单桩抗拔极限承载力设计值 Td = {_pile.DesignAxialUpliftCapacity.ToString("F2")}kN");
+                _db.Writeln($"单桩极限抗压承载力设计值 Qd = {_pile.DesignAxialBearingCapacity.Value.ToString("F2")}kN");
+                _db.Writeln($"单桩抗拔极限承载力设计值 Td = {_pile.DesignAxialUpliftCapacity.Value.ToString("F2")}kN");
             }
 
         }

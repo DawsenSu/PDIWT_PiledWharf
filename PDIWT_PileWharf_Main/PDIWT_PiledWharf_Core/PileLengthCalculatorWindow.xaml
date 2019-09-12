@@ -9,215 +9,266 @@
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:loc="clr-namespace:PDIWT.Resources.Localization.MainModule;assembly=PDIWT.Resources"
     xmlns:local="clr-namespace:PDIWT_PiledWharf_Core"
+    xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pdi="clr-namespace:PDIWT.Resources.CustomUserControl;assembly=PDIWT.Resources"
+    xmlns:pdiext="clr-namespace:PDIWT.Resources.CustomUserControl"
     Title="{x:Static loc:Resources.PileLengthCalWindow}"
-    Width="600"
-    Height="400"
+    Width="500"
+    Height="600"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Skins/MainSkin.xaml" />
+                <ResourceDictionary>
+                    <com:PileTypesToDisplayNameConverter x:Key="BearingCapacityPileTypesConverter" />
+                    <con:ReferenceToVisibilityConverter x:Key="ReferenceToVisiblityConverter" />
+                    <con:BoolenToVisibilityConverter x:Key="IsCalculatedToCheckPicConverter" />
+                    <com:PileLengthResultToStringConverter x:Key="Length2Str" />
+                    <DataTemplate x:Key="PileListTemplate">
+                        <Border
+                            Margin="3"
+                            HorizontalAlignment="Stretch"
+                            BorderBrush="SteelBlue"
+                            BorderThickness="1"
+                            CornerRadius="4">
+                            <Grid Margin="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock FontWeight="Bold" Text="{Binding PileName, Mode=OneWay}" />
+                                <Image
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Height="8"
+                                    Source="pack://application:,,,/PDIWT.Resources;Component/Images/Icons/Check.ico"
+                                    Visibility="{Binding IsCalculated, Mode=OneWay, Converter={StaticResource IsCalculatedToCheckPicConverter}}" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    Text="{Binding BearingCapacityPileType, Converter={StaticResource BearingCapacityPileTypesConverter}, Mode=OneWay}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
     <Grid x:Name="Grid_MainLayout">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <!--  Calculator Main Panel  -->
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <!--  Input Parameters  -->
+        <Expander
+            Grid.Row="0"
+            Foreground="{StaticResource GroupBoxCaptionColor}"
+            Header="{x:Static loc:Resources.InputParameters}"
+            IsExpanded="True">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <!--  Calculation Coefficients  -->
+                <GroupBox Header="{x:Static loc:Resources.DesignAxialBearingCapacity}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <pdi:LabelTextBox
+                            DisplayName="{x:Static loc:Resources.DesignAxialBearingCapacity}"
+                            Parameter="{Binding TargetBearingCapacity}"
+                            Unit="kN" />
+                        <pdi:LabelTextBox
+                            Grid.Row="1"
+                            DisplayName="{x:Static loc:Resources.PileLengthModulus}"
+                            Parameter="{Binding PileLengthModulus}"
+                            Unit="m" />
+                    </Grid>
+                </GroupBox>
+                <!--  Pile Calculation Coefficients  -->
+                <GroupBox Grid.Column="1" Header="{x:Static loc:Resources.CalculationCoefficients}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <pdi:LabelTextBox
+                            Grid.Row="0"
+                            DisplayName="{x:Static loc:Resources.PartialCoefficient}"
+                            Parameter="{Binding PartialCoefficient, StringFormat={}{0:F2}}"
+                            ToolTip="{x:Static loc:Resources.Note_PartialCoeff}" />
+                        <pdi:LabelTextBox
+                            Grid.Row="1"
+                            DisplayName="{x:Static loc:Resources.BlockCoefficient}"
+                            Parameter="{Binding BlockCoefficient, StringFormat={}{0:F2}}" />
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </Expander>
+        <!--  Main Grid Layout  -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="{x:Static loc:Resources.PileList}">
+                <ListBox
+                    Width="200"
+                    ContextMenu="{DynamicResource GridAndListContextMenu}"
+                    ItemTemplate="{StaticResource PileListTemplate}"
+                    ItemsSource="{Binding VirtualPileTable}"
+                    SelectedItem="{Binding SelectedVirtualPile}" />
+            </GroupBox>
             <GroupBox
-                Grid.Row="0"
-                Grid.Column="0"
-                Header="{x:Static loc:Resources.InputParameters}">
+                Grid.Column="1"
+                DataContext="{Binding SelectedVirtualPile}"
+                Header="{x:Static loc:Resources.PileDetailInformation}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <!--  Calculation Coefficients  -->
-                    <GroupBox Header="{x:Static loc:Resources.DesignAxialBearingCapacity}">
+                    <GroupBox Header="{x:Static loc:Resources.BasicInformation}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <pdi:LabelTextBox
-                                DisplayName="{x:Static loc:Resources.DesignAxialBearingCapacity}"
-                                Parameter="{Binding TargetBearingCapacity}"
-                                Unit="kN" />
-                            <pdi:LabelTextBox
-                                Grid.Row="1"
-                                DisplayName="{x:Static loc:Resources.PileLengthModulus}"
-                                Parameter="{Binding PileLengthModulus}"
-                                Unit="m" />
-                        </Grid>
-                    </GroupBox>
-                    <!--  Pile Calculation Coefficients  -->
-                    <GroupBox
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        Header="{x:Static loc:Resources.CalculationCoefficients}">
-                        <Grid>
-                            <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <pdi:LabelTextBox
+                                x:Name="LabelTextBox_PileName"
                                 Grid.Row="0"
-                                DisplayName="{x:Static loc:Resources.PartialCoefficient}"
-                                Parameter="{Binding PartialCoefficient, StringFormat={}{0:F2}}"
-                                ToolTip="{x:Static loc:Resources.Note_PartialCoeff}" />
-                            <pdi:LabelTextBox
-                                Grid.Row="1"
-                                DisplayName="{x:Static loc:Resources.BlockCoefficient}"
-                                Parameter="{Binding BlockCoefficient, StringFormat={}{0:F2}}"
-                                Visibility="{Binding SelectedBearingCapacityPileType, Converter={StaticResource TubeorSteelToVisibilityConverter}}" />
+                                DisplayName="{x:Static loc:Resources.PileName}"
+                                Parameter="{Binding PileName}" />
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="{x:Static loc:Resources.PileTopPoint}" />
+                                <Label Grid.Column="1" Content="X" />
+                                <TextBox Grid.Column="2" Text="{Binding PileX}" />
+                                <Label Grid.Column="3" Content="Y" />
+                                <TextBox Grid.Column="4" Text="{Binding PileY}" />
+                                <Label Grid.Column="5" Content="Z" />
+                                <TextBox Grid.Column="6" Text="{Binding PileZ}" />
+                                <Label Grid.Column="7" Content="m" />
+                            </Grid>
+                            <StackPanel
+                                Grid.Row="2"
+                                HorizontalAlignment="Stretch"
+                                Orientation="Horizontal">
+                                <Label
+                                    x:Name="Lable_PileWorkmanshipType"
+                                    Width="150"
+                                    Content="{x:Static loc:Resources.PileWorkmanshipType}" />
+                                <pdiext:BearingCapacityPileTypeComboBox
+                                    Width="90"
+                                    Margin="22,1,0,1"
+                                    HorizontalContentAlignment="Stretch"
+                                    BearingCapacityPileType="{Binding BearingCapacityPileType, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                            <StackPanel
+                                Grid.Row="3"
+                                HorizontalAlignment="Stretch"
+                                Orientation="Horizontal">
+                                <Label
+                                    x:Name="Lable_PileGeoType"
+                                    Width="150"
+                                    Content="{x:Static loc:Resources.PileGeoType}" />
+                                <pdiext:PileTypeComboBox
+                                    Width="90"
+                                    Margin="22,1,0,1"
+                                    SelectedPileType="{Binding PileGeoType, UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+
                         </Grid>
                     </GroupBox>
-                    <!--  Pile Geometry Information  -->
-                    <!--<GroupBox
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Header="{x:Static loc:Resources.GeometryInformation}">
+                    <GroupBox Grid.Row="1" Header="{x:Static loc:Resources.GeometryInformation}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
+                            <pdi:LabelTextBox
+                                x:Name="LabelTextBox_PileSkewness"
+                                Grid.Row="1"
+                                DisplayName="{x:Static loc:Resources.PileSkewness}"
+                                IsEnabled="{Binding IsChecked, ElementName=CheckBox_skewness, Converter={StaticResource IsCheckedToReversedIsEnableConverter}}"
+                                Parameter="{Binding PileSkewness, StringFormat={}{0:F2}}"
+                                ToolTip="If pile is vertical, enter NaN" />
+                            <pdi:LabelTextBox
+                                Grid.Row="2"
+                                DisplayName="RotationAngle"
+                                Parameter="{Binding PlanRotationAngle}"
+                                Unit="°" />
                             <pdi:LabelTextBox
                                 x:Name="LabelTextBox_PileWidth"
-                                Grid.Row="0"
+                                Grid.Row="3"
                                 DisplayName="{x:Static loc:Resources.PileWidth}"
                                 Parameter="{Binding PileDiameter, StringFormat={}{0:F2}}"
                                 Unit="m" />
                             <pdi:LabelTextBox
                                 x:Name="LabelTextBox_PileInsideDiameter"
-                                Grid.Row="1"
-                                Grid.Column="0"
+                                Grid.Row="4"
                                 DisplayName="{x:Static loc:Resources.PileInsideDiameter}"
-                                Parameter="{Binding PileInsideDiameter, StringFormat={}{0:F2}}"
+                                Parameter="{Binding PileInnerDiameter, StringFormat={}{0:F2}}"
                                 Unit="m"
                                 Visibility="{Binding SelectedPileGeoType, Mode=OneWay, Converter={StaticResource TubePileStringOfListToVisibilityConverter}}" />
                         </Grid>
-                    </GroupBox>-->
-                    <!--  Pile Material Information  -->
-                    <!--<GroupBox
-                        Grid.Row="0"
-                        Grid.RowSpan="2"
-                        Grid.Column="1"
-                        Header="{x:Static loc:Resources.MaterialInformation}">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <GroupBox Header="{x:Static loc:Resources.Concrete}">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <pdi:LabelTextBox
-                                        x:Name="LabelTextBox_ConcreteWeight"
-                                        Grid.Row="0"
-                                        DisplayName="{x:Static loc:Resources.Weight}"
-                                        Parameter="{Binding ConcreteWeight, StringFormat={}{0:F2}}"
-                                        Unit="kN/m3" />
-                                    <pdi:LabelTextBox
-                                        x:Name="LabelTextBox_ConcreteUnderWaterWeight"
-                                        Grid.Row="1"
-                                        DisplayName="{x:Static loc:Resources.UnderWaterUnitWeight}"
-                                        Parameter="{Binding ConcreteUnderwaterWeight, StringFormat={}{0:F2}}"
-                                        Unit="kN/m3" />
-                                </Grid>
-                            </GroupBox>
-                            <GroupBox
-                                Grid.Row="1"
-                                Header="{x:Static loc:Resources.Steel}"
-                                Visibility="{Binding SelectedPileGeoType, Mode=OneWay, Converter={StaticResource SteelPileStringOfListToVisibilityConverter}}">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <pdi:LabelTextBox
-                                        x:Name="LabelTextBox_SteelWeight"
-                                        Grid.Row="0"
-                                        DisplayName="{x:Static loc:Resources.Weight}"
-                                        Parameter="{Binding SteelWeight, StringFormat={}{0:F2}}"
-                                        Unit="kN/m3" />
-                                    <pdi:LabelTextBox
-                                        x:Name="LabelTextBox_SteelUnderWaterWeigth"
-                                        Grid.Row="1"
-                                        DisplayName="{x:Static loc:Resources.UnderWaterUnitWeight}"
-                                        Parameter="{Binding SteelUnderwaterWeight, StringFormat={}{0:F2}}"
-                                        Unit="kN/m3" />
-                                </Grid>
-                            </GroupBox>
-                        </Grid>
-                    </GroupBox>-->
+                    </GroupBox>
+                    <StackPanel
+                        Grid.Row="2"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                        <Label Content="Pile Length:" />
+                        <Label Content="{Binding PileLength, Converter={StaticResource Length2Str}, Mode=OneWay}" Foreground="OrangeRed" />
+                        <Label Content="m" />
+                    </StackPanel>
+                    <lvc:CartesianChart Grid.Row="3" Margin="2">
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="{x:Static loc:Resources.DesignAxialBearingCapacity}" Position="RightTop" />
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis x:Name="xAxis" Title="{x:Static loc:Resources.PileLength}" />
+                        </lvc:CartesianChart.AxisY>
+                        <lvc:CartesianChart.Series>
+                            <lvc:LineSeries
+                                x:Name="LineSeries"
+                                Title=""
+                                Fill="Transparent"
+                                LineSmoothness="0"
+                                Values="{Binding DataResources}" />
+                        </lvc:CartesianChart.Series>
+                    </lvc:CartesianChart>
+
                 </Grid>
             </GroupBox>
-            <GroupBox
-                Grid.Row="1"
-                Grid.Column="0"
-                Header="{x:Static loc:Resources.PileSpatialInformation}">
-                <DataGrid
-                    x:Name="DataGird_PileTable"
-                    AutoGenerateColumns="False"
-                    ColumnWidth="*"
-                    ItemsSource="{Binding VirtualPileTable}"
-                    SelectedItem="{Binding SelectedVirtualPile}">
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Command="{Binding ShowCurve}" Header="{x:Static loc:Resources.ShowPileLengthBCCurve}">
-                                <MenuItem.Icon>
-                                    <Image Source="pack://application:,,,/PDIWT.Resources;Component/Images/Icons/Linechart.ico" />
-                                </MenuItem.Icon>
-                            </MenuItem>
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
-                    <DataGrid.RowHeaderTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding DataContext.RowNumber, RelativeSource={RelativeSource AncestorType=DataGridRow}, Converter={StaticResource RowToIndexConv}, Mode=OneWay}" />
-                        </DataTemplate>
-                    </DataGrid.RowHeaderTemplate>
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding PileName}" Header="{x:Static loc:Resources.PileName}" />
-                        <DataGridTextColumn Binding="{Binding PileX}" Header="x(m)" />
-                        <DataGridTextColumn Binding="{Binding PileY}" Header="y(m)" />
-                        <DataGridTextColumn Binding="{Binding PileZ}" Header="z(m)" />
-                        <DataGridTextColumn Binding="{Binding PileSkewness}" Header="{x:Static loc:Resources.PileSkewness}" />
-                        <DataGridTextColumn
-                            Binding="{Binding PileLength, Mode=OneWay, StringFormat={}{0:F2}}"
-                            Foreground="Red"
-                            Header="{x:Static loc:Resources.PileLength}"
-                            IsReadOnly="True" />
-                        <DataGridTextColumn Binding="{Binding PlanRotationAngle}" Header="Angle(°)" />
-                        <DataGridTextColumn Binding="{Binding PileDiameter}" Header="{x:Static loc:Resources.PileWidth}" />
-                        <DataGridTextColumn Binding="{Binding PileInnerDiameter}" Header="{x:Static loc:Resources.PileInsideDiameter}" />
-
-                    </DataGrid.Columns>
-                </DataGrid>
-            </GroupBox>
         </Grid>
-
         <!--  Bottom Panel  -->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />

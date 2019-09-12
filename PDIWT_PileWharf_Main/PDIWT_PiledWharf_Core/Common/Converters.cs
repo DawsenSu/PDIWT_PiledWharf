@@ -127,6 +127,22 @@ namespace PDIWT_PiledWharf_Core.Common
         }
     }
 
+    [ValueConversion(typeof(double), typeof(string))]
+    public class PileLengthResultToStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double _row = (double)value;
+            return double.IsNaN(_row) ? "*" : _row.ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return DependencyProperty.UnsetValue;
+        }
+    }
+
+
     [ValueConversion(typeof(DesignWaterLevelCondition), typeof(string))]
     public class DesignWaterLevelConverter : IValueConverter
     {

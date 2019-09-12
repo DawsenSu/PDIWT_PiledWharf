@@ -241,7 +241,6 @@
       <DependentUpon>BearingCapacityPileTypeComboBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common\Converters.cs" />
-    <Compile Include="Common\ExcelFileReader.cs" />
     <Compile Include="Common\Marshal.cs" />
     <Compile Include="Common\PDIWT.Formula.cs" />
     <Compile Include="Common\PDIWT_Attributes.cs" />
@@ -264,9 +263,7 @@
     <Compile Include="Model\PDIWT_SoilLayerCollection.cs" />
     <Compile Include="Model\PDIWT_Wharf.cs" />
     <Compile Include="Model\PDWIT_PileSoilLayerIntersectionInfo.cs" />
-    <Compile Include="Model\PDIWT_BearingCapacity_PileInfo.cs" />
     <Compile Include="Model\PDIWT_SoilLayer.cs" />
-    <Compile Include="Model\SoilLayerInfo.cs" />
     <Compile Include="Model\Tools\AttachBCInstanceTool.cs" />
     <Compile Include="AttachBCInstanceUserControl.xaml.cs">
       <DependentUpon>AttachBCInstanceUserControl.xaml</DependentUpon>
