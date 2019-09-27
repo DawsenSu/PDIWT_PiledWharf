@@ -675,4 +675,67 @@
   <data name="PileDetailInformation" xml:space="preserve">
     <value>桩基详细信息</value>
   </data>
+  <data name="PlanRotationAngle" xml:space="preserve">
+    <value>平面旋转角度</value>
+  </data>
+  <data name="ClearAll" xml:space="preserve">
+    <value>清除所有</value>
+  </data>
+  <data name="Wharf" xml:space="preserve">
+    <value>码头</value>
+  </data>
+  <data name="TotalLength" xml:space="preserve">
+    <value>总长</value>
+  </data>
+  <data name="PileFrame" xml:space="preserve">
+    <value>排架</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>拷贝</value>
+  </data>
+  <data name="Illustration" xml:space="preserve">
+    <value>示意</value>
+  </data>
+  <data name="LeftCantilever" xml:space="preserve">
+    <value>左悬臂</value>
+  </data>
+  <data name="CentralSpan" xml:space="preserve">
+    <value>中间跨</value>
+  </data>
+  <data name="RightCantilever" xml:space="preserve">
+    <value>右悬臂</value>
+  </data>
+  <data name="Result" xml:space="preserve">
+    <value>结果</value>
+  </data>
+  <data name="LastSectionHandleMethod" xml:space="preserve">
+    <value>最后结构段处理方式</value>
+  </data>
+  <data name="LHM_Separate" xml:space="preserve">
+    <value>与前一结构段分离</value>
+  </data>
+  <data name="LHM_Combine" xml:space="preserve">
+    <value>与前一结构段合并</value>
+  </data>
+  <data name="PileFrameDivider" xml:space="preserve">
+    <value>排架划分</value>
+  </data>
+  <data name="SpanLength" xml:space="preserve">
+    <value>排架间距</value>
+  </data>
+  <data name="NumberOfSpan" xml:space="preserve">
+    <value>排架间距数</value>
+  </data>
+  <data name="LeftCantiLegnth" xml:space="preserve">
+    <value>左悬臂长度</value>
+  </data>
+  <data name="RightCantiLength" xml:space="preserve">
+    <value>右悬臂长度</value>
+  </data>
+  <data name="PM_All" xml:space="preserve">
+    <value>每点</value>
+  </data>
+  <data name="PM_WholeHour" xml:space="preserve">
+    <value>整点</value>
+  </data>
 </root>

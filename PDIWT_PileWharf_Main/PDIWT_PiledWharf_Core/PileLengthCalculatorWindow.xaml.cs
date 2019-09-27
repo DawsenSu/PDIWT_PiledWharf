@@ -39,10 +39,10 @@ namespace PDIWT_PiledWharf_Core
             Icon = new BitmapImage(new Uri("pack://application:,,,/PDIWT.Resources;component/Images/Icons/PileLength.ico", UriKind.RelativeOrAbsolute));
 
             xAxis.LabelFormatter = value => (-value).ToString();
-            LineSeries.LabelPoint = value => string.Format("BearCapacity:{0:F2}\nLength:{1:F2}", value.X, value.Y);
+            LineSeries.LabelPoint = value => string.Format("BearCapacity:{0:F2}\nLength:{1:F2}", value.X, -value.Y);
 
-            Messenger.Default.Register<PileLengthCalculatorWindowType>(this, ShowWindow);
-            Closing += (s, e) => Messenger.Default.Unregister(this);
+            //Messenger.Default.Register<PileLengthCalculatorWindowType>(this, ShowWindow);
+            //Closing += (s, e) => Messenger.Default.Unregister(this);
         }
 
         readonly BM.MessageCenter _mc = BM.MessageCenter.Instance;
@@ -93,71 +93,71 @@ namespace PDIWT_PiledWharf_Core
             }
         }
 
-        private void ShowWindow(PileLengthCalculatorWindowType windowType)
-        {
-            switch (windowType)
-            {
-                case PileLengthCalculatorWindowType.CurveWidnow:
-                    try
-                    {
-                        double _uorpermeter = BM.Session.Instance.GetActiveDgnModel().GetModelInfo().UorPerMeter;
-                        VirtualSteelOrTubePile _pile = new VirtualSteelOrTubePile()
-                        {
-                            PileName = Vm.SelectedVirtualPile[0].ToString(),
-                            PileX = (double)Vm.SelectedVirtualPile[1] * _uorpermeter,
-                            PileY = (double)Vm.SelectedVirtualPile[2] * _uorpermeter,
-                            PileZ = (double)Vm.SelectedVirtualPile[3] * _uorpermeter,
-                            PileSkewness = (double)Vm.SelectedVirtualPile[4],
-                            PlanRotationAngle = (double)Vm.SelectedVirtualPile[5],
-                            PileDiameter = (double)Vm.SelectedVirtualPile[6] * _uorpermeter,
-                            PileInnerDiameter = (double)Vm.SelectedVirtualPile[7] * _uorpermeter,
-                        };
-                        switch (_pile.GetPileBearingCapacityCurveInfo(Vm.PartialCoefficient, Vm.BlockCoefficient, out ObservableCollection<Tuple<double, double>> _results))
-                        {
-                            case GetPileBearingCapacityCurveInfoStatus.InvalidObjectStruct:
-                                _mc.ShowMessage(BM.MessageType.Warning, "Invalid input parameter or internal error", _pile.ToString(), BM.MessageAlert.None);
-                                return;
-                            case GetPileBearingCapacityCurveInfoStatus.NoIntersection:
-                                _mc.ShowMessage(BM.MessageType.Warning, "No intersection between soil layer and pile", _pile.ToString(), BM.MessageAlert.None);
-                                return;
-                            case GetPileBearingCapacityCurveInfoStatus.Success:
-                                break;
-                        }
+        //private void ShowWindow(PileLengthCalculatorWindowType windowType)
+        //{
+        //    switch (windowType)
+        //    {
+        //        case PileLengthCalculatorWindowType.CurveWidnow:
+        //            try
+        //            {
+        //                double _uorpermeter = BM.Session.Instance.GetActiveDgnModel().GetModelInfo().UorPerMeter;
+        //                VirtualSteelOrTubePile _pile = new VirtualSteelOrTubePile()
+        //                {
+        //                    PileName = Vm.SelectedVirtualPile[0].ToString(),
+        //                    PileX = (double)Vm.SelectedVirtualPile[1] * _uorpermeter,
+        //                    PileY = (double)Vm.SelectedVirtualPile[2] * _uorpermeter,
+        //                    PileZ = (double)Vm.SelectedVirtualPile[3] * _uorpermeter,
+        //                    PileSkewness = (double)Vm.SelectedVirtualPile[4],
+        //                    PlanRotationAngle = (double)Vm.SelectedVirtualPile[5],
+        //                    PileDiameter = (double)Vm.SelectedVirtualPile[6] * _uorpermeter,
+        //                    PileInnerDiameter = (double)Vm.SelectedVirtualPile[7] * _uorpermeter,
+        //                };
+        //                switch (_pile.GetPileBearingCapacityCurveInfo(Vm.PartialCoefficient, Vm.BlockCoefficient, out ObservableCollection<Tuple<double, double>> _results))
+        //                {
+        //                    case GetPileBearingCapacityCurveInfoStatus.InvalidObjectStruct:
+        //                        _mc.ShowMessage(BM.MessageType.Warning, "Invalid input parameter or internal error", _pile.ToString(), BM.MessageAlert.None);
+        //                        return;
+        //                    case GetPileBearingCapacityCurveInfoStatus.NoIntersection:
+        //                        _mc.ShowMessage(BM.MessageType.Warning, "No intersection between soil layer and pile", _pile.ToString(), BM.MessageAlert.None);
+        //                        return;
+        //                    case GetPileBearingCapacityCurveInfoStatus.Success:
+        //                        break;
+        //                }
 
-                        LiveCharts.ChartValues<ObservablePoint> _chartPoints = new LiveCharts.ChartValues<ObservablePoint>();
-                        foreach (var _result in _results)
-                        {
-                            _chartPoints.Add(new ObservablePoint(_result.Item2, -_result.Item1 / _uorpermeter));
-                        }
-                        //LiveCharts.ChartValues<Tuple<double, double>> _tuples = new LiveCharts.ChartValues<Tuple<double, double>>();
-                        //foreach (var _result in _results)
-                        //{
-                        //    _tuples.Add(Tuple.Create(_result.Item2, _result.Item1 / _uorpermeter));
-                        //}
+        //                LiveCharts.ChartValues<ObservablePoint> _chartPoints = new LiveCharts.ChartValues<ObservablePoint>();
+        //                foreach (var _result in _results)
+        //                {
+        //                    _chartPoints.Add(new ObservablePoint(_result.Item2, -_result.Item1 / _uorpermeter));
+        //                }
+        //                //LiveCharts.ChartValues<Tuple<double, double>> _tuples = new LiveCharts.ChartValues<Tuple<double, double>>();
+        //                //foreach (var _result in _results)
+        //                //{
+        //                //    _tuples.Add(Tuple.Create(_result.Item2, _result.Item1 / _uorpermeter));
+        //                //}
 
-                        PileLengthCurveWindow _curveWindow = new PileLengthCurveWindow();
-                        PileLengthCurveViewModel _vm = new PileLengthCurveViewModel()
-                        {
-                            //SeriesCollection = new LiveCharts.SeriesCollection
-                            //{
-                            //    new LiveCharts.Wpf.LineSeries{Title="PileLength/m",Values = _chartPoints, LineSmoothness=0}
-                            //}
-                            ////DataResources = _tuples
-                            DataResources = _chartPoints
-                        };
-                        _curveWindow.DataContext = _vm;
-                        _curveWindow.Owner = this;
-                        _curveWindow.ShowDialog();
-                    }
-                    catch (Exception e)
-                    {
-                        _mc.ShowErrorMessage("Unknown reason: can't show BC - length curve", e.ToString(), false);
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
+        //                PileLengthCurveWindow _curveWindow = new PileLengthCurveWindow();
+        //                PileLengthCurveViewModel _vm = new PileLengthCurveViewModel()
+        //                {
+        //                    //SeriesCollection = new LiveCharts.SeriesCollection
+        //                    //{
+        //                    //    new LiveCharts.Wpf.LineSeries{Title="PileLength/m",Values = _chartPoints, LineSmoothness=0}
+        //                    //}
+        //                    ////DataResources = _tuples
+        //                    DataResources = _chartPoints
+        //                };
+        //                _curveWindow.DataContext = _vm;
+        //                _curveWindow.Owner = this;
+        //                _curveWindow.ShowDialog();
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                _mc.ShowErrorMessage("Unknown reason: can't show BC - length curve", e.ToString(), false);
+        //            }
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //}
 
         //private void DataGird_PileTable_LoadingAndUnLoadingRow(object sender, DataGridRowEventArgs e)
         //{

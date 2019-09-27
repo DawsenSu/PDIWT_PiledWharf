@@ -675,4 +675,67 @@
   <data name="PileDetailInformation" xml:space="preserve">
     <value>Pile Detail Information</value>
   </data>
+  <data name="PlanRotationAngle" xml:space="preserve">
+    <value>Plan Rotation Angle</value>
+  </data>
+  <data name="ClearAll" xml:space="preserve">
+    <value>Clear All</value>
+  </data>
+  <data name="Wharf" xml:space="preserve">
+    <value>Wharf</value>
+  </data>
+  <data name="TotalLength" xml:space="preserve">
+    <value>Total Length</value>
+  </data>
+  <data name="PileFrame" xml:space="preserve">
+    <value>Pile Frame</value>
+  </data>
+  <data name="Copy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="Illustration" xml:space="preserve">
+    <value>Illustration</value>
+  </data>
+  <data name="LeftCantilever" xml:space="preserve">
+    <value>Left Cantilever</value>
+  </data>
+  <data name="CentralSpan" xml:space="preserve">
+    <value>Central Span</value>
+  </data>
+  <data name="RightCantilever" xml:space="preserve">
+    <value>Right Cantilever</value>
+  </data>
+  <data name="Result" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="LastSectionHandleMethod" xml:space="preserve">
+    <value>Last Section Handle Method</value>
+  </data>
+  <data name="LHM_Separate" xml:space="preserve">
+    <value>Separate With Previous</value>
+  </data>
+  <data name="LHM_Combine" xml:space="preserve">
+    <value>Combine With Previous</value>
+  </data>
+  <data name="PileFrameDivider" xml:space="preserve">
+    <value>Pile Frame Divider</value>
+  </data>
+  <data name="SpanLength" xml:space="preserve">
+    <value>Span Length</value>
+  </data>
+  <data name="NumberOfSpan" xml:space="preserve">
+    <value>Number of Span</value>
+  </data>
+  <data name="LeftCantiLegnth" xml:space="preserve">
+    <value>Lefrt Cantilever Length</value>
+  </data>
+  <data name="RightCantiLength" xml:space="preserve">
+    <value>Right Cantilever Length</value>
+  </data>
+  <data name="PM_All" xml:space="preserve">
+    <value>Every Point</value>
+  </data>
+  <data name="PM_WholeHour" xml:space="preserve">
+    <value>Every Whole Hour</value>
+  </data>
 </root>

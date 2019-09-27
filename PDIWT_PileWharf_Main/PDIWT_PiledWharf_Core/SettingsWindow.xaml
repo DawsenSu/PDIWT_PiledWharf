@@ -674,7 +674,7 @@
                 TabIndex="22" />
             <Button
                 Click="Button_Click_CancelWindow"
-                Content="{x:Static loc:Resources.Close}"
+                Content="{x:Static loc:Resources.Cancel}"
                 Style="{StaticResource BasicButton}"
                 TabIndex="23" />
         </StackPanel>

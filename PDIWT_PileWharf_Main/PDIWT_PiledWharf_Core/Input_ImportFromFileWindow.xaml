@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pdiext="clr-namespace:PDIWT.Resources.CustomUserControl"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
     Title="{x:Static loc:Resources.Draw}"
     Width="320"
     Height="190"
@@ -271,30 +272,41 @@
                 </DataGrid>
             </Grid>
         </GroupBox>-->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Margin="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button
+            <xctk:IconButton
                 Grid.Column="0"
-                Width="100"
+                Width="25"
+                HorizontalAlignment="Left"
                 Command="{Binding Draw}"
-                Content="{x:Static loc:Resources.Draw}"
-                Style="{StaticResource BasicButton}" />
-            <Button
+                ToolTip="{x:Static loc:Resources.Draw}">
+                <xctk:IconButton.Icon>
+                    <Image Source="pack://application:,,,/PDIWT.Resources;component/Images/Icons/Draw.ico" />
+                </xctk:IconButton.Icon>
+            </xctk:IconButton>
+            <xctk:IconButton
                 Grid.Column="1"
-                Width="100"
+                Width="25"
                 Command="{Binding Import}"
-                Content="{x:Static loc:Resources.ImportFromFile}"
-                Style="{StaticResource BasicButton}" />
-            <Button
+                ToolTip="{x:Static loc:Resources.ImportFromFile}">
+                <xctk:IconButton.Icon>
+                    <Image Source="pack://application:,,,/PDIWT.Resources;component/Images/Icons/ExcelFile.ico" />
+                </xctk:IconButton.Icon>
+            </xctk:IconButton>
+            <xctk:IconButton
                 Grid.Column="2"
-                Width="100"
+                Width="25"
+                HorizontalAlignment="Right"
                 Click="Button_Click"
-                Content="{x:Static loc:Resources.Cancel}"
-                Style="{StaticResource BasicButton}" />
+                ToolTip="{x:Static loc:Resources.Cancel}">
+                <xctk:IconButton.Icon>
+                    <Image Source="pack://application:,,,/PDIWT.Resources;component/Images/Icons/Delete.ico" />
+                </xctk:IconButton.Icon>
+            </xctk:IconButton>
         </Grid>
     </Grid>
 

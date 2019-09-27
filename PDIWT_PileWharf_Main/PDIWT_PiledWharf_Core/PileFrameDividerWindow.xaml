@@ -1,0 +1,216 @@
+﻿<Window
+    x:Class="PDIWT_PiledWharf_Core.PileFrameDividerWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:loc="clr-namespace:PDIWT.Resources.Localization.MainModule;assembly=PDIWT.Resources"
+    xmlns:local="clr-namespace:PDIWT_PiledWharf_Core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+    Title="{x:Static loc:Resources.PileFrameDivider}"
+    Width="600"
+    Height="450"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Skins/MainSkin.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/PDIWT.Resources;Component/Localization/OtherModule/zh-CN.xaml" />-->
+                <ResourceDictionary>
+                    <DataTemplate x:Key="DataTemplate1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Orientation="Horizontal">
+                                <Label Content="{x:Static loc:Resources.SpanLength}" Foreground="Blue" />
+                                <Label Content="(m)" Foreground="Blue" />
+                            </StackPanel>
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Foreground="Blue"
+                                Text="{Binding Span}" />
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Content="{x:Static loc:Resources.NumberOfSpan}" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Text="{Binding Number}" />
+                            <StackPanel
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Orientation="Horizontal">
+                                <Label Content="{x:Static loc:Resources.LeftCantiLegnth}" Foreground="Blue" />
+                                <Label Content="(m)" Foreground="Blue" />
+                            </StackPanel>
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                Foreground="Blue"
+                                Text="{Binding LeftLength}" />
+                            <StackPanel
+                                Grid.Row="0"
+                                Grid.Column="3"
+                                Orientation="Horizontal">
+                                <Label Content="{x:Static loc:Resources.RightCantiLength}" Foreground="Blue" />
+                                <Label Content="(m)" Foreground="Blue" />
+                            </StackPanel>
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="3"
+                                Text="{Binding RightLength}" />
+                        </Grid>
+                    </DataTemplate>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Margin="3">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions />
+        <GroupBox Grid.Row="0" Header="{x:Static loc:Resources.Wharf}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <Label VerticalAlignment="Center" Content="{x:Static loc:Resources.TotalLength}" />
+                <TextBox
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Text="{Binding WharfLength}" />
+                <Label
+                    Grid.Column="2"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Content="m" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="{x:Static loc:Resources.PileFrame}">
+            <ListBox
+                ItemTemplate="{DynamicResource DataTemplate1}"
+                ItemsSource="{Binding Sections}"
+                SelectedItem="{Binding SelectedWharfSection}">
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding Add}" Header="{x:Static loc:Resources.Add}">
+                            <MenuItem.Icon>
+                                <Image Source="pack://application:,,,/PDIWT.Resources;Component/Images/Icons/New.ico" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Command="{Binding Copy}" Header="{x:Static loc:Resources.Copy}">
+                            <MenuItem.Icon>
+                                <Image Source="pack://application:,,,/PDIWT.Resources;Component/Images/Icons/Copy.ico" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Command="{Binding Delete}" Header="{x:Static loc:Resources.Delete}">
+                            <MenuItem.Icon>
+                                <Image Source="pack://application:,,,/PDIWT.Resources;Component/Images/Icons/Delete.ico" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+            </ListBox>
+        </GroupBox>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <TextBlock Margin="10,0" Text="{x:Static loc:Resources.Illustration}" />
+            <ScrollViewer
+                Grid.Row="1"
+                Margin="5"
+                HorizontalContentAlignment="Left"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto">
+                <Canvas x:Name="Board" />
+            </ScrollViewer>
+            <Grid Grid.Row="2" Margin="10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Rectangle
+                    Width="10"
+                    Height="10"
+                    Fill="Blue" />
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="10,0"
+                    Text="{x:Static loc:Resources.LeftCantilever}" />
+                <Rectangle
+                    Grid.Column="2"
+                    Width="10"
+                    Height="10"
+                    Fill="Orange" />
+                <TextBlock
+                    Grid.Column="3"
+                    Margin="10,0"
+                    Text="{x:Static loc:Resources.SpanLength}" />
+                <Rectangle
+                    Grid.Column="4"
+                    Width="10"
+                    Height="10"
+                    Fill="Red" />
+                <TextBlock
+                    Grid.Column="5"
+                    Margin="10,0"
+                    Text="{x:Static loc:Resources.RightCantilever}" />
+            </Grid>
+        </Grid>
+
+        <GroupBox Grid.Row="3" Header="Result">
+            <RichTextBox>
+                <FlowDocument>
+                    <Paragraph>
+                        <Run Text="{Binding ResultText}" />
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+        </GroupBox>
+        <UniformGrid Grid.Row="4" Columns="4">
+            <TextBlock VerticalAlignment="Center" Text="{x:Static loc:Resources.LastSectionHandleMethod}" />
+            <ComboBox
+                x:Name="ComboBox_LastSectionHandleMethod"
+                DisplayMemberPath="Value"
+                SelectedValue="{Binding SelectedMethod}"
+                SelectedValuePath="Key" />
+            <TextBlock />
+            <xctk:IconButton
+                Width="25"
+                HorizontalAlignment="Right"
+                Command="{Binding Calculate}"
+                ToolTip="{x:Static loc:Resources.Calculate}">
+                <xctk:IconButton.Icon>
+                    <Image Source="pack://application:,,,/PDIWT.Resources;component/Images/Icons/Calculate.ico" />
+                </xctk:IconButton.Icon>
+            </xctk:IconButton>
+        </UniformGrid>
+    </Grid>
+</Window>

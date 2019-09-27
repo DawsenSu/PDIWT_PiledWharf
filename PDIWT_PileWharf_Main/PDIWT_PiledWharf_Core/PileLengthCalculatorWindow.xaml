@@ -13,6 +13,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pdi="clr-namespace:PDIWT.Resources.CustomUserControl;assembly=PDIWT.Resources"
     xmlns:pdiext="clr-namespace:PDIWT.Resources.CustomUserControl"
+    xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
     Title="{x:Static loc:Resources.PileLengthCalWindow}"
     Width="500"
     Height="600"
@@ -124,14 +125,33 @@
             <GroupBox Header="{x:Static loc:Resources.PileList}">
                 <ListBox
                     Width="200"
-                    ContextMenu="{DynamicResource GridAndListContextMenu}"
                     ItemTemplate="{StaticResource PileListTemplate}"
-                    ItemsSource="{Binding VirtualPileTable}"
-                    SelectedItem="{Binding SelectedVirtualPile}" />
+                    ItemsSource="{Binding PileLengthCalcInfos}"
+                    SelectedItem="{Binding SelectedPileLengthCalcInfo}">
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="{Binding Add}" Header="{x:Static loc:Resources.Add}">
+                                <MenuItem.Icon>
+                                    <Image Source="pack://application:,,,/PDIWT.Resources;Component/Images/Icons/New.ico" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding Delete}" Header="{x:Static loc:Resources.Delete}">
+                                <MenuItem.Icon>
+                                    <Image Source="pack://application:,,,/PDIWT.Resources;Component/Images/Icons/Delete.ico" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Command="{Binding ClearAll}" Header="{x:Static loc:Resources.ClearAll}">
+                                <MenuItem.Icon>
+                                    <Image Source="pack://application:,,,/PDIWT.Resources;Component/Images/Icons/ClearAll.ico" />
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                </ListBox>
             </GroupBox>
             <GroupBox
                 Grid.Column="1"
-                DataContext="{Binding SelectedVirtualPile}"
+                DataContext="{Binding SelectedPileLengthCalcInfo}"
                 Header="{x:Static loc:Resources.PileDetailInformation}">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -221,7 +241,7 @@
                                 ToolTip="If pile is vertical, enter NaN" />
                             <pdi:LabelTextBox
                                 Grid.Row="2"
-                                DisplayName="RotationAngle"
+                                DisplayName="{x:Static loc:Resources.PlanRotationAngle}"
                                 Parameter="{Binding PlanRotationAngle}"
                                 Unit="°" />
                             <pdi:LabelTextBox
@@ -268,7 +288,7 @@
             </GroupBox>
         </Grid>
         <!--  Bottom Panel  -->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" Margin="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -276,16 +296,24 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button
+            <xctk:IconButton
                 Grid.Column="0"
+                Width="25"
                 Command="{Binding ImportFromFile}"
-                Content="{x:Static loc:Resources.ImportFromFile}"
-                Style="{StaticResource BasicButton}" />
-            <Button
+                ToolTip="{x:Static loc:Resources.ImportFromFile}">
+                <xctk:IconButton.Icon>
+                    <Image Source="pack://application:,,,/PDIWT.Resources;component/Images/Icons/ExcelFile.ico" />
+                </xctk:IconButton.Icon>
+            </xctk:IconButton>
+
+            <xctk:IconButton
                 Grid.Column="3"
                 Command="{Binding Calculate}"
-                Content="{x:Static loc:Resources.Calculate}"
-                Style="{StaticResource BasicButton}" />
+                ToolTip="{x:Static loc:Resources.Calculate}">
+                <xctk:IconButton.Icon>
+                    <Image Source="pack://application:,,,/PDIWT.Resources;component/Images/Icons/Calculate.ico" />
+                </xctk:IconButton.Icon>
+            </xctk:IconButton>
             <!--<Button
                 Grid.Column="4"
                 Command="{Binding GenerateNote}"

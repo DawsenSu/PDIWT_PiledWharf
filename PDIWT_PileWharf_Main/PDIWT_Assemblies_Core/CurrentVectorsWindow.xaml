@@ -1,0 +1,85 @@
+﻿<Window
+    x:Class="PDIWT_Assemblies_Core.CurrentVectorsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:loc="clr-namespace:PDIWT.Resources.Localization.MainModule;assembly=PDIWT.Resources"
+    xmlns:local="clr-namespace:PDIWT_Assemblies_Core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="流矢图绘制"
+    Width="282"
+    Height="188.667"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Skins/MainSkin.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid Margin="0,0,0,1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="{x:Static loc:Resources.InputParameters}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Button
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Width="120"
+                    Command="{Binding Browse}"
+                    Content="{x:Static loc:Resources.ImportFromFile}"
+                    Style="{StaticResource BasicButton}" />
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Content="观测点:" />
+                <ComboBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    IsEnabled="{Binding IsImportFile}"
+                    ItemsSource="{Binding MonitorStations}"
+                    SelectedItem="{Binding SelectedStation}" />
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Content="竖向计算方式:" />
+                <ComboBox
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    IsEnabled="{Binding IsImportFile}"
+                    ItemsSource="{Binding DrawDataSource}"
+                    SelectedItem="{Binding SelectedDataSource}" />
+                <Label
+                    Grid.Row="3"
+                    Grid.Column="0"
+                    Content="选择方式:" />
+                <ComboBox
+                    x:Name="comboBox_pickMethod"
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    DisplayMemberPath="Value"
+                    IsEnabled="{Binding IsImportFile}"
+                    SelectedValue="{Binding SelectedPickMethod}"
+                    SelectedValuePath="Key" />
+            </Grid>
+        </GroupBox>
+        <Button
+            Grid.Row="1"
+            Width="30"
+            Command="{Binding Draw}"
+            Content="{x:Static loc:Resources.Draw}"
+            Style="{StaticResource BasicButton}" />
+    </Grid>
+</Window>

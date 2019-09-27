@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PDIWT_PiledWharf_Core.Model;
 
+using GalaSoft.MvvmLight;
 namespace PDIWT.Resources.CustomUserControl
 {
     /// <summary>
@@ -35,9 +36,16 @@ namespace PDIWT.Resources.CustomUserControl
 
         // Using a DependencyProperty as the backing store for BearingCapacityPileType.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty BearingCapacityPileTypeProperty =
-            DependencyProperty.Register("BearingCapacityPileType", typeof(BearingCapacityPileTypes), typeof(BearingCapacityPileTypeComboBox), 
+            DependencyProperty.Register("BearingCapacityPileType", typeof(BearingCapacityPileTypes), typeof(BearingCapacityPileTypeComboBox),
                 new FrameworkPropertyMetadata(BearingCapacityPileTypes.DrivenPileWithSealedEnd, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
-
+        //private static void OnPileTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        //{
+        //    var _pileDict = PDIWT_Helper.GetEnumDescriptionDictionary<BearingCapacityPileTypes>();
+        //    int _index = (int)e.NewValue;
+        //    var _keypair = _pileDict.ElementAt(_index);
+        //    BearingCapacityPileTypeComboBox _combox = (BearingCapacityPileTypeComboBox)d;
+        //    _combox.BearingCapacityPileType_ComboBox.SelectedItem = _keypair;
+        //}
     }
 }

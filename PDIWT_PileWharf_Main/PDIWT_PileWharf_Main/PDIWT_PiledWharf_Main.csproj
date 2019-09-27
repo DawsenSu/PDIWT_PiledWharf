@@ -139,6 +139,10 @@
       <HintPath>..\..\MicrostationAssemblies\Bentley.Windowing.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Encryption, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MDL\PDIWT_MS\PDIWT_Bentley_Install\Encryption\bin\Release\Encryption.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />

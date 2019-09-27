@@ -10,6 +10,7 @@
     xmlns:local="clr-namespace:PDIWT_PiledWharf_Core.ViewModel"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pdi="clr-namespace:PDIWT.Resources.CustomUserControl;assembly=PDIWT.Resources"
+    xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
     Title="{x:Static loc:Resources.PileCollisionDetectionWindowTitle}"
     Width="225.333"
     Height="300"
@@ -65,10 +66,11 @@
             Grid.Row="2"
             HorizontalAlignment="Right"
             Orientation="Horizontal">
-            <Button
-                Command="{Binding Calculate}"
-                Content="{x:Static loc:Resources.Calculate}"
-                Style="{StaticResource BasicButton}" />
+            <xctk:IconButton Command="{Binding Calculate}" ToolTip="{x:Static loc:Resources.Calculate}">
+                <xctk:IconButton.Icon>
+                    <Image Source="pack://application:,,,/PDIWT.Resources;component/Images/Icons/Calculate.ico" />
+                </xctk:IconButton.Icon>
+            </xctk:IconButton>
         </StackPanel>
     </Grid>
 </Window>

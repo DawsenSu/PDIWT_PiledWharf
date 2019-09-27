@@ -39,6 +39,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             SimpleIoc.Default.Register<WaveForceViewModel>();
             //SimpleIoc.Default.Register<BuildUpSoilLayersViewModel>();
             SimpleIoc.Default.Register<PileCollisionDetectionViewModel>();
+            SimpleIoc.Default.Register<PileFrameDividerViewModel>();
         }
 
         /// <summary>
@@ -85,6 +86,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         public WaveForceViewModel WaveForce => ServiceLocator.Current.GetInstance<WaveForceViewModel>();
         public PileCollisionDetectionViewModel PileCollisionDetection => ServiceLocator.Current.GetInstance<PileCollisionDetectionViewModel>();
 
+        public PileFrameDividerViewModel PileFrameDivider => ServiceLocator.Current.GetInstance<PileFrameDividerViewModel>();
         //public BuildUpSoilLayersViewModel BuildUpSoilLayers => ServiceLocator.Current.GetInstance<BuildUpSoilLayersViewModel>();
         /// <summary>
         /// Cleans up all the resources.

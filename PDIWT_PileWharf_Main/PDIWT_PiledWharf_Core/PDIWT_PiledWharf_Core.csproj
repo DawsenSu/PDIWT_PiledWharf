@@ -264,6 +264,7 @@
     <Compile Include="Model\PDIWT_Wharf.cs" />
     <Compile Include="Model\PDWIT_PileSoilLayerIntersectionInfo.cs" />
     <Compile Include="Model\PDIWT_SoilLayer.cs" />
+    <Compile Include="Model\PDWIT_WharfSection.cs" />
     <Compile Include="Model\Tools\AttachBCInstanceTool.cs" />
     <Compile Include="AttachBCInstanceUserControl.xaml.cs">
       <DependentUpon>AttachBCInstanceUserControl.xaml</DependentUpon>
@@ -272,6 +273,9 @@
     <Compile Include="Model\VirtualPile.cs" />
     <Compile Include="PickUpSoilLayersFromLibWindow.xaml.cs">
       <DependentUpon>PickUpSoilLayersFromLibWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PileFrameDividerWindow.xaml.cs">
+      <DependentUpon>PileFrameDividerWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="PileLengthCalculatorWindow.xaml.cs">
       <DependentUpon>PileLengthCalculatorWindow.xaml</DependentUpon>
@@ -299,6 +303,7 @@
     <Compile Include="PileCollisionDetectionWindow.xaml.cs">
       <DependentUpon>PileCollisionDetectionWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\PileFrameDividerViewModel.cs" />
     <Compile Include="ViewModel\PileLengthCalculatorViewModel.cs" />
     <Compile Include="ViewModel\PileLengthCurveViewModel.cs" />
     <Compile Include="ViewModel\PilePlacementViewModel.cs" />
@@ -338,6 +343,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="PickUpSoilLayersFromLibWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PileFrameDividerWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

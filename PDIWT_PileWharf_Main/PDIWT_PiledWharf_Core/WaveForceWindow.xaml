@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pdi="clr-namespace:PDIWT.Resources.CustomUserControl;assembly=PDIWT.Resources"
     xmlns:pdiext="clr-namespace:PDIWT.Resources.CustomUserControl"
+    xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
     Title="{x:Static loc:Resources.WaveForceWindowTitle}"
     Width="800"
     Height="591.333"
@@ -411,28 +412,37 @@
             </Grid>
         </GroupBox>
 
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" Margin="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            <Button
+            <xctk:IconButton
                 Grid.Column="0"
-                Command="{Binding LoadParameters}"
-                Content="{x:Static loc:Resources.LoadFromModel}"
-                Style="{StaticResource BasicButton}" />
-            <Button
+                Command="{Binding LoadParameter}"
+                ToolTip="{x:Static loc:Resources.LoadFromModel}">
+                <xctk:IconButton.Icon>
+                    <Image Source="pack://application:,,,/PDIWT.Resources;component/Images/Icons/LoadFromModel.ico" />
+                </xctk:IconButton.Icon>
+            </xctk:IconButton>
+            <xctk:IconButton
                 Grid.Column="2"
                 Command="{Binding Calculate}"
-                Content="{x:Static loc:Resources.Calculate}"
-                Style="{StaticResource BasicButton}" />
-            <Button
+                ToolTip="{x:Static loc:Resources.Calculate}">
+                <xctk:IconButton.Icon>
+                    <Image Source="pack://application:,,,/PDIWT.Resources;component/Images/Icons/Calculate.ico" />
+                </xctk:IconButton.Icon>
+            </xctk:IconButton>
+            <xctk:IconButton
                 Grid.Column="3"
                 Command="{Binding GenerateNote}"
-                Content="{x:Static loc:Resources.GenerateCalculationNote}"
-                Style="{StaticResource BasicButton}" />
+                ToolTip="{x:Static loc:Resources.GenerateCalculationNote}">
+                <xctk:IconButton.Icon>
+                    <Image Source="pack://application:,,,/PDIWT.Resources;component/Images/Icons/CalculationNote.ico" />
+                </xctk:IconButton.Icon>
+            </xctk:IconButton>
         </Grid>
     </Grid>
 </Window>

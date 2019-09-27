@@ -120,7 +120,18 @@
     <Resource Include="Images\Icons\Check.ico" />
     <Resource Include="Images\Icons\PileLength.ico" />
     <Resource Include="Images\Icons\Linechart.ico" />
-    <Content Include="Images\Icons\Waterway.ico" />
+    <Resource Include="Images\Icons\ClearAll.ico" />
+    <Resource Include="Images\Icons\PileFrameDivider.ico" />
+    <Resource Include="Images\Icons\Copy.ico" />
+    <Resource Include="Images\Icons\CurrentVectors.ico" />
+    <Resource Include="Images\Icons\Calculate.ico" />
+    <Resource Include="Images\Icons\Draw.ico" />
+    <Resource Include="Images\Icons\ExcelFile.ico" />
+    <Resource Include="Images\Icons\LoadFromModel.ico" />
+    <Resource Include="Images\Icons\Waterway.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\Layers.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

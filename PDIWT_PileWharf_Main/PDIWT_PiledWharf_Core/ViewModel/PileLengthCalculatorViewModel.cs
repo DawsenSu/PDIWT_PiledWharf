@@ -25,6 +25,8 @@ using BD = Bentley.DgnPlatformNET;
 using BM = Bentley.MstnPlatformNET;
 using BG = Bentley.GeometryNET;
 using PDIWT_PiledWharf_Core_Cpp;
+
+
 namespace PDIWT_PiledWharf_Core.ViewModel
 {
     using LiveCharts.Defaults;
@@ -45,34 +47,47 @@ namespace PDIWT_PiledWharf_Core.ViewModel
             _partialCoefficient = 1.5;
             _blockCoefficient = 1;
 
-            _virtualPileTable = new DataTable("PileSpatialInfomation");
-            _virtualPileTable.Columns.Add(new DataColumn("PileName", typeof(string)) { DefaultValue = PileBase._unknownPileName }); //0
-            _virtualPileTable.Columns.Add(new DataColumn("PileX", typeof(double)) { DefaultValue = 0 });//1 unit: m
-            _virtualPileTable.Columns.Add(new DataColumn("PileY", typeof(double)) { DefaultValue = 0 });//2 unit: m
-            _virtualPileTable.Columns.Add(new DataColumn("PileZ", typeof(double)) { DefaultValue = 0 });//3 unit: m
-            _virtualPileTable.Columns.Add(new DataColumn("BearingCapacityPileType", typeof(BearingCapacityPileTypes)) { DefaultValue = BearingCapacityPileTypes.DrivenPileWithSealedEnd });//4
-            _virtualPileTable.Columns.Add(new DataColumn("PileGeoType", typeof(PileTypeManaged)) { DefaultValue = PileTypeManaged.SqaurePile });//5
-            _virtualPileTable.Columns.Add(new DataColumn("PileSkewness", typeof(double)) { DefaultValue = double.NaN });//6
-            _virtualPileTable.Columns.Add(new DataColumn("PlanRotationAngle", typeof(double)) { DefaultValue = 0 });//7 Degree
-            _virtualPileTable.Columns.Add(new DataColumn("PileDiameter", typeof(double)) { DefaultValue = 0 });//8 unit: m
-            _virtualPileTable.Columns.Add(new DataColumn("PileInnerDiameter", typeof(double)) { DefaultValue = 0 });//9 unit: m
-            _virtualPileTable.Columns.Add(new DataColumn("PileLength", typeof(double)) { DefaultValue = double.NaN });//10 unit: m
-            _virtualPileTable.Columns.Add(new DataColumn("DataResources", typeof(ChartValues<ObservablePoint>)) { DefaultValue = new  ChartValues<ObservablePoint>() }); //11 unit: IS
-            _virtualPileTable.Columns.Add(new DataColumn("IsCalculated", typeof(bool)) { DefaultValue = false });//12 unit: 
+            PileLengthCalcInfos = new ObservableCollection<PileLengthCalcInfo>();
+            //_virtualPileTable = new DataTable("PileSpatialInfomation");
+            //_virtualPileTable.Columns.Add(new DataColumn("PileName", typeof(string)) { DefaultValue = PileBase._unknownPileName }); //0
+            //_virtualPileTable.Columns.Add(new DataColumn("PileX", typeof(double)) { DefaultValue = 0 });//1 unit: m
+            //_virtualPileTable.Columns.Add(new DataColumn("PileY", typeof(double)) { DefaultValue = 0 });//2 unit: m
+            //_virtualPileTable.Columns.Add(new DataColumn("PileZ", typeof(double)) { DefaultValue = 0 });//3 unit: m
+            //_virtualPileTable.Columns.Add(new DataColumn("BearingCapacityPileType", typeof(BearingCapacityPileTypes)) { DefaultValue = BearingCapacityPileTypes.DrivenPileWithSealedEnd });//4
+            //_virtualPileTable.Columns.Add(new DataColumn("PileGeoType", typeof(PileTypeManaged)) { DefaultValue = PileTypeManaged.SqaurePile });//5
+            //_virtualPileTable.Columns.Add(new DataColumn("PileSkewness", typeof(double)) { DefaultValue = double.NaN });//6
+            //_virtualPileTable.Columns.Add(new DataColumn("PlanRotationAngle", typeof(double)) { DefaultValue = 0 });//7 Degree
+            //_virtualPileTable.Columns.Add(new DataColumn("PileDiameter", typeof(double)) { DefaultValue = 0 });//8 unit: m
+            //_virtualPileTable.Columns.Add(new DataColumn("PileInnerDiameter", typeof(double)) { DefaultValue = 0 });//9 unit: m
+            //_virtualPileTable.Columns.Add(new DataColumn("PileLength", typeof(double)) { DefaultValue = double.NaN });//10 unit: m
+            //_virtualPileTable.Columns.Add(new DataColumn("DataResources", typeof(ChartValues<ObservablePoint>)) { DefaultValue = new  ChartValues<ObservablePoint>() }); //11 unit: IS
+            //_virtualPileTable.Columns.Add(new DataColumn("IsCalculated", typeof(bool)) { DefaultValue = false });//12 unit: 
 
 #if DEBUG
-            DataRow _row = _virtualPileTable.NewRow();
-            _row[0] = "Test Piles";
-            _row[1] = 480770;
-            _row[2] = 2500575D;
-            _row[3] = 16;
-            _row[4] = BearingCapacityPileTypes.TubePileOrSteelPile;
-            _row[5] = PileTypeManaged.TubePile;
-            _row[6] = double.NaN;
-            _row[7] = 0;
-            _row[8] = 1;
-            _row[9] = 0.8;
-            _virtualPileTable.Rows.Add(_row);
+            PileLengthCalcInfos.Add(new PileLengthCalcInfo()
+            {
+                PileName = "Test Pile",
+                PileX = 480770,
+                PileY = 2500575D,
+                PileZ = 16,
+                BearingCapacityPileType = BearingCapacityPileTypes.TubePileOrSteelPile,
+                PileGeoType = PileTypeManaged.TubePile,
+                PlanRotationAngle = 0,
+                PileDiameter = 1,
+                PileInnerDiameter = 0.8
+            });
+            //DataRow _row = _virtualPileTable.NewRow();
+            //_row[0] = "Test Piles";
+            //_row[1] = 480770;
+            //_row[2] = 2500575D;
+            //_row[3] = 16;
+            //_row[4] = BearingCapacityPileTypes.TubePileOrSteelPile;
+            //_row[5] = PileTypeManaged.TubePile;
+            //_row[6] = double.NaN;
+            //_row[7] = 0;
+            //_row[8] = 1;
+            //_row[9] = 0.8;
+            //_virtualPileTable.Rows.Add(_row);
 #endif
         }
 
@@ -161,26 +176,41 @@ namespace PDIWT_PiledWharf_Core.ViewModel
         }
 
 
-        private DataTable _virtualPileTable;
+        //private DataTable _virtualPileTable;
+        ///// <summary>
+        ///// Property Description
+        ///// </summary>
+        //public DataTable VirtualPileTable
+        //{
+        //    get { return _virtualPileTable; }
+        //    set { Set(ref _virtualPileTable, value); }
+        //}
+
+
+        //private DataRowView _selectedVirtualPile;
+        ///// <summary>
+        ///// Property Description
+        ///// </summary>
+        //public DataRowView SelectedVirtualPile
+        //{
+        //    get { return _selectedVirtualPile; }
+        //    set { Set(ref _selectedVirtualPile, value); }
+        //}
+
+
+        public ObservableCollection<PileLengthCalcInfo> PileLengthCalcInfos { get; set; }
+
+
+        private PileLengthCalcInfo _selectedPileLengthCalcInfo;
         /// <summary>
         /// Property Description
         /// </summary>
-        public DataTable VirtualPileTable
+        public PileLengthCalcInfo SelectedPileLengthCalcInfo
         {
-            get { return _virtualPileTable; }
-            set { Set(ref _virtualPileTable, value); }
+            get { return _selectedPileLengthCalcInfo; }
+            set { Set(ref _selectedPileLengthCalcInfo, value); }
         }
 
-
-        private DataRowView _selectedVirtualPile;
-        /// <summary>
-        /// Property Description
-        /// </summary>
-        public DataRowView SelectedVirtualPile
-        {
-            get { return _selectedVirtualPile; }
-            set { Set(ref _selectedVirtualPile, value); }
-        }
 
         private RelayCommand _add;
 
@@ -195,9 +225,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                     ?? (_add = new RelayCommand(
                         () =>
                         {
-                            DataRow _row = _virtualPileTable.NewRow();
-                            _row[0] = "New Pile";
-                            VirtualPileTable.Rows.Add(_row);
+                            PileLengthCalcInfos.Add(new PileLengthCalcInfo() { PileName = "New Pile" });
                         }));
             }
         }
@@ -214,26 +242,44 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                 return _delete
                     ?? (_delete = new RelayCommand(()=> 
                     {
-                        var _currentPile = SelectedVirtualPile.Row;
-                        if (VirtualPileTable.Rows.Count == 1)
+                        var _currentPile = SelectedPileLengthCalcInfo;
+                        if (PileLengthCalcInfos.Count == 1)
                         {
-                            SelectedVirtualPile = null;
+                            SelectedPileLengthCalcInfo = null;
                         }
                         else
                         {
-                            int _index = VirtualPileTable.Rows.IndexOf(_currentPile);
+                            int _index = PileLengthCalcInfos.IndexOf(_currentPile);
 
-                            if (_index == VirtualPileTable.Rows.Count - 1)
+                            if (_index == PileLengthCalcInfos.Count - 1)
                             {
-                                SelectedVirtualPile = VirtualPileTable.DefaultView[_index - 1];
+                                SelectedPileLengthCalcInfo = PileLengthCalcInfos[_index - 1];
                             }
                             else
                             {
-                                SelectedVirtualPile = VirtualPileTable.DefaultView[_index + 1];
+                                SelectedPileLengthCalcInfo = PileLengthCalcInfos[_index + 1];
                             }
                         }
-                        _currentPile.Delete() ;
-                    }, () => SelectedVirtualPile != null));
+                        PileLengthCalcInfos.Remove(_currentPile);
+                    }));
+            }
+        }
+
+        private RelayCommand _clearAll;
+
+        /// <summary>
+        /// Gets the ClearAll.
+        /// </summary>
+        public RelayCommand ClearAll
+        {
+            get
+            {
+                return _clearAll
+                    ?? (_clearAll = new RelayCommand(
+                    () =>
+                    {
+                        PileLengthCalcInfos.Clear();
+                    }));
             }
         }
 
@@ -294,18 +340,20 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                             var _worksheet = _excelPackage.Workbook.Worksheets[1];
                             for (int i = 2; i < _worksheet.Dimension.Rows + 1; i++)
                             {
-                                DataRow _newRow = VirtualPileTable.NewRow();
-                                _newRow[0] = _worksheet.Cells[i, 1].Text;
-                                _newRow[1] = double.Parse(_worksheet.Cells[i, 2].Text);
-                                _newRow[2] = double.Parse(_worksheet.Cells[i, 3].Text);
-                                _newRow[3] = double.Parse(_worksheet.Cells[i, 4].Text);
-                                _newRow[4] = (BearingCapacityPileTypes)double.Parse(_worksheet.Cells[i, 5].Text);
-                                _newRow[5] = (PileTypeManaged)double.Parse(_worksheet.Cells[i, 6].Text);
-                                _newRow[6] = double.Parse(_worksheet.Cells[i, 7].Text);
-                                _newRow[7] = double.Parse(_worksheet.Cells[i, 8].Text);
-                                _newRow[8] = double.Parse(_worksheet.Cells[i, 9].Text);
-                                _newRow[9] = double.Parse(_worksheet.Cells[i, 10].Text);
-                                VirtualPileTable.Rows.Add(_newRow);
+                                var _newPile = new PileLengthCalcInfo()
+                                {
+                                    PileName = _worksheet.Cells[i, 1].Text,
+                                    PileX = double.Parse(_worksheet.Cells[i, 2].Text),
+                                    PileY = double.Parse(_worksheet.Cells[i, 3].Text),
+                                    PileZ = double.Parse(_worksheet.Cells[i, 4].Text),
+                                    BearingCapacityPileType = (BearingCapacityPileTypes)double.Parse(_worksheet.Cells[i, 5].Text),
+                                    PileGeoType = (PileTypeManaged)double.Parse(_worksheet.Cells[i, 6].Text),
+                                    PileSkewness = double.Parse(_worksheet.Cells[i, 7].Text),
+                                    PlanRotationAngle = double.Parse(_worksheet.Cells[i, 8].Text),
+                                    PileDiameter = double.Parse(_worksheet.Cells[i, 9].Text),
+                                    PileInnerDiameter = double.Parse(_worksheet.Cells[i, 10].Text)
+                                };
+                                PileLengthCalcInfos.Add(_newPile);
                                 _numberofpiles++;
                             }
                         }
@@ -341,23 +389,23 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                 double _uorpermeter = BM.Session.Instance.GetActiveDgnModel().GetModelInfo().UorPerMeter;
                 double _successPileNumber = 0;
                 double _totalNumber = 0;
-                foreach (DataRow _row in VirtualPileTable.Rows)
+                foreach (var _pileInfo in PileLengthCalcInfos)
                 {
                     VirtualSteelOrTubePile _pile = new VirtualSteelOrTubePile()
                     {
-                        PileName = _row[0].ToString(),
-                        PileX = (double)_row[1] * _uorpermeter,
-                        PileY = (double)_row[2] * _uorpermeter,
-                        PileZ = (double)_row[3] * _uorpermeter,
-                        BCPileType = (BearingCapacityPileTypes)_row[4],
-                        GeoPileType = (PileTypeManaged)_row[5],
-                        PileSkewness = (double)_row[6],
-                        PlanRotationAngle = (double)_row[7],
-                        PileDiameter = (double)_row[8] * _uorpermeter,
-                        PileInnerDiameter = (double)_row[9] * _uorpermeter,
+                        PileName = _pileInfo.PileName,
+                        PileX = _pileInfo.PileX * _uorpermeter,
+                        PileY = _pileInfo.PileY * _uorpermeter,
+                        PileZ = _pileInfo.PileZ * _uorpermeter,
+                        BCPileType = _pileInfo.BearingCapacityPileType,
+                        GeoPileType = _pileInfo.PileGeoType,
+                        PileSkewness = _pileInfo.PileSkewness,
+                        PlanRotationAngle = _pileInfo.PlanRotationAngle,
+                        PileDiameter = _pileInfo.PileDiameter * _uorpermeter,
+                        PileInnerDiameter = _pileInfo.PileInnerDiameter * _uorpermeter,
                     };
                     //_row[8] = double.NaN;
-                    Marshal.mdlDialog_completionBarUpdate(_dialog, "Calculating", (int)(++_totalNumber / VirtualPileTable.Rows.Count * 100));
+                    Marshal.mdlDialog_completionBarUpdate(_dialog, "Calculating", (int)(++_totalNumber / PileLengthCalcInfos.Count * 100));
                     switch (_pile.GetPileBearingCapacityCurveInfo(PartialCoefficient, BlockCoefficient, out ObservableCollection<Tuple<double, double>> _results))
                     {
                         case GetPileBearingCapacityCurveInfoStatus.InvalidObjectStruct:
@@ -374,7 +422,7 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                     {
                         _chartPoints.Add(new ObservablePoint(_result.Item2, -_result.Item1 / _uorpermeter));
                     }
-                    _row[11] = _chartPoints;
+                    _pileInfo.DataResources = _chartPoints;
 
                     switch (_pile.CalculatePileLength(TargetBearingCapacity, PileLengthModulus * _uorpermeter, _results))
                     {
@@ -391,22 +439,168 @@ namespace PDIWT_PiledWharf_Core.ViewModel
                             continue;
                     }
 
-                    _row[10] = _pile.PileLength / _uorpermeter;
-                    _row[12] = true;
+                    _pileInfo.PileLength = _pile.PileLength / _uorpermeter;
+                    _pileInfo.IsCalculated = true;
                     Bentley.UI.Threading.DispatcherHelper.DoEvents();
                     _successPileNumber++;
                 }
-                _mc.ShowInfoMessage("Calculation Complete", $"Calculated: {VirtualPileTable.Rows.Count}, succeed: {_successPileNumber}, fail: {VirtualPileTable.Rows.Count - _successPileNumber} ", false);
+                _mc.ShowInfoMessage("Calculation Complete", $"Calculated: {PileLengthCalcInfos.Count}, succeed: {_successPileNumber}, fail: {PileLengthCalcInfos.Count - _successPileNumber} ", false);
             }
             catch (Exception e)
             {
-                _mc.ShowErrorMessage("Can't calculate the pile", e.ToString(), false);
+                if(e is InvalidOperationException)
+                    _mc.ShowErrorMessage("There exists unset bearing capacity calculation value for soil layer", e.ToString(), false);
+                else
+                    _mc.ShowErrorMessage("Can't calculate the pile", e.ToString(), false);
             }
             finally
             {
                 Marshal.mdlDialog_completionBarClose(_dialog);
-
             }
+        }
+    }
+
+    public class PileLengthCalcInfo : ObservableObject
+    {
+        public PileLengthCalcInfo()
+        {
+            _pilename = PileBase._unknownPileName;
+            _bearingcapacityPiletType = BearingCapacityPileTypes.DrivenPileWithSealedEnd;
+            _pileGeoType = PileTypeManaged.SqaurePile;
+            _pileSkewness = double.NaN;
+            _pileLength = double.NaN;
+            _dataResources = new ChartValues<ObservablePoint>();
+            _isCalaculated = false; 
+        }
+
+        private string _pilename;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public string PileName
+        {
+            get { return _pilename; }
+            set { Set(ref _pilename, value); }
+        }
+
+        private double _pileX;
+        /// <summary>
+        /// Unit: m
+        /// </summary>
+        public double PileX
+        {
+            get { return _pileX; }
+            set { Set(ref _pileX, value); }
+        }
+
+        private double _pileY;
+        /// <summary>
+        /// unit:m
+        /// </summary>
+        public double PileY
+        {
+            get { return _pileY; }
+            set { Set(ref _pileY, value); }
+        }
+
+        private double _pileZ;
+        /// <summary>
+        /// unit:m
+        /// </summary>
+        public double PileZ
+        {
+            get { return _pileZ; }
+            set { Set(ref _pileZ, value); }
+        }
+
+        private BearingCapacityPileTypes _bearingcapacityPiletType;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public BearingCapacityPileTypes BearingCapacityPileType
+        {
+            get { return _bearingcapacityPiletType; }
+            set { Set(ref _bearingcapacityPiletType, value); }
+        }
+
+        private PileTypeManaged _pileGeoType;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public PileTypeManaged PileGeoType
+        {
+            get { return _pileGeoType; }
+            set { Set(ref _pileGeoType, value); }
+        }
+
+        private double _pileSkewness;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public double PileSkewness
+        {
+            get { return _pileSkewness; }
+            set { Set(ref _pileSkewness, value); }
+        }
+
+        private double _planRotationAngle;
+        /// <summary>
+        /// Unit: Degree
+        /// </summary>
+        public double PlanRotationAngle
+        {
+            get { return _planRotationAngle; }
+            set { Set(ref _planRotationAngle, value); }
+        }
+
+        private double _pileDiameter;
+        /// <summary>
+        /// Unit:m
+        /// </summary>
+        public double PileDiameter
+        {
+            get { return _pileDiameter; }
+            set { Set(ref _pileDiameter, value); }
+        }
+
+        private double _pileInnerDiameter;
+        /// <summary>
+        /// Unit:m
+        /// </summary>
+        public double PileInnerDiameter
+        {
+            get { return _pileInnerDiameter; }
+            set { Set(ref _pileInnerDiameter, value); }
+        }
+
+        private double _pileLength;
+        /// <summary>
+        /// Unti:m
+        /// </summary>
+        public double PileLength
+        {
+            get { return _pileLength; }
+            set { Set(ref _pileLength, value); }
+        }
+
+        private ChartValues<ObservablePoint> _dataResources;
+        /// <summary>
+        /// Used by livechart, unit: SI.
+        /// </summary>
+        public ChartValues<ObservablePoint> DataResources
+        {
+            get { return _dataResources; }
+            set { Set(ref _dataResources, value); }
+        }
+
+        private bool _isCalaculated;
+        /// <summary>
+        /// Property Description
+        /// </summary>
+        public bool IsCalculated
+        {
+            get { return _isCalaculated; }
+            set { Set(ref _isCalaculated, value); }
         }
     }
 }

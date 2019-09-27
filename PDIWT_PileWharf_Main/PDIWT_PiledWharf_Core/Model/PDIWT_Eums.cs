@@ -93,4 +93,12 @@ namespace PDIWT_PiledWharf_Core.Model
     {
         CurveWidnow
     }
+
+    public enum LastSectionHandleMethod
+    {
+        [Description("LHM_Separate")]
+        Separate,
+        [Description("LHM_Combine")]
+        Combine
+    }
 }
