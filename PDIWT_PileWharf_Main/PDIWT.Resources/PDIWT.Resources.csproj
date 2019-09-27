@@ -133,5 +133,13 @@
   <ItemGroup>
     <Resource Include="Images\Icons\Layers.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\Cancel.ico" />
+    <Resource Include="Images\Icons\Confirm.ico" />
+    <Resource Include="Images\Icons\Start.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Icons\Stair.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

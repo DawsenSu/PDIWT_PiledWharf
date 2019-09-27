@@ -421,7 +421,7 @@
             </Grid.ColumnDefinitions>
             <xctk:IconButton
                 Grid.Column="0"
-                Command="{Binding LoadParameter}"
+                Command="{Binding LoadParameters}"
                 ToolTip="{x:Static loc:Resources.LoadFromModel}">
                 <xctk:IconButton.Icon>
                     <Image Source="pack://application:,,,/PDIWT.Resources;component/Images/Icons/LoadFromModel.ico" />

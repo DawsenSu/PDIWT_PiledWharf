@@ -738,4 +738,7 @@
   <data name="PM_WholeHour" xml:space="preserve">
     <value>Every Whole Hour</value>
   </data>
+  <data name="StairCreationToolTitle" xml:space="preserve">
+    <value>Create Stair</value>
+  </data>
 </root>

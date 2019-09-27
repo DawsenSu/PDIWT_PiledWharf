@@ -1663,6 +1663,15 @@ namespace PDIWT.Resources.Localization.MainModule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create Stair.
+        /// </summary>
+        public static string StairCreationToolTitle {
+            get {
+                return ResourceManager.GetString("StairCreationToolTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Steel.
         /// </summary>
         public static string Steel {

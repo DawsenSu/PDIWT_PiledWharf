@@ -179,13 +179,15 @@
     <Compile Include="CurrentVectorsWindow.xaml.cs">
       <DependentUpon>CurrentVectorsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Design\DesignDataService.cs" />
     <Compile Include="Model\CurrentMonitorSheet.cs" />
-    <Compile Include="Model\DataItem.cs" />
-    <Compile Include="Model\DataService.cs" />
-    <Compile Include="Model\IDataService.cs" />
+    <Compile Include="Model\Stair.cs" />
     <Compile Include="Model\Tools\CurrentVectorTool.cs" />
+    <Compile Include="Model\Tools\StairCreationTool.cs" />
+    <Compile Include="StairCreationUserControl.xaml.cs">
+      <DependentUpon>StairCreationUserControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\CurrentVectorsViewModel.cs" />
+    <Compile Include="ViewModel\StairCreationViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="CurrentVectorsWindow.xaml">
       <SubType>Designer</SubType>
@@ -194,6 +196,10 @@
     <Page Include="Skins\MainSkin.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="StairCreationUserControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +220,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -229,6 +236,9 @@
       <Project>{1055ee07-f11a-49db-ad46-06e49948bda2}</Project>
       <Name>PDIWT.Resources</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Design\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -738,4 +738,7 @@
   <data name="PM_WholeHour" xml:space="preserve">
     <value>整点</value>
   </data>
+  <data name="StairCreationToolTitle" xml:space="preserve">
+    <value>创建楼梯</value>
+  </data>
 </root>
